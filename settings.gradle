@@ -1,0 +1,7 @@
+include ':sample-android'
+rootProject.name = 'ApexNLP'
+include 'apex'
+include 'english-nlp'
+include 'persian-nlp'
+include 'dfalex'
+

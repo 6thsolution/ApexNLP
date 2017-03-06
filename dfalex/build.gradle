@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+
+
+

@@ -1,0 +1,528 @@
+[DIV=/][MULT=*]
+ [MULT=*] Copyright [INTEGER_LITERAL=2015] Matthew Timmermans
+ [MULT=*] 
+ [MULT=*] Licensed under the Apache License[COMMA=,] Version [DOUBLE_LITERAL=2.0] [LPAREN=(]the [STRING_LITERAL="License"][RPAREN=)][SEMICOLON=;]
+ [MULT=*] you may not use [THIS=this] file except in compliance with the License[DOT=.]
+ [MULT=*] You may obtain a copy of the License at
+ [MULT=*] 
+ [MULT=*]     http[COLON=:][DIV=/][DIV=/]www[DOT=.]apache[DOT=.]org[DIV=/]licenses[DIV=/]LICENSE[DOUBLE_LITERAL=-2.0]
+ [MULT=*] 
+ [MULT=*] Unless required by applicable law or agreed to in writing[COMMA=,] software
+ [MULT=*] distributed under the License is distributed on an [STRING_LITERAL="AS IS"] BASIS[COMMA=,]
+ [MULT=*] WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND[COMMA=,] either express or implied[DOT=.]
+ [MULT=*] See the License [FOR=for] the spec[IF=if]ic language governing permissions and
+ [MULT=*] limitations under the License[DOT=.]
+ [MULT=*][DIV=/]
+[PACKAGE=package] com[DOT=.]nobigsoftware[DOT=.]dfalex[SEMICOLON=;]
+
+[IMPORT=import] java[DOT=.]io[DOT=.]IOException[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]io[DOT=.]ObjectOutputStream[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]io[DOT=.]Serializable[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]ArrayList[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]Collections[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]LinkedHashMap[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]List[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]Map[SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]Map[DOT=.]En[TRY=try][SEMICOLON=;]
+[IMPORT=import] java[DOT=.]util[DOT=.]Set[SEMICOLON=;]
+
+[IMPORT=import] com[DOT=.]nobigsoftware[DOT=.]util[DOT=.]BuilderCache[SEMICOLON=;]
+[IMPORT=import] com[DOT=.]nobigsoftware[DOT=.]util[DOT=.]SHAOutputStream[SEMICOLON=;]
+
+[DIV=/][MULT=*][MULT=*]
+ [MULT=*] Builds deterministic finite automata [LPAREN=(]google phrase[RPAREN=)] or DFAs that find patterns in strings
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] Given a set of patterns and the desired result of matching each pattern[COMMA=,] you can produce a
+ [MULT=*] DFA that will simultaneously match a sequence of [CHAR=char]acters against all of those patterns[DOT=.]
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] You can also build DFAs [FOR=for] multiple sets of patterns simultaneously[DOT=.] The resulting DFAs will
+ [MULT=*] be optimized to share states wherever possible[DOT=.]
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] When you build a DFA to match a set of patterns[COMMA=,] you get a [STRING_LITERAL="start state"] [LPAREN=(]a [LBRACE={]@link DfaState[RBRACE=}][RPAREN=)] [FOR=for]
+ [MULT=*] that pattern set[DOT=.] Each [CHAR=char]acter of a string can be passed in turn to [LBRACE={]@link DfaState#getNextState[LPAREN=(][CHAR=char][RPAREN=)][RBRACE=}][COMMA=,]
+ [MULT=*] which will [RETURN=return] a [NEW=new] [LBRACE={]@link DfaState[RBRACE=}][DOT=.]
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] [LBRACE={]@link DfaState#getMatch[LPAREN=(][RPAREN=)][RBRACE=}] can be called at any time to get the MATCHRESULT [LPAREN=(][IF=if] any[RPAREN=)] [FOR=for]
+ [MULT=*] the patterns that match the [CHAR=char]acters processed so far[DOT=.]
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] A [LBRACE={]@link DfaState[RBRACE=}] can be used with a [LBRACE={]@link StringMatcher[RBRACE=}] to find instances of patterns in strings[COMMA=,]
+ [MULT=*] or with other pattern[MINUS=-]matching [CLASS=class]es[DOT=.]
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] NOTE that building a Dfa is a complex procedure[DOT=.]  You should typically [DO=do] it only once [FOR=for] each
+ [MULT=*] pattern set you want to use[DOT=.]  Usually you would [DO=do] [THIS=this] in a [STATIC=static] initializer[DOT=.]
+ [MULT=*] [LT=<]P[GT=>]
+ [MULT=*] You can provide a cache that can remember and recall built DFAs[COMMA=,] which allows you to build DFAs
+ [MULT=*] during your build process in various ways[COMMA=,] instead of building them at runtime[DOT=.]  Or you can use
+ [MULT=*] the cache to store built DFAs on the first run of your program so they [DO=do]n't need to be built
+ [MULT=*] the next time[DOT=.][DOT=.][DOT=.]  But [THIS=this] is usually unnecessary[COMMA=,] since building DFAs is more fast enough to
+ [MULT=*] [DO=do] during runtime initialization[DOT=.]
+ [MULT=*] 
+ [MULT=*] @param MATCHRESULT The type of result to produce by matching a pattern[DOT=.]  This must be serializable
+ [MULT=*]      to support caching of built DFAs
+ [MULT=*][DIV=/]
+[PUBLIC=public] [CLASS=class] DfaBuilder[LT=<]MATCHRESULT [EXTENDS=extends] Serializable[GT=>]
+[LBRACE={]
+    [DIV=/][DIV=/]dfa types [FOR=for] cache keys
+    [PRIVATE=private] [STATIC=static] [FINAL=final] [INT=int] DFATYPE_MATCHER [EQ==] [INTEGER_LITERAL=0][SEMICOLON=;]
+    [PRIVATE=private] [STATIC=static] [FINAL=final] [INT=int] DFATYPE_REVERSEFINDER [EQ==] [INTEGER_LITERAL=1][SEMICOLON=;]
+    
+    [PRIVATE=private] [FINAL=final] BuilderCache m_cache[SEMICOLON=;]
+    [PRIVATE=private] [FINAL=final] Map[LT=<]MATCHRESULT[COMMA=,] List[LT=<]Matchable[RSHIFT=>>] m_patterns [EQ==] [NEW=new] LinkedHashMap[LT=<][GT=>][LPAREN=(][RPAREN=)][SEMICOLON=;]
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Create a [NEW=new] DfaBuilder without a [LBRACE={]@link BuilderCache[RBRACE=}]
+     [MULT=*][DIV=/]
+    [PUBLIC=public] DfaBuilder[LPAREN=(][RPAREN=)]
+    [LBRACE={]
+        m_cache [EQ==] [NULL=null][SEMICOLON=;]
+    [RBRACE=}]
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Create a [NEW=new] DfaBuilder[COMMA=,] with a builder cache to bypass recalculation of pre[MINUS=-]build DFAs
+     [MULT=*] 
+     [MULT=*] @param cache    The BuilderCache to use
+     [MULT=*][DIV=/]
+    [PUBLIC=public] DfaBuilder[LPAREN=(]BuilderCache cache[RPAREN=)]
+    [LBRACE={]
+        m_cache [EQ==] cache[SEMICOLON=;]
+    [RBRACE=}]
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Reset [THIS=this] DFA builder by [FOR=for]getting all the patterns that have been added
+     [MULT=*][DIV=/]
+    [PUBLIC=public] [VOID=void] clear[LPAREN=(][RPAREN=)]
+    [LBRACE={]
+        m_patterns[DOT=.]clear[LPAREN=(][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+    
+    [PUBLIC=public] [VOID=void] addPattern[LPAREN=(]Matchable pat[COMMA=,] MATCHRESULT accept[RPAREN=)]
+    [LBRACE={]
+        List[LT=<]Matchable[GT=>] patlist [EQ==] m_patterns[DOT=.]computeIfAbsent[LPAREN=(]accept[COMMA=,] x [MINUS=-][GT=>] [NEW=new] ArrayList[LT=<][GT=>][LPAREN=(][RPAREN=)][RPAREN=)][SEMICOLON=;]
+        patlist[DOT=.]add[LPAREN=(]pat[RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+    
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build DFA [FOR=for] a single language
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] The resulting DFA matches ALL patterns that have been added to [THIS=this] builder
+     [MULT=*] 
+     [MULT=*] @param ambiguityResolver     When patterns [FOR=for] multiple results match the same string[COMMA=,] [THIS=this] is called to
+     [MULT=*]                              combine the multiple results [INT=int]o one[DOT=.]  If [THIS=this] is [NULL=null][COMMA=,] then a DfaAmbiguityException
+     [MULT=*]                              will be [THROW=throw]n in that [CASE=case][DOT=.]
+     [MULT=*]  @[RETURN=return] The start state [FOR=for] a DFA that matches the set of patterns in language
+     [MULT=*][DIV=/]
+    [PUBLIC=public] DfaState[LT=<]MATCHRESULT[GT=>] build[LPAREN=(]DfaAmbiguityResolver[LT=<][QUESTION=?] [SUPER=super] MATCHRESULT[GT=>] ambiguityResolver[RPAREN=)]
+    [LBRACE={]
+        [RETURN=return] build[LPAREN=(]Collections[DOT=.]singletonList[LPAREN=(]m_patterns[DOT=.]keySet[LPAREN=(][RPAREN=)][RPAREN=)][COMMA=,] ambiguityResolver[RPAREN=)][DOT=.]get[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build DFA [FOR=for] a single language
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] The language is spec[IF=if]ied as a subset of available MATCHRESULTs[COMMA=,] and will include patterns
+     [MULT=*] [FOR=for] each result in its set[DOT=.]
+     [MULT=*] 
+     [MULT=*] @param language     set defining the languages to build
+     [MULT=*] @param ambiguityResolver     When patterns [FOR=for] multiple results match the same string[COMMA=,] [THIS=this] is called to
+     [MULT=*]                              combine the multiple results [INT=int]o one[DOT=.]  If [THIS=this] is [NULL=null][COMMA=,] then a DfaAmbiguityException
+     [MULT=*]                              will be [THROW=throw]n in that [CASE=case][DOT=.]
+     [MULT=*]  @[RETURN=return] The start state [FOR=for] a DFA that matches the set of patterns in language
+     [MULT=*][DIV=/]
+    [PUBLIC=public] DfaState[LT=<]MATCHRESULT[GT=>] build[LPAREN=(]Set[LT=<]MATCHRESULT[GT=>] language[COMMA=,] DfaAmbiguityResolver[LT=<][QUESTION=?] [SUPER=super] MATCHRESULT[GT=>] ambiguityResolver[RPAREN=)]
+    [LBRACE={]
+        [RETURN=return] build[LPAREN=(]Collections[DOT=.]singletonList[LPAREN=(]language[RPAREN=)][COMMA=,] ambiguityResolver[RPAREN=)][DOT=.]get[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build DFAs [FOR=for] multiple languages simultaneously[DOT=.]
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] Each language is spec[IF=if]ied as a subset of available MATCHRESULTs[COMMA=,] and will include patterns
+     [MULT=*] [FOR=for] each result in its set[DOT=.]
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] Languages built simultaneously will be globally minimized and will share as many states as possible[DOT=.]
+     [MULT=*] 
+     [MULT=*] @param languages     sets defining the languages to build
+     [MULT=*] @param ambiguityResolver     When patterns [FOR=for] multiple results match the same string[COMMA=,] [THIS=this] is called to
+     [MULT=*]                              combine the multiple results [INT=int]o one[DOT=.]  If [THIS=this] is [NULL=null][COMMA=,] then a DfaAmbiguityException
+     [MULT=*]                              will be [THROW=throw]n in that [CASE=case][DOT=.]
+     [MULT=*] @[RETURN=return] Start states [FOR=for] DFAs that match the given languages[DOT=.]  This will have the same length as languages[COMMA=,] with
+     [MULT=*]         corresponding start states in corresponding positions[DOT=.]
+     [MULT=*][DIV=/]
+    @SuppressWarnings[LPAREN=(][STRING_LITERAL="unchecked"][RPAREN=)]
+    [PUBLIC=public] List[LT=<]DfaState[LT=<]MATCHRESULT[RSHIFT=>>] build[LPAREN=(]List[LT=<]Set[LT=<]MATCHRESULT[RSHIFT=>>] languages[COMMA=,] DfaAmbiguityResolver[LT=<][QUESTION=?] [SUPER=super] MATCHRESULT[GT=>] ambiguityResolver[RPAREN=)]
+    [LBRACE={]
+        [IF=if] [LPAREN=(]languages[DOT=.]isEmpty[LPAREN=(][RPAREN=)][RPAREN=)]
+        [LBRACE={]
+            [RETURN=return] Collections[DOT=.]emptyList[LPAREN=(][RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        
+        SerializableDfa[LT=<]MATCHRESULT[GT=>] serializableDfa [EQ==] [NULL=null][SEMICOLON=;]
+        [IF=if] [LPAREN=(]m_cache [EQEQ===] [NULL=null][RPAREN=)]
+        [LBRACE={]
+            serializableDfa [EQ==] _build[LPAREN=(]languages[COMMA=,] ambiguityResolver[RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [ELSE=else]
+        [LBRACE={]
+            String cacheKey [EQ==] _getCacheKey[LPAREN=(]DFATYPE_MATCHER[COMMA=,] languages[COMMA=,] ambiguityResolver[RPAREN=)][SEMICOLON=;]
+            serializableDfa [EQ==] [LPAREN=(]SerializableDfa[LT=<]MATCHRESULT[GT=>][RPAREN=)] m_cache[DOT=.]getCachedItem[LPAREN=(]cacheKey[RPAREN=)][SEMICOLON=;]
+            [IF=if] [LPAREN=(]serializableDfa [EQEQ===] [NULL=null][RPAREN=)]
+            [LBRACE={]
+                serializableDfa [EQ==] _build[LPAREN=(]languages[COMMA=,] ambiguityResolver[RPAREN=)][SEMICOLON=;]
+                m_cache[DOT=.]maybeCacheItem[LPAREN=(]cacheKey[COMMA=,] serializableDfa[RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+        [RBRACE=}]
+        [RETURN=return] serializableDfa[DOT=.]getStartStates[LPAREN=(][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build the reverse finder DFA [FOR=for] all patterns that have been added to [THIS=this] builder
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] The [STRING_LITERAL="reverse finder DFA"] [FOR=for] a set of patterns is applied to a string backwards from the end[COMMA=,] and will
+     [MULT=*] produce a [LBRACE={]@link Boolean#TRUE[RBRACE=}] result at every position where a non[MINUS=-]empty string match [FOR=for] one of the
+     [MULT=*] patterns starts[DOT=.] At other positions it will produce [NULL=null] result[DOT=.] 
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] For searching through an entire string[COMMA=,] using a reverse finder with RFStringMatcher is faster than matching
+     [MULT=*] with just the DFA [FOR=for] the language[COMMA=,] especially [FOR=for] strings that have no matches[DOT=.]
+     [MULT=*] 
+     [MULT=*] @[RETURN=return] The start state [FOR=for] the reverse finder DFA
+     [MULT=*][DIV=/]
+    [PUBLIC=public] DfaState[LT=<]Boolean[GT=>] buildReverseFinder[LPAREN=(][RPAREN=)]
+    [LBRACE={]
+        [RETURN=return] buildReverseFinders[LPAREN=(]Collections[DOT=.]singletonList[LPAREN=(]m_patterns[DOT=.]keySet[LPAREN=(][RPAREN=)][RPAREN=)][RPAREN=)][DOT=.]get[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build the reverse finder DFA [FOR=for] a language
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] The language is spec[IF=if]ied as a subset of available MATCHRESULTs[COMMA=,] and will include patterns
+     [MULT=*] [FOR=for] each result in its set[DOT=.]
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] The [STRING_LITERAL="reverse finder DFA"] [FOR=for] a language is applied to a string backwards from the end[COMMA=,] and will
+     [MULT=*] produce a [LBRACE={]@link Boolean#TRUE[RBRACE=}] result at every position where a non[MINUS=-]empty string in the language starts[DOT=.] At
+     [MULT=*] other positions it will produce [NULL=null] result[DOT=.] 
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] For searching through an entire string[COMMA=,] using a reverse finder with RFStringMatcher is faster than matching
+     [MULT=*] with just the DFA [FOR=for] the language[COMMA=,] especially [FOR=for] strings that have no matches[DOT=.]
+     [MULT=*] 
+     [MULT=*] @param language     set defining the languages to build
+     [MULT=*] @[RETURN=return] The start state [FOR=for] the reverse finder DFA
+     [MULT=*][DIV=/]
+    [PUBLIC=public] DfaState[LT=<]Boolean[GT=>] buildReverseFinder[LPAREN=(]Set[LT=<]MATCHRESULT[GT=>] language[RPAREN=)]
+    [LBRACE={]
+        [RETURN=return] buildReverseFinders[LPAREN=(]Collections[DOT=.]singletonList[LPAREN=(]language[RPAREN=)][RPAREN=)][DOT=.]get[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build reverse finder DFAs [FOR=for] multiple languages simultaneously[DOT=.]
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] Each language is spec[IF=if]ied as a subset of available MATCHRESULTs[COMMA=,] and will include patterns
+     [MULT=*] [FOR=for] each result in its set[DOT=.]
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] The [STRING_LITERAL="reverse finder DFA"] [FOR=for] a language is applied to a string backwards from the end[COMMA=,] and will
+     [MULT=*] produce a [LBRACE={]@link Boolean#TRUE[RBRACE=}] result at every position where a non[MINUS=-]empty string in the language starts[DOT=.] At
+     [MULT=*] other positions it will produce [NULL=null] result[DOT=.] 
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] For searching through an entire string[COMMA=,] using a reverse finder with RFStringMatcher is faster than matching
+     [MULT=*] with just the DFA [FOR=for] the language[COMMA=,] especially [FOR=for] strings that have no matches[DOT=.]
+     [MULT=*] 
+     [MULT=*] @param languages     sets defining the languages to build
+     [MULT=*] @[RETURN=return] Start states [FOR=for] reverse finders [FOR=for] the given languages[DOT=.]  This will have the same length as languages[COMMA=,] with
+     [MULT=*]         corresponding start states in corresponding positions[DOT=.]
+     [MULT=*][DIV=/]
+    @SuppressWarnings[LPAREN=(][STRING_LITERAL="unchecked"][RPAREN=)]
+    [PUBLIC=public] List[LT=<]DfaState[LT=<]Boolean[RSHIFT=>>] buildReverseFinders[LPAREN=(]List[LT=<]Set[LT=<]MATCHRESULT[RSHIFT=>>] languages[RPAREN=)]
+    [LBRACE={]
+        [IF=if] [LPAREN=(]languages[DOT=.]isEmpty[LPAREN=(][RPAREN=)][RPAREN=)]
+        [LBRACE={]
+            [RETURN=return] Collections[DOT=.]emptyList[LPAREN=(][RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        
+        SerializableDfa[LT=<]Boolean[GT=>] serializableDfa [EQ==] [NULL=null][SEMICOLON=;]
+        [IF=if] [LPAREN=(]m_cache [EQEQ===] [NULL=null][RPAREN=)]
+        [LBRACE={]
+            serializableDfa [EQ==] _buildReverseFinders[LPAREN=(]languages[RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [ELSE=else]
+        [LBRACE={]
+            String cacheKey [EQ==] _getCacheKey[LPAREN=(]DFATYPE_REVERSEFINDER[COMMA=,] languages[COMMA=,] [NULL=null][RPAREN=)][SEMICOLON=;]
+            serializableDfa [EQ==] [LPAREN=(]SerializableDfa[LT=<]Boolean[GT=>][RPAREN=)] m_cache[DOT=.]getCachedItem[LPAREN=(]cacheKey[RPAREN=)][SEMICOLON=;]
+            [IF=if] [LPAREN=(]serializableDfa [EQEQ===] [NULL=null][RPAREN=)]
+            [LBRACE={]
+                serializableDfa [EQ==] _buildReverseFinders[LPAREN=(]languages[RPAREN=)][SEMICOLON=;]
+                m_cache[DOT=.]maybeCacheItem[LPAREN=(]cacheKey[COMMA=,] serializableDfa[RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+        [RBRACE=}]
+        [RETURN=return] serializableDfa[DOT=.]getStartStates[LPAREN=(][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build a [LBRACE={]@link StringSearcher[RBRACE=}] [FOR=for] all the patterns that have been added to [THIS=this] builder
+     [MULT=*] 
+     [MULT=*] @param ambiguityResolver     When patterns [FOR=for] multiple results match the same string[COMMA=,] [THIS=this] is called to
+     [MULT=*]                              combine the multiple results [INT=int]o one[DOT=.]  If [THIS=this] is [NULL=null][COMMA=,] then a DfaAmbiguityException
+     [MULT=*]                              will be [THROW=throw]n in that [CASE=case][DOT=.]
+     [MULT=*]  @[RETURN=return] A [LBRACE={]@link StringSearcher[RBRACE=}] [FOR=for] all the patterns in [THIS=this] builder
+     [MULT=*][DIV=/]
+    [PUBLIC=public] StringSearcher[LT=<]MATCHRESULT[GT=>] buildStringSearcher[LPAREN=(]DfaAmbiguityResolver[LT=<]MATCHRESULT[GT=>] resolver[RPAREN=)]
+    [LBRACE={]
+        [RETURN=return] [NEW=new] StringSearcher[LT=<][GT=>][LPAREN=(]build[LPAREN=(]resolver[RPAREN=)][COMMA=,] buildReverseFinder[LPAREN=(][RPAREN=)][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+    
+    [DIV=/][MULT=*][MULT=*]
+     [MULT=*] Build DFAs from a provided NFA
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] This method is used when you want to build the NFA yourself instead of letting
+     [MULT=*] [THIS=this] [CLASS=class] [DO=do] it[DOT=.]
+     [MULT=*] [LT=<]P[GT=>]
+     [MULT=*] Languages built simultaneously will be globally minimized and will share as many states as possible[DOT=.]
+     [MULT=*] 
+     [MULT=*] @param nfa           The NFA
+     [MULT=*] @param nfaStartStates     The [RETURN=return] value will include the DFA states corresponding to these NFA states[COMMA=,] in the same order
+     [MULT=*] @param ambiguityResolver     When patterns [FOR=for] multiple results match the same string[COMMA=,] [THIS=this] is called to
+     [MULT=*]                              combine the multiple results [INT=int]o one[DOT=.]  If [THIS=this] is [NULL=null][COMMA=,] then a DfaAmbiguityException
+     [MULT=*]                              will be [THROW=throw]n in that [CASE=case][DOT=.]
+     [MULT=*] @param cache If [THIS=this] cache is non[MINUS=-][NULL=null][COMMA=,] it will be checked [FOR=for] a memoized result [FOR=for] [THIS=this] NFA[COMMA=,] and will be populated
+     [MULT=*]      with a memoized result when the call is complete[DOT=.]
+     [MULT=*] @[RETURN=return] DFA start states that are equivalent to the given NFA start states[DOT=.]  This will have the same length as nfaStartStates[COMMA=,] with
+     [MULT=*]         corresponding start states in corresponding positions[DOT=.]
+     [MULT=*][DIV=/]
+    @SuppressWarnings[LPAREN=(][STRING_LITERAL="unchecked"][RPAREN=)]
+    [PUBLIC=public] [STATIC=static] [LT=<]MR[GT=>] List[LT=<]DfaState[LT=<]MR[RSHIFT=>>] buildFromNfa[LPAREN=(]Nfa[LT=<]MR[GT=>] nfa[COMMA=,] [INT=int][LBRACK=[][RBRACK=]] nfaStartStates[COMMA=,] DfaAmbiguityResolver[LT=<][QUESTION=?] [SUPER=super] MR[GT=>] ambiguityResolver[COMMA=,] BuilderCache cache [RPAREN=)]
+    [LBRACE={]
+        String cacheKey [EQ==] [NULL=null][SEMICOLON=;]
+        SerializableDfa[LT=<]MR[GT=>] serializableDfa [EQ==] [NULL=null][SEMICOLON=;]
+        [IF=if] [LPAREN=(]cache [NOTEQ=!=] [NULL=null][RPAREN=)]
+        [LBRACE={]
+            [TRY=try]
+            [LBRACE={]
+                [DIV=/][DIV=/]generate the cache key by serializing key info [INT=int]o an SHA hash
+                SHAOutputStream sha [EQ==] [NEW=new] SHAOutputStream[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                sha[DOT=.]on[LPAREN=(][FALSE=false][RPAREN=)][SEMICOLON=;]
+                ObjectOutputStream os [EQ==] [NEW=new] ObjectOutputStream[LPAREN=(]sha[RPAREN=)][SEMICOLON=;]
+                os[DOT=.]flush[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                sha[DOT=.]on[LPAREN=(][TRUE=true][RPAREN=)][SEMICOLON=;]
+                os[DOT=.]writeObject[LPAREN=(]nfaStartStates[RPAREN=)][SEMICOLON=;]
+                os[DOT=.]writeObject[LPAREN=(]nfa[RPAREN=)][SEMICOLON=;]
+                os[DOT=.]writeObject[LPAREN=(]ambiguityResolver[RPAREN=)][SEMICOLON=;]
+                os[DOT=.]flush[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                
+                cacheKey [EQ==] sha[DOT=.]getBase[INTEGER_LITERAL=32]Digest[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                os[DOT=.]close[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+            [CATCH=catch][LPAREN=(]IOException e[RPAREN=)]
+            [LBRACE={]
+                [DIV=/][DIV=/][DO=do]esn't really happen
+                [THROW=throw] [NEW=new] RuntimeException[LPAREN=(]e[RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+            serializableDfa [EQ==] [LPAREN=(]SerializableDfa[LT=<]MR[GT=>][RPAREN=)]cache[DOT=.]getCachedItem[LPAREN=(]cacheKey[RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [IF=if] [LPAREN=(]serializableDfa [EQEQ===] [NULL=null][RPAREN=)]
+        [LBRACE={]
+            RawDfa[LT=<]MR[GT=>] minimalDfa[SEMICOLON=;]
+            [LBRACE={]
+                RawDfa[LT=<]MR[GT=>] rawDfa [EQ==] [LPAREN=(][NEW=new] DfaFromNfa[LT=<]MR[GT=>][LPAREN=(]nfa[COMMA=,] nfaStartStates[COMMA=,] ambiguityResolver[RPAREN=)][RPAREN=)][DOT=.]getDfa[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                minimalDfa [EQ==] [LPAREN=(][NEW=new] DfaMinimizer[LT=<]MR[GT=>][LPAREN=(]rawDfa[RPAREN=)][RPAREN=)][DOT=.]getMinimizedDfa[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+            serializableDfa [EQ==] [NEW=new] SerializableDfa[LT=<][GT=>][LPAREN=(]minimalDfa[RPAREN=)][SEMICOLON=;]
+            [IF=if] [LPAREN=(]cacheKey [NOTEQ=!=] [NULL=null] [ANDAND=&&] cache [NOTEQ=!=] [NULL=null][RPAREN=)]
+            [LBRACE={]
+                cache[DOT=.]maybeCacheItem[LPAREN=(]cacheKey[COMMA=,] serializableDfa[RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+        [RBRACE=}]
+        [RETURN=return] serializableDfa[DOT=.]getStartStates[LPAREN=(][RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+
+    [PRIVATE=private] String _getCacheKey[LPAREN=(][FINAL=final] [INT=int] dfaType[COMMA=,] List[LT=<]Set[LT=<]MATCHRESULT[RSHIFT=>>] languages[COMMA=,] DfaAmbiguityResolver[LT=<][QUESTION=?] [SUPER=super] MATCHRESULT[GT=>] ambiguityResolver[RPAREN=)]
+    [LBRACE={]
+        String cacheKey[SEMICOLON=;]
+        [TRY=try]
+        [LBRACE={]
+            [DIV=/][DIV=/]generate the cache key by serializing key info [INT=int]o an SHA hash
+            SHAOutputStream sha [EQ==] [NEW=new] SHAOutputStream[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            sha[DOT=.]on[LPAREN=(][FALSE=false][RPAREN=)][SEMICOLON=;]
+            ObjectOutputStream os [EQ==] [NEW=new] ObjectOutputStream[LPAREN=(]sha[RPAREN=)][SEMICOLON=;]
+            os[DOT=.]flush[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            sha[DOT=.]on[LPAREN=(][TRUE=true][RPAREN=)][SEMICOLON=;]
+            os[DOT=.]writeInt[LPAREN=(]dfaType[RPAREN=)][SEMICOLON=;]
+            [FINAL=final] [INT=int] numLangs [EQ==] languages[DOT=.]size[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            os[DOT=.]writeInt[LPAREN=(]numLangs[RPAREN=)][SEMICOLON=;]
+            
+            [DIV=/][DIV=/]write key stuff out in an order based on our LinkedHashMap[COMMA=,] [FOR=for] deterministic serialization
+            [FOR=for] [LPAREN=(]En[TRY=try][LT=<]MATCHRESULT[COMMA=,] List[LT=<]Matchable[RSHIFT=>>] patEn[TRY=try] [COLON=:] m_patterns[DOT=.]en[TRY=try]Set[LPAREN=(][RPAREN=)][RPAREN=)]
+            [LBRACE={]
+                [BOOLEAN=boolean] included [EQ==] [FALSE=false][SEMICOLON=;]
+                List[LT=<]Matchable[GT=>] patList [EQ==] patEn[TRY=try][DOT=.]getValue[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                [IF=if] [LPAREN=(]patList[DOT=.]isEmpty[LPAREN=(][RPAREN=)][RPAREN=)]
+                [LBRACE={]
+                    [CONTINUE=continue][SEMICOLON=;]
+                [RBRACE=}]
+                [FOR=for] [LPAREN=(][INT=int] i[EQ==][INTEGER_LITERAL=0][SEMICOLON=;] i[LT=<]numLangs[SEMICOLON=;] [PLUSPLUS=++]i[RPAREN=)]
+                [LBRACE={]
+                    [IF=if] [LPAREN=(][NOT=!]languages[DOT=.]get[LPAREN=(]i[RPAREN=)][DOT=.]contains[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)][RPAREN=)]
+                    [LBRACE={]
+                        [CONTINUE=continue][SEMICOLON=;]
+                    [RBRACE=}]
+                    included [EQ==] [TRUE=true][SEMICOLON=;]
+                    [BREAK=break][SEMICOLON=;]
+                [RBRACE=}]
+                [IF=if] [LPAREN=(][NOT=!]included[RPAREN=)]
+                [LBRACE={]
+                    [CONTINUE=continue][SEMICOLON=;]
+                [RBRACE=}]
+                os[DOT=.]writeInt[LPAREN=(]patList[DOT=.]size[LPAREN=(][RPAREN=)][RPAREN=)][SEMICOLON=;]
+                [IF=if] [LPAREN=(]numLangs[GT=>][INTEGER_LITERAL=1][RPAREN=)]
+                [LBRACE={]
+                    [INT=int] bits[EQ==]languages[DOT=.]get[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][DOT=.]contains[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)] [QUESTION=?] [INTEGER_LITERAL=1][COLON=:][INTEGER_LITERAL=0][SEMICOLON=;]
+                    [FOR=for] [LPAREN=(][INT=int] i[EQ==][INTEGER_LITERAL=1][SEMICOLON=;] i[LT=<]languages[DOT=.]size[LPAREN=(][RPAREN=)][SEMICOLON=;] [PLUSPLUS=++]i[RPAREN=)]
+                    [LBRACE={]
+                        [IF=if] [LPAREN=(][LPAREN=(]i[AND=&][INTEGER_LITERAL=31][RPAREN=)][EQEQ===][INTEGER_LITERAL=0][RPAREN=)]
+                        [LBRACE={]
+                            os[DOT=.]writeInt[LPAREN=(]bits[RPAREN=)][SEMICOLON=;]
+                            bits[EQ==][INTEGER_LITERAL=0][SEMICOLON=;]
+                        [RBRACE=}]
+                        [IF=if] [LPAREN=(]languages[DOT=.]get[LPAREN=(]i[RPAREN=)][DOT=.]contains[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)][RPAREN=)]
+                        [LBRACE={]
+                            bits [OREQ=|=] [INTEGER_LITERAL=1][LSHIFT=<<][LPAREN=(]i[AND=&][INTEGER_LITERAL=31][RPAREN=)][SEMICOLON=;]
+                        [RBRACE=}]
+                    [RBRACE=}]
+                    os[DOT=.]writeInt[LPAREN=(]bits[RPAREN=)][SEMICOLON=;]
+                [RBRACE=}]
+                [FOR=for] [LPAREN=(]Matchable pat [COLON=:] patList[RPAREN=)]
+                [LBRACE={]
+                    os[DOT=.]writeObject[LPAREN=(]pat[RPAREN=)][SEMICOLON=;]
+                [RBRACE=}]
+                os[DOT=.]writeObject[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+            os[DOT=.]writeInt[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][SEMICOLON=;] [DIV=/][DIV=/][INTEGER_LITERAL=0][MINUS=-]size pattern list terminates pattern map
+            os[DOT=.]writeObject[LPAREN=(]ambiguityResolver[RPAREN=)][SEMICOLON=;]
+            os[DOT=.]flush[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            
+            cacheKey [EQ==] sha[DOT=.]getBase[INTEGER_LITERAL=32]Digest[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            os[DOT=.]close[LPAREN=(][RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [CATCH=catch][LPAREN=(]IOException e[RPAREN=)]
+        [LBRACE={]
+            [DIV=/][DIV=/][DO=do]esn't really happen
+            [THROW=throw] [NEW=new] RuntimeException[LPAREN=(]e[RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [RETURN=return] cacheKey[SEMICOLON=;]
+    [RBRACE=}]
+    
+    [PRIVATE=private] SerializableDfa[LT=<]MATCHRESULT[GT=>] _build[LPAREN=(]List[LT=<]Set[LT=<]MATCHRESULT[RSHIFT=>>] languages[COMMA=,] DfaAmbiguityResolver[LT=<][QUESTION=?] [SUPER=super] MATCHRESULT[GT=>] ambiguityResolver[RPAREN=)]
+    [LBRACE={]
+        Nfa[LT=<]MATCHRESULT[GT=>] nfa [EQ==] [NEW=new] Nfa[LT=<][GT=>][LPAREN=(][RPAREN=)][SEMICOLON=;]
+        
+        [INT=int][LBRACK=[][RBRACK=]] nfaStartStates [EQ==] [NEW=new] [INT=int][LBRACK=[]languages[DOT=.]size[LPAREN=(][RPAREN=)][RBRACK=]][SEMICOLON=;]
+        [FOR=for] [LPAREN=(][INT=int] i[EQ==][INTEGER_LITERAL=0][SEMICOLON=;] i[LT=<]languages[DOT=.]size[LPAREN=(][RPAREN=)][SEMICOLON=;] [PLUSPLUS=++]i[RPAREN=)]
+        [LBRACE={]
+            nfaStartStates[LBRACK=[]i[RBRACK=]] [EQ==] nfa[DOT=.]addState[LPAREN=(][NULL=null][RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        
+        [IF=if] [LPAREN=(]ambiguityResolver [EQEQ===] [NULL=null][RPAREN=)]
+        [LBRACE={]
+            ambiguityResolver [EQ==] DfaBuilder[COLON=:][COLON=:][DEFAULT=default]AmbiguityResolver[SEMICOLON=;]
+        [RBRACE=}]
+        
+        [FOR=for] [LPAREN=(]En[TRY=try][LT=<]MATCHRESULT[COMMA=,] List[LT=<]Matchable[RSHIFT=>>] patEn[TRY=try] [COLON=:] m_patterns[DOT=.]en[TRY=try]Set[LPAREN=(][RPAREN=)][RPAREN=)]
+        [LBRACE={]
+            List[LT=<]Matchable[GT=>] patList [EQ==] patEn[TRY=try][DOT=.]getValue[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            [IF=if] [LPAREN=(]patList [EQEQ===] [NULL=null] [OROR=||] patList[DOT=.]size[LPAREN=(][RPAREN=)][LT=<][INTEGER_LITERAL=1][RPAREN=)]
+            [LBRACE={]
+                [CONTINUE=continue][SEMICOLON=;]
+            [RBRACE=}]
+            [INT=int] matchState [EQ==] [INTEGER_LITERAL=-1][SEMICOLON=;] [DIV=/][DIV=/]start state [FOR=for] matching [THIS=this] token
+            [FOR=for] [LPAREN=(][INT=int] i[EQ==][INTEGER_LITERAL=0][SEMICOLON=;] i[LT=<]languages[DOT=.]size[LPAREN=(][RPAREN=)][SEMICOLON=;] [PLUSPLUS=++]i[RPAREN=)]
+            [LBRACE={]
+                [IF=if] [LPAREN=(][NOT=!]languages[DOT=.]get[LPAREN=(]i[RPAREN=)][DOT=.]contains[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)][RPAREN=)]
+                [LBRACE={]
+                    [CONTINUE=continue][SEMICOLON=;]
+                [RBRACE=}]
+                [IF=if] [LPAREN=(]matchState[LT=<][INTEGER_LITERAL=0][RPAREN=)]
+                [LBRACE={]
+                    [INT=int] acceptState [EQ==] nfa[DOT=.]addState[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)][SEMICOLON=;] [DIV=/][DIV=/][FINAL=final] state accepting [THIS=this] token
+                    [IF=if] [LPAREN=(]patList[DOT=.]size[LPAREN=(][RPAREN=)][GT=>][INTEGER_LITERAL=1][RPAREN=)]
+                    [LBRACE={]
+                        [DIV=/][DIV=/]we have multiple patterns[DOT=.]  Make a union
+                        matchState [EQ==] nfa[DOT=.]addState[LPAREN=(][NULL=null][RPAREN=)][SEMICOLON=;]
+                        [FOR=for] [LPAREN=(]Matchable pat [COLON=:] patList[RPAREN=)]
+                        [LBRACE={]
+                            nfa[DOT=.]addEpsilon[LPAREN=(]matchState[COMMA=,] pat[DOT=.]addToNFA[LPAREN=(]nfa[COMMA=,] acceptState[RPAREN=)][RPAREN=)][SEMICOLON=;]
+                        [RBRACE=}]
+                    [RBRACE=}]
+                    [ELSE=else]
+                    [LBRACE={]
+                        [DIV=/][DIV=/]only one pattern no union necessary
+                        matchState [EQ==] patList[DOT=.]get[LPAREN=(][INTEGER_LITERAL=0][RPAREN=)][DOT=.]addToNFA[LPAREN=(]nfa[COMMA=,] acceptState[RPAREN=)][SEMICOLON=;]
+                    [RBRACE=}]
+                [RBRACE=}]
+                [DIV=/][DIV=/]language i matches these patterns
+                nfa[DOT=.]addEpsilon[LPAREN=(]nfaStartStates[LBRACK=[]i[RBRACK=]][COMMA=,]matchState[RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+        [RBRACE=}]
+        
+        SerializableDfa[LT=<]MATCHRESULT[GT=>] serializableDfa[SEMICOLON=;]
+        [LBRACE={]
+            RawDfa[LT=<]MATCHRESULT[GT=>] minimalDfa[SEMICOLON=;]
+            [LBRACE={]
+                RawDfa[LT=<]MATCHRESULT[GT=>] rawDfa [EQ==] [LPAREN=(][NEW=new] DfaFromNfa[LT=<]MATCHRESULT[GT=>][LPAREN=(]nfa[COMMA=,] nfaStartStates[COMMA=,] ambiguityResolver[RPAREN=)][RPAREN=)][DOT=.]getDfa[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                minimalDfa [EQ==] [LPAREN=(][NEW=new] DfaMinimizer[LT=<]MATCHRESULT[GT=>][LPAREN=(]rawDfa[RPAREN=)][RPAREN=)][DOT=.]getMinimizedDfa[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+            serializableDfa [EQ==] [NEW=new] SerializableDfa[LT=<][GT=>][LPAREN=(]minimalDfa[RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [RETURN=return] serializableDfa[SEMICOLON=;]
+    [RBRACE=}]
+    
+    [PRIVATE=private] SerializableDfa[LT=<]Boolean[GT=>] _buildReverseFinders[LPAREN=(]List[LT=<]Set[LT=<]MATCHRESULT[RSHIFT=>>] languages[RPAREN=)]
+    [LBRACE={]
+        Nfa[LT=<]Boolean[GT=>] nfa [EQ==] [NEW=new] Nfa[LT=<][GT=>][LPAREN=(][RPAREN=)][SEMICOLON=;]
+        
+        [INT=int] startState [EQ==] nfa[DOT=.]addState[LPAREN=(][NULL=null][RPAREN=)][SEMICOLON=;]
+        [FINAL=final] [INT=int] endState [EQ==] nfa[DOT=.]addState[LPAREN=(][TRUE=true][RPAREN=)][SEMICOLON=;]
+        [FINAL=final] DfaAmbiguityResolver[LT=<]Boolean[GT=>] ambiguityResolver [EQ==] DfaBuilder[COLON=:][COLON=:][DEFAULT=default]AmbiguityResolver[SEMICOLON=;]
+
+        [DIV=/][DIV=/]First[COMMA=,] make an NFA that matches the reverse of all the patterns
+        [FOR=for] [LPAREN=(]En[TRY=try][LT=<]MATCHRESULT[COMMA=,] List[LT=<]Matchable[RSHIFT=>>] patEn[TRY=try] [COLON=:] m_patterns[DOT=.]en[TRY=try]Set[LPAREN=(][RPAREN=)][RPAREN=)]
+        [LBRACE={]
+            List[LT=<]Matchable[GT=>] patList [EQ==] patEn[TRY=try][DOT=.]getValue[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            [IF=if] [LPAREN=(]patList [EQEQ===] [NULL=null] [OROR=||] patList[DOT=.]size[LPAREN=(][RPAREN=)][LT=<][INTEGER_LITERAL=1][RPAREN=)]
+            [LBRACE={]
+                [CONTINUE=continue][SEMICOLON=;]
+            [RBRACE=}]
+            [FOR=for] [LPAREN=(][INT=int] i[EQ==][INTEGER_LITERAL=0][SEMICOLON=;] i[LT=<]languages[DOT=.]size[LPAREN=(][RPAREN=)][SEMICOLON=;] [PLUSPLUS=++]i[RPAREN=)]
+            [LBRACE={]
+                [IF=if] [LPAREN=(][NOT=!]languages[DOT=.]get[LPAREN=(]i[RPAREN=)][DOT=.]contains[LPAREN=(]patEn[TRY=try][DOT=.]getKey[LPAREN=(][RPAREN=)][RPAREN=)][RPAREN=)]
+                [LBRACE={]
+                    [CONTINUE=continue][SEMICOLON=;]
+                [RBRACE=}]
+                [FOR=for] [LPAREN=(]Matchable pat [COLON=:] patEn[TRY=try][DOT=.]getValue[LPAREN=(][RPAREN=)][RPAREN=)]
+                [LBRACE={]
+                    [INT=int] st [EQ==] pat[DOT=.]getReversed[LPAREN=(][RPAREN=)][DOT=.]addToNFA[LPAREN=(]nfa[COMMA=,] endState[RPAREN=)][SEMICOLON=;]
+                    nfa[DOT=.]addEpsilon[LPAREN=(]startState[COMMA=,] st[RPAREN=)][SEMICOLON=;]
+                [RBRACE=}]
+            [RBRACE=}]
+        [RBRACE=}]
+        [DIV=/][DIV=/]omit the empty string
+        startState [EQ==] nfa[DOT=.]Disempt[IF=if]y[LPAREN=(]startState[RPAREN=)][SEMICOLON=;]
+        
+        [DIV=/][DIV=/]allow anything first
+        startState [EQ==] Pattern[DOT=.]maybeRepeat[LPAREN=(]CharRange[DOT=.]ALL[RPAREN=)][DOT=.]addToNFA[LPAREN=(]nfa[COMMA=,] startState[RPAREN=)][SEMICOLON=;]
+        
+        [DIV=/][DIV=/]build the DFA
+        SerializableDfa[LT=<]Boolean[GT=>] serializableDfa[SEMICOLON=;]
+        [LBRACE={]
+            RawDfa[LT=<]Boolean[GT=>] minimalDfa[SEMICOLON=;]
+            [LBRACE={]
+                RawDfa[LT=<]Boolean[GT=>] rawDfa [EQ==] [LPAREN=(][NEW=new] DfaFromNfa[LT=<]Boolean[GT=>][LPAREN=(]nfa[COMMA=,] [NEW=new] [INT=int][LBRACK=[][RBRACK=]] [LBRACE={]startState[RBRACE=}][COMMA=,] ambiguityResolver[RPAREN=)][RPAREN=)][DOT=.]getDfa[LPAREN=(][RPAREN=)][SEMICOLON=;]
+                minimalDfa [EQ==] [LPAREN=(][NEW=new] DfaMinimizer[LT=<]Boolean[GT=>][LPAREN=(]rawDfa[RPAREN=)][RPAREN=)][DOT=.]getMinimizedDfa[LPAREN=(][RPAREN=)][SEMICOLON=;]
+            [RBRACE=}]
+            serializableDfa [EQ==] [NEW=new] SerializableDfa[LT=<][GT=>][LPAREN=(]minimalDfa[RPAREN=)][SEMICOLON=;]
+        [RBRACE=}]
+        [RETURN=return] serializableDfa[SEMICOLON=;]
+    [RBRACE=}]
+    
+    [PRIVATE=private] [STATIC=static] [LT=<]T[GT=>] T [DEFAULT=default]AmbiguityResolver[LPAREN=(]Set[LT=<]T[GT=>] matches[RPAREN=)]
+    [LBRACE={]
+        [THROW=throw] [NEW=new] DfaAmbiguityException[LPAREN=(]matches[RPAREN=)][SEMICOLON=;]
+    [RBRACE=}]
+[RBRACE=}]

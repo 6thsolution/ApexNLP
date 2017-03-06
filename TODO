@@ -1,0 +1,11 @@
+# English NLP
+1. Support Go to [place name]
+2. Support time like( half past ten, next hour)
+
+
+http://www.nltk.org/book/ch07.html
+http://www.slideshare.net/gagan1667/opennlp-demo
+https://github.com/stanfordnlp/CoreNLP/blob/master/src/edu/stanford/nlp/time/SUTime.java
+https://helpspot.readdle.com/calendars/index.php?pg=kb.page&id=429
+https://github.com/dstl/baleen/blob/master/baleen/baleen-annotators/src/main/java/uk/gov/dstl/baleen/annotators/regex/Date.java
+https://github.com/ahmetaa/zemberek-nlp

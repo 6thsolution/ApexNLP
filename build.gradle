@@ -1,0 +1,35 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "net.nemerosa:versioning:1.7.1"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.4.5"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7"
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+    }
+}
+
+group GROUP
+version VERSION_NAME
+
+def noCommonModules = ["sample-android", "dfalex"]
+subprojects { subproj ->
+    group GROUP
+    version VERSION_NAME
+//    apply plugin: 'idea'
+//
+    if (!noCommonModules.contains(subproj.name)) {
+        apply plugin: 'java'
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+    }
+    repositories {
+        mavenCentral()
+    }
+
+}

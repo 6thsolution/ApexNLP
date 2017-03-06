@@ -1,0 +1,473 @@
+S0
+    ! -> S1:NOT
+    " -> S2
+    % -> S3:MOD
+    & -> S4:AND
+    ' -> S5
+    ( -> S6:LPAREN
+    ) -> S7:RPAREN
+    * -> S8:MULT
+    + -> S9:PLUS
+    , -> S10:COMMA
+    - -> S11:MINUS
+    . -> S12:DOT
+    / -> S13:DIV
+    0 -> S14:INTEGER_LITERAL
+    1-9 -> S15:INTEGER_LITERAL
+    : -> S16:COLON
+    ; -> S17:SEMICOLON
+    < -> S18:LT
+    = -> S19:EQ
+    > -> S20:GT
+    ? -> S21:QUESTION
+    [ -> S22:LBRACK
+    ] -> S23:RBRACK
+    ^ -> S24:XOR
+    a -> b -> s -> t -> r -> a -> c -> t -> S25:ABSTRACT
+    b -> S26
+    c -> S27
+    d -> S28
+    e -> S29
+    f -> S30
+    g -> o -> t -> o -> S31:GOTO
+    i -> S32
+    l -> o -> n -> g -> S33:LONG
+    n -> S34
+    p -> S35
+    r -> e -> t -> u -> r -> n -> S36:RETURN
+    s -> S37
+    t -> S38
+    v -> o -> S39
+    w -> h -> i -> l -> e -> S40:WHILE
+    { -> S41:LBRACE
+    | -> S42:OR
+    } -> S43:RBRACE
+    ~ -> S44:COMP
+S1:NOT
+    = -> S45:NOTEQ
+S2
+    $0-\t -> S2
+    $b-$c -> S2
+    $e-! -> S2
+    " -> S46:STRING_LITERAL
+    #-[ -> S2
+    \ -> S47
+    ]-$ffff -> S2
+S3:MOD
+    = -> S48:MODEQ
+S4:AND
+    & -> S49:ANDAND
+    = -> S50:ANDEQ
+S5
+    $0-\t -> ' -> S51:CHARACTER_LITERAL
+    $b-$c -> ' -> S51:CHARACTER_LITERAL
+    $e-& -> ' -> S51:CHARACTER_LITERAL
+    (-[ -> ' -> S51:CHARACTER_LITERAL
+    \ -> S52
+    ]-$ffff -> ' -> S51:CHARACTER_LITERAL
+S6:LPAREN
+    (done)
+S7:RPAREN
+    (done)
+S8:MULT
+    = -> S53:MULTEQ
+S9:PLUS
+    + -> S54:PLUSPLUS
+    . -> 0-9 -> S55:DOUBLE_LITERAL
+    0 -> S56:INTEGER_LITERAL
+    1-9 -> S57:INTEGER_LITERAL
+    = -> S58:PLUSEQ
+S10:COMMA
+    (done)
+S11:MINUS
+    - -> S59:MINUSMINUS
+    . -> 0-9 -> S55:DOUBLE_LITERAL
+    0 -> S56:INTEGER_LITERAL
+    1-9 -> S57:INTEGER_LITERAL
+    = -> S60:MINUSEQ
+S12:DOT
+    0-9 -> S61:DOUBLE_LITERAL
+S13:DIV
+    = -> S62:DIVEQ
+S14:INTEGER_LITERAL
+    . -> S61:DOUBLE_LITERAL
+    0-7 -> S63:INTEGER_LITERAL
+    8-9 -> S64
+    E -> S65
+    L -> S66:LONG_LITERAL
+    X -> S67
+    e -> S65
+    l -> S66:LONG_LITERAL
+    x -> S67
+S15:INTEGER_LITERAL
+    . -> S61:DOUBLE_LITERAL
+    0-9 -> S15:INTEGER_LITERAL
+    E -> S65
+    L -> S66:LONG_LITERAL
+    e -> S65
+    l -> S66:LONG_LITERAL
+S16:COLON
+    (done)
+S17:SEMICOLON
+    (done)
+S18:LT
+    < -> S68:LSHIFT
+    = -> S69:LTEQ
+S19:EQ
+    = -> S70:EQEQ
+S20:GT
+    = -> S71:GTEQ
+    > -> S72:RSHIFT
+S21:QUESTION
+    (done)
+S22:LBRACK
+    (done)
+S23:RBRACK
+    (done)
+S24:XOR
+    = -> S73:XOREQ
+S25:ABSTRACT
+    (done)
+S26
+    o -> o -> l -> e -> a -> n -> S74:BOOLEAN
+    r -> e -> a -> k -> S75:BREAK
+    y -> t -> e -> S76:BYTE
+S27
+    a -> S77
+    h -> a -> r -> S78:CHAR
+    l -> a -> s -> s -> S79:CLASS
+    o -> n -> S80
+S28
+    e -> f -> a -> u -> l -> t -> S81:DEFAULT
+    o -> S82:DO
+S29
+    l -> s -> e -> S83:ELSE
+    x -> t -> e -> n -> d -> s -> S84:EXTENDS
+S30
+    a -> l -> s -> e -> S85:FALSE
+    i -> n -> a -> l -> S86:FINAL
+    l -> o -> a -> t -> S87:FLOAT
+    o -> r -> S88:FOR
+S31:GOTO
+    (done)
+S32
+    f -> S89:IF
+    m -> p -> S90
+    n -> S91
+S33:LONG
+    (done)
+S34
+    a -> t -> i -> v -> e -> S92:NATIVE
+    e -> w -> S93:NEW
+    u -> l -> l -> S94:NULL
+S35
+    a -> c -> k -> a -> g -> e -> S95:PACKAGE
+    r -> S96
+    u -> b -> l -> i -> c -> S97:PUBLIC
+S36:RETURN
+    (done)
+S37
+    h -> o -> r -> t -> S98:SHORT
+    t -> S99
+    u -> p -> e -> r -> S100:SUPER
+    w -> i -> t -> c -> h -> S101:SWITCH
+    y -> n -> c -> h -> r -> o -> n -> i -> z -> e -> d -> S102:SYNCHRONIZED
+S38
+    h -> S103
+    r -> S104
+S39
+    i -> d -> S105:VOID
+    l -> a -> t -> i -> l -> e -> S106:VOLATILE
+S40:WHILE
+    (done)
+S41:LBRACE
+    (done)
+S42:OR
+    = -> S107:OREQ
+    | -> S108:OROR
+S43:RBRACE
+    (done)
+S44:COMP
+    (done)
+S45:NOTEQ
+    (done)
+S46:STRING_LITERAL
+    (done)
+S47
+    " -> S2
+    ' -> S2
+    0-7 -> S2
+    \ -> S2
+    b -> S2
+    f -> S2
+    n -> S2
+    r -> S2
+    t -> S2
+S48:MODEQ
+    (done)
+S49:ANDAND
+    (done)
+S50:ANDEQ
+    (done)
+S51:CHARACTER_LITERAL
+    (done)
+S52
+    " -> ' -> S51:CHARACTER_LITERAL
+    ' -> ' -> S51:CHARACTER_LITERAL
+    0-3 -> S109
+    4-7 -> S110
+    \ -> ' -> S51:CHARACTER_LITERAL
+    b -> ' -> S51:CHARACTER_LITERAL
+    f -> ' -> S51:CHARACTER_LITERAL
+    n -> ' -> S51:CHARACTER_LITERAL
+    r -> ' -> S51:CHARACTER_LITERAL
+    t -> ' -> S51:CHARACTER_LITERAL
+S53:MULTEQ
+    (done)
+S54:PLUSPLUS
+    (done)
+S55:DOUBLE_LITERAL
+    0-9 -> S55:DOUBLE_LITERAL
+    D -> S111:DOUBLE_LITERAL
+    E -> S112
+    F -> S113:FLOAT_LITERAL
+    d -> S111:DOUBLE_LITERAL
+    e -> S112
+    f -> S113:FLOAT_LITERAL
+S56:INTEGER_LITERAL
+    . -> S55:DOUBLE_LITERAL
+    0-7 -> S114:INTEGER_LITERAL
+    8-9 -> S115
+    E -> S112
+    L -> S66:LONG_LITERAL
+    X -> S67
+    e -> S112
+    l -> S66:LONG_LITERAL
+    x -> S67
+S57:INTEGER_LITERAL
+    . -> S55:DOUBLE_LITERAL
+    0-9 -> S57:INTEGER_LITERAL
+    E -> S112
+    L -> S66:LONG_LITERAL
+    e -> S112
+    l -> S66:LONG_LITERAL
+S58:PLUSEQ
+    (done)
+S59:MINUSMINUS
+    (done)
+S60:MINUSEQ
+    (done)
+S61:DOUBLE_LITERAL
+    0-9 -> S61:DOUBLE_LITERAL
+    D -> S111:DOUBLE_LITERAL
+    E -> S65
+    d -> S111:DOUBLE_LITERAL
+    e -> S65
+S62:DIVEQ
+    (done)
+S63:INTEGER_LITERAL
+    . -> S61:DOUBLE_LITERAL
+    0-7 -> S63:INTEGER_LITERAL
+    8-9 -> S64
+    E -> S65
+    L -> S66:LONG_LITERAL
+    e -> S65
+    l -> S66:LONG_LITERAL
+S64
+    . -> S61:DOUBLE_LITERAL
+    0-9 -> S64
+    E -> S65
+    e -> S65
+S65
+    + -> 0-9 -> S116:DOUBLE_LITERAL
+    - -> 0-9 -> S116:DOUBLE_LITERAL
+S66:LONG_LITERAL
+    (done)
+S67
+    0-9 -> S117:INTEGER_LITERAL
+    A-F -> S117:INTEGER_LITERAL
+    a-f -> S117:INTEGER_LITERAL
+S68:LSHIFT
+    = -> S118:LSHIFTEQ
+S69:LTEQ
+    (done)
+S70:EQEQ
+    (done)
+S71:GTEQ
+    (done)
+S72:RSHIFT
+    = -> S119:RSHIFTEQ
+    > -> S120:URSHIFT
+S73:XOREQ
+    (done)
+S74:BOOLEAN
+    (done)
+S75:BREAK
+    (done)
+S76:BYTE
+    (done)
+S77
+    s -> e -> S121:CASE
+    t -> c -> h -> S122:CATCH
+S78:CHAR
+    (done)
+S79:CLASS
+    (done)
+S80
+    s -> t -> S123:CONST
+    t -> i -> n -> u -> e -> S124:CONTINUE
+S81:DEFAULT
+    (done)
+S82:DO
+    u -> b -> l -> e -> S125:DOUBLE
+S83:ELSE
+    (done)
+S84:EXTENDS
+    (done)
+S85:FALSE
+    (done)
+S86:FINAL
+    l -> y -> S126:FINALLY
+S87:FLOAT
+    (done)
+S88:FOR
+    (done)
+S89:IF
+    (done)
+S90
+    l -> e -> m -> e -> n -> t -> s -> S127:IMPLEMENTS
+    o -> r -> t -> S128:IMPORT
+S91
+    s -> t -> a -> n -> c -> e -> o -> f -> S129:INSTANCEOF
+    t -> S130:INT
+S92:NATIVE
+    (done)
+S93:NEW
+    (done)
+S94:NULL
+    (done)
+S95:PACKAGE
+    (done)
+S96
+    i -> v -> a -> t -> e -> S131:PRIVATE
+    o -> t -> e -> c -> t -> e -> d -> S132:PROTECTED
+S97:PUBLIC
+    (done)
+S98:SHORT
+    (done)
+S99
+    a -> t -> i -> c -> S133:STATIC
+    r -> i -> c -> t -> f -> p -> S134:STRICTFP
+S100:SUPER
+    (done)
+S101:SWITCH
+    (done)
+S102:SYNCHRONIZED
+    (done)
+S103
+    i -> s -> S135:THIS
+    r -> o -> w -> S136:THROW
+S104
+    a -> n -> s -> i -> e -> n -> t -> S137:TRANSIENT
+    u -> e -> S138:TRUE
+    y -> S139:TRY
+S105:VOID
+    (done)
+S106:VOLATILE
+    (done)
+S107:OREQ
+    (done)
+S108:OROR
+    (done)
+S109
+    ' -> S51:CHARACTER_LITERAL
+    0-7 -> S110
+S110
+    ' -> S51:CHARACTER_LITERAL
+    0-7 -> ' -> S51:CHARACTER_LITERAL
+S111:DOUBLE_LITERAL
+    (done)
+S112
+    + -> 0-9 -> S140:DOUBLE_LITERAL
+    - -> 0-9 -> S140:DOUBLE_LITERAL
+S113:FLOAT_LITERAL
+    (done)
+S114:INTEGER_LITERAL
+    . -> S55:DOUBLE_LITERAL
+    0-7 -> S114:INTEGER_LITERAL
+    8-9 -> S115
+    E -> S112
+    L -> S66:LONG_LITERAL
+    e -> S112
+    l -> S66:LONG_LITERAL
+S115
+    . -> S55:DOUBLE_LITERAL
+    0-9 -> S115
+    E -> S112
+    e -> S112
+S116:DOUBLE_LITERAL
+    0-9 -> S116:DOUBLE_LITERAL
+    D -> S111:DOUBLE_LITERAL
+    d -> S111:DOUBLE_LITERAL
+S117:INTEGER_LITERAL
+    0-9 -> S117:INTEGER_LITERAL
+    A-F -> S117:INTEGER_LITERAL
+    L -> S66:LONG_LITERAL
+    a-f -> S117:INTEGER_LITERAL
+    l -> S66:LONG_LITERAL
+S118:LSHIFTEQ
+    (done)
+S119:RSHIFTEQ
+    (done)
+S120:URSHIFT
+    = -> S141:URSHIFTEQ
+S121:CASE
+    (done)
+S122:CATCH
+    (done)
+S123:CONST
+    (done)
+S124:CONTINUE
+    (done)
+S125:DOUBLE
+    (done)
+S126:FINALLY
+    (done)
+S127:IMPLEMENTS
+    (done)
+S128:IMPORT
+    (done)
+S129:INSTANCEOF
+    (done)
+S130:INT
+    e -> r -> f -> a -> c -> e -> S142:INTERFACE
+S131:PRIVATE
+    (done)
+S132:PROTECTED
+    (done)
+S133:STATIC
+    (done)
+S134:STRICTFP
+    (done)
+S135:THIS
+    (done)
+S136:THROW
+    s -> S143:THROWS
+S137:TRANSIENT
+    (done)
+S138:TRUE
+    (done)
+S139:TRY
+    (done)
+S140:DOUBLE_LITERAL
+    0-9 -> S140:DOUBLE_LITERAL
+    D -> S111:DOUBLE_LITERAL
+    F -> S113:FLOAT_LITERAL
+    d -> S111:DOUBLE_LITERAL
+    f -> S113:FLOAT_LITERAL
+S141:URSHIFTEQ
+    (done)
+S142:INTERFACE
+    (done)
+S143:THROWS
+    (done)

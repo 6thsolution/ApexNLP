@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':apex')
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile project(path: ':apex', configuration: 'testOutput')
+}
+
+
+
+

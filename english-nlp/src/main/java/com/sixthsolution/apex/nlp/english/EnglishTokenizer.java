@@ -1,0 +1,18 @@
+package com.sixthsolution.apex.nlp.english;
+
+import com.sixthsolution.apex.nlp.tokenization.StandardTokenizer;
+
+/**
+ * @author Saeed Masoumi (s-masoumi@live.com)
+ */
+
+public class EnglishTokenizer extends StandardTokenizer {
+    @Override
+    protected String normalize(String sentence) {
+        return super.normalize(sentence)
+                .replaceAll("(\\d+)(\\s+)(\\d+)", "$1 , $3")
+                .replaceAll("(,)"," $1 ")
+//                .replaceAll("(\\s+)(from|starts)(\\s+)", "$1, $2$3")
+                ;
+    }
+}
