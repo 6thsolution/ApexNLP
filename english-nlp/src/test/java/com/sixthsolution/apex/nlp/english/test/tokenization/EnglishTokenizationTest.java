@@ -4,7 +4,7 @@ import com.nobigsoftware.dfalex.Pattern;
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.english.EnglishTokenizer;
 import com.sixthsolution.apex.nlp.english.EnglishVocabulary;
-import com.sixthsolution.apex.nlp.ner.Category;
+import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.Chunker;
 import com.sixthsolution.apex.nlp.ner.Entity;
 import com.sixthsolution.apex.nlp.ner.regex.ChunkDetectionFilter;
@@ -49,30 +49,5 @@ public class EnglishTokenizationTest {
         );
         assertTokens("Go GYM 2.05.2013 19:00",
                 "Go", "GYM", "2", ".", "05", ".", "2013", ",", "19", ":", "00");
-    }
-
-    @Test
-    public void foo() {
-        Tokenizer tokenizer = new EnglishTokenizer();
-        Tagger tagger = new StandardTagger(EnglishVocabulary.build());
-        Chunker chunker = new RegExChunker(Arrays.<ChunkDetector>asList(new ChunkDetector() {
-            @Override
-            protected List<Pair<Category, Pattern>> getPatterns() {
-                return Arrays.asList(
-                        new Pair<Category, Pattern>(Category.TIME,
-                                Pattern.match((char) Tag.NUMBER.id + "")));
-            }
-
-            @Override
-            protected List<ChunkDetectionFilter> getFilters() {
-                return null;
-            }
-
-            @Override
-            public Entity getEntity() {
-                return Entity.TIME;
-            }
-        }));
-        chunker.chunk(tagger.tag(tokenizer.tokenize("at 10 at 10 a")));
     }
 }

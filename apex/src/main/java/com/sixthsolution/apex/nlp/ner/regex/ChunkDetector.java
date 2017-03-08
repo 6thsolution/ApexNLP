@@ -7,7 +7,7 @@ import com.nobigsoftware.dfalex.StringMatcher;
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.dict.TagValue;
 import com.sixthsolution.apex.nlp.dict.Tags;
-import com.sixthsolution.apex.nlp.ner.Category;
+import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
 import com.sixthsolution.apex.nlp.ner.Entity;
 import com.sixthsolution.apex.nlp.tagger.TaggedWord;
@@ -24,7 +24,7 @@ import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
 
 public abstract class ChunkDetector {
 
-    protected final DfaState<Category> state;
+    protected final DfaState<Label> state;
     protected final List<ChunkDetectionFilter> filters;
 
     public ChunkDetector() {
@@ -32,9 +32,9 @@ public abstract class ChunkDetector {
         state = createDFA();
     }
 
-    private DfaState<Category> createDFA() {
-        DfaBuilder<Category> builder = new DfaBuilder<>();
-        for (Pair<Category, Pattern> pair : getPatterns()) {
+    private DfaState<Label> createDFA() {
+        DfaBuilder<Label> builder = new DfaBuilder<>();
+        for (Pair<Label, Pattern> pair : getPatterns()) {
             builder.addPattern(pair.second, pair.first);
         }
         return builder.build(null);
@@ -43,7 +43,7 @@ public abstract class ChunkDetector {
     public ChunkedPart detect(TaggedWords taggedWords) {
         String sentence = convertTaggedWordsToCharSequence(taggedWords);
         StringMatcher matcher = new StringMatcher(sentence);
-        Category result;
+        Label result;
         while ((result = matcher.findNext(state)) != null) {
             int startIndex = matcher.getLastMatchStart();
             int endIndex = matcher.getLastMatchEnd();
@@ -54,6 +54,9 @@ public abstract class ChunkDetector {
                                 taggedWords.subList(startIndex, endIndex));
                     }
                 }
+            } else {
+                return new ChunkedPart(getEntity(), result,
+                        taggedWords.subList(startIndex, endIndex));
             }
         }
         return null;
@@ -79,13 +82,13 @@ public abstract class ChunkDetector {
         return Tag.NONE;
     }
 
-    protected abstract List<Pair<Category, Pattern>> getPatterns();
+    protected abstract List<Pair<Label, Pattern>> getPatterns();
 
     protected abstract List<ChunkDetectionFilter> getFilters();
 
     protected abstract Entity getEntity();
 
-    public static Pair<Category, Pattern> newPattern(Category category, Pattern pattern) {
-        return new Pair<>(category, pattern);
+    public static Pair<Label, Pattern> newPattern(Label label, Pattern pattern) {
+        return new Pair<>(label, pattern);
     }
 }

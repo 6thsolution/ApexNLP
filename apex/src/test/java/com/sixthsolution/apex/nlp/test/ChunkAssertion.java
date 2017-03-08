@@ -1,13 +1,13 @@
 package com.sixthsolution.apex.nlp.test;
 
-import com.sixthsolution.apex.nlp.ner.Category;
+import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
 
 import java.util.List;
 
-import static com.sixthsolution.apex.nlp.ner.Category.DATE;
-import static com.sixthsolution.apex.nlp.ner.Category.LOCATION;
-import static com.sixthsolution.apex.nlp.ner.Category.TIME;
+import static com.sixthsolution.apex.nlp.ner.Label.DATE;
+import static com.sixthsolution.apex.nlp.ner.Label.LOCATION;
+import static com.sixthsolution.apex.nlp.ner.Label.TIME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -48,20 +48,20 @@ public class ChunkAssertion {
         assertChunk(date, DATE);
         return this;
     }
-    private ChunkedPart getChunkedPartByType(Category type) {
+    private ChunkedPart getChunkedPartByType(Label type) {
         for (ChunkedPart part : chunkedParts) {
-            if (part.getCategory().equals(type)) {
+            if (part.getLabel().equals(type)) {
                 return part;
             }
         }
         return null;
     }
 
-    private void assertEmpty(Category type) {
+    private void assertEmpty(Label type) {
         assertNull(getChunkedPartByType(type));
     }
 
-    private void assertChunk(String phrase, Category type) {
+    private void assertChunk(String phrase, Label type) {
         ChunkedPart chunk = getChunkedPartByType(type);
         assertNotNull(chunk);
         assertEquals(phrase, chunk.toStringTaggedWords());

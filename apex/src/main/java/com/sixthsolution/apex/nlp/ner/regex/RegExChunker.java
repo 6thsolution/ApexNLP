@@ -13,9 +13,9 @@ import java.util.List;
 
 public class RegExChunker implements Chunker {
 
-    private final List<ChunkDetector> chunkDetectors;
+    private final List<? extends ChunkDetector> chunkDetectors;
 
-    public RegExChunker(List<ChunkDetector> chunkDetectors) {
+    public RegExChunker(List<? extends ChunkDetector> chunkDetectors) {
         this.chunkDetectors = chunkDetectors;
     }
 

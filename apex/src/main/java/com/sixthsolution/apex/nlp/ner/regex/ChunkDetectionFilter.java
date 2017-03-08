@@ -1,6 +1,6 @@
 package com.sixthsolution.apex.nlp.ner.regex;
 
-import com.sixthsolution.apex.nlp.ner.Category;
+import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 
 /**
@@ -9,5 +9,5 @@ import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 
 public abstract class ChunkDetectionFilter {
 
-    public abstract boolean accept(Category result, TaggedWords taggedWords, int startIndex, int endIndex);
+    public abstract boolean accept(Label result, TaggedWords taggedWords, int startIndex, int endIndex);
 }

@@ -35,7 +35,7 @@ public class ChunkerAssertion {
     }
 
     private ChunkAssertion makeChunkAssertion(String word) {
-        System.out.println("Category assertion for: " + word);
+        System.out.println("Label assertion for: " + word);
         long startTime = System.currentTimeMillis();
         TaggedWords taggedWords = tagger.tag(tokenizer.tokenize(word));
         ChunkAssertion result = new ChunkAssertion(chunker.chunk(taggedWords));

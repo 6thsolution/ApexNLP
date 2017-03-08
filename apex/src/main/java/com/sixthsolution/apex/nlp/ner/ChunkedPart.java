@@ -11,18 +11,22 @@ import java.util.List;
 public class ChunkedPart {
 
     private final Entity entity;
-    private final Category category;
+    private final Label label;
     private final List<TaggedWord> taggedWords;
 
-    public ChunkedPart(Entity entity,Category category,
+    public ChunkedPart(Entity entity,Label label,
                        List<TaggedWord> taggedWords) {
         this.entity =entity;
-        this.category = category;
+        this.label = label;
         this.taggedWords = taggedWords;
     }
 
-    public Category getCategory() {
-        return category;
+    public Label getLabel() {
+        return label;
+    }
+
+    public Entity getEntity() {
+        return entity;
     }
 
     public List<TaggedWord> getTaggedWords() {
@@ -39,6 +43,6 @@ public class ChunkedPart {
 
     @Override
     public String toString() {
-        return category.name() + " -> " + toStringTaggedWords() ;
+        return label.name() + " -> " + toStringTaggedWords() ;
     }
 }

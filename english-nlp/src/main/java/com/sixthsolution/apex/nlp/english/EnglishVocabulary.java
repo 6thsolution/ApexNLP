@@ -76,7 +76,7 @@ public final class EnglishVocabulary {
         vb.tag(TIME_RELATIVE, TIME)
                 .e(9, "morning")
                 .e(12, "noon")
-                .e(16, "evening", "afternoon", "after-noon")
+                .e(16, "in_the_evening", "in_the_afternoon", "in_the_after-noon")
                 .e(21, "night")
                 .e(23, "midnight", "mid-night")
                 .e(0, "now");//TODO current time
