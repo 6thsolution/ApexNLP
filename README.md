@@ -1,13 +1,32 @@
 # ApexNLP
-A natural language processing tool that makes it easy to create events like `Piano lessons Tuesday at 6pm`
+A natural language processing tool that makes it easy to create events like `Piano lessons Tuesdays at 6pm`. 
 
+ApexNLP is a deterministic rule-based system designed for recognizing and normalizing event expressions.  It will convert given sentences to a simple [`Event`](https://github.com/6thsolution/ApexNLP/blob/master/apex/src/main/java/com/sixthsolution/apex/model/Event.java) class.
 
-- [Features](#features)
+- [Features](#-features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [FAQ](#faq)
-- [Documentation](#documentation)
+- [Documentation](#-documentation)
 - [License](#license)
+
+## 🚀 Features
+*  Robust and Fast
+*  Easy to Use
+*  Support Multi Languages
+*  Written in Java and support Android 
+*  Support most date/time formats
+
+## Installation
+
+## Usage
+
+## 📖 Documentation
+
+| Title         | Description           | 
+| ------------- |:-------------|  
+| [Usage Workflows]() | How to use ApexNLP and its features. |
+| [API Reference]()      | Java doc for ApexNLP's API. | 
+| [Add New Languages]()      | How to add and support a new language to the ApexNLP project.      |   
 
 ## License
 
