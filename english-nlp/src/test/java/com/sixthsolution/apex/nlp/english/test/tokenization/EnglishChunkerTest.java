@@ -43,14 +43,15 @@
 //        assertSentence("1400 - 1600").hasTimeChunk("1400 - 1600");
 //        assertSentence("at 5-6pm").hasTimeChunk("at 5 - 6 pm");
 //        assertSentence("at nine till eleven").hasTimeChunk("at nine till eleven");
+//        assertSentence("from 5pm to 6pm").hasTimeChunk("from 5 pm to 6 pm");
+//        assertSentence("from 9 : 30 to 12 : 00").hasTimeChunk("from 9 : 30 to 12 : 00");
+//        assertSentence("from 9:30 till 12:00").hasTimeChunk("from 9 : 30 till 12 : 00");
+
 //        assertSentence("at nine for 5 hours").hasTimeChunk("at nine for 5 hours");
 //        assertSentence("at noon for 30 min").hasTimeChunk("at noon for 30 min");
-//        assertSentence("from 5pm to 6pm").hasTimeChunk("from 5 pm to 6 pm");
 //        assertSentence("in one hour").hasTimeChunk("in one hour");
-//        assertSentence("from 9:30 till 12:00").hasTimeChunk("from 9 : 30 till 12 : 00");
 //        assertSentence("from morning till 12 pm").hasTimeChunk("from morning till 12 pm");
 //        assertSentence("from now for 2 hour").hasTimeChunk("from now for 2 hour");
-//        assertSentence("from 9 : 30 to 12 : 00").hasTimeChunk("from 9 : 30 to 12 : 00");
 //        assertSentence("5 minutes before nine").hasTimeChunk("5 minutes before nine");
 //        assertSentence("an hour after noon").hasTimeChunk("an hour after noon");
 //    }

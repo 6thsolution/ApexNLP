@@ -50,16 +50,22 @@ public abstract class ChunkDetector {
             if (filters != null) {
                 for (ChunkDetectionFilter filter : filters) {
                     if (filter.accept(result, taggedWords, startIndex, endIndex)) {
-                        return new ChunkedPart(getEntity(), result,
-                                taggedWords.subList(startIndex, endIndex));
+                        return createChunkedPart(taggedWords, startIndex, endIndex, result);
                     }
                 }
             } else {
-                return new ChunkedPart(getEntity(), result,
-                        taggedWords.subList(startIndex, endIndex));
+                return createChunkedPart(taggedWords, startIndex, endIndex, result);
             }
         }
         return null;
+    }
+
+    private ChunkedPart createChunkedPart(TaggedWords taggedWords, int startIndex, int endIndex,
+                                          Label label) {
+        ChunkedPart chunkedPart = new ChunkedPart(getEntity(), label,
+                taggedWords.newSubList(startIndex, endIndex));
+        taggedWords.removeRange(startIndex, endIndex);
+        return chunkedPart;
     }
 
     private String convertTaggedWordsToCharSequence(TaggedWords taggedWords) {

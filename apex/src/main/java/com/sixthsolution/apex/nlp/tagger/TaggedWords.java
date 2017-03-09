@@ -2,6 +2,7 @@ package com.sixthsolution.apex.nlp.tagger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
@@ -26,4 +27,11 @@ public class TaggedWords extends ArrayList<TaggedWord> {
         return sb.toString();
     }
 
+    public List<TaggedWord> newSubList(int startIndex, int endIndex) {
+        List<TaggedWord> taggedWords = new ArrayList<>();
+        for (int i = startIndex; i < endIndex; i++) {
+            taggedWords.add(get(i));
+        }
+        return taggedWords;
+    }
 }

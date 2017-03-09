@@ -15,7 +15,8 @@ public class TimeDetectionFilter extends ChunkDetectionFilter {
 
     @Override
     public boolean accept(Label label, TaggedWords taggedWords, int startIndex, int endIndex) {
-        if (label.equals(Label.FIXED_TIME)) {
+        switch (label) {
+            case FIXED_TIME:
             //ignore single number
             if (startIndex == endIndex - 1 &&
                     taggedWords.get(startIndex).getTags().containsTag(NUMBER)) {
@@ -28,6 +29,8 @@ public class TimeDetectionFilter extends ChunkDetectionFilter {
                 return false;
             }
             return true;
+            case RANGE_TIME:
+                return true;
         }
         return false;
     }

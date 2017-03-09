@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static com.sixthsolution.apex.nlp.ner.Entity.TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.FIXED_TIME;
+import static com.sixthsolution.apex.nlp.ner.Label.RANGE_TIME;
 import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunkedPart;
 
 /**
@@ -35,6 +36,7 @@ public class TimeDetectorTest {
         assertChunkedPart("6p_m").text("6 p_m").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("6p").text("6 p").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("at 23:10").text("at 23 : 10").label(FIXED_TIME).entity(TIME);
+        assertChunkedPart("at 8.20 pm").text("at 8 . 20 pm").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("23:10").text("23 : 10").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("at four").text("at four").label(FIXED_TIME).entity(TIME);
     }
@@ -43,6 +45,27 @@ public class TimeDetectorTest {
     public void test_invalid_fixed_time(){
         assertChunkedPart("7").noDetection();
         assertChunkedPart("12.2.2016").noDetection();
+    }
 
+    @Test
+    public void test_range_time() {
+        assertChunkedPart("from 5pm till 6pm").text("from 5 pm till 6 pm")
+                .label(RANGE_TIME)
+                .entity(TIME);
+        assertChunkedPart("at 5-6pm").text("at 5 - 6 pm")
+                .label(RANGE_TIME)
+                .entity(TIME);
+        assertChunkedPart("at nine till eleven").text("at nine till eleven")
+                .label(RANGE_TIME)
+                .entity(TIME);
+        assertChunkedPart("from 5pm to 6pm").text("from 5 pm to 6 pm")
+                .label(RANGE_TIME)
+                .entity(TIME);
+        assertChunkedPart("from 9:30 to 10:30").text("from 9 : 30 to 10 : 30")
+                .label(RANGE_TIME)
+                .entity(TIME);
+        assertChunkedPart("from morning - 9pm").text("from morning - 9 pm")
+                .label(RANGE_TIME)
+                .entity(TIME);
     }
 }
