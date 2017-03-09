@@ -39,4 +39,10 @@ public class TimeDetectorTest {
         assertChunkedPart("at four").text("at four").label(FIXED_TIME).entity(TIME);
     }
 
+    @Test
+    public void test_invalid_fixed_time(){
+        assertChunkedPart("7").noDetection();
+        assertChunkedPart("12.2.2016").noDetection();
+
+    }
 }

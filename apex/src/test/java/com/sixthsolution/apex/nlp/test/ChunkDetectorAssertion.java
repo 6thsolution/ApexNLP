@@ -11,6 +11,7 @@ import com.sixthsolution.apex.nlp.tokenization.Tokenizer;
 import java.util.Iterator;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -76,6 +77,11 @@ public class ChunkDetectorAssertion {
                 }
             }
             assertEquals(text, sb.toString());
+            return this;
+        }
+
+        public ChunkedPartAssertion noDetection() {
+            assertNull(chunkedPart);
             return this;
         }
     }

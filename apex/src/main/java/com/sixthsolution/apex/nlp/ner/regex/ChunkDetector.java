@@ -7,9 +7,9 @@ import com.nobigsoftware.dfalex.StringMatcher;
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.dict.TagValue;
 import com.sixthsolution.apex.nlp.dict.Tags;
-import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
 import com.sixthsolution.apex.nlp.ner.Entity;
+import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.tagger.TaggedWord;
 import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 import com.sixthsolution.apex.nlp.util.Pair;
@@ -25,7 +25,7 @@ import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
 public abstract class ChunkDetector {
 
     protected final DfaState<Label> state;
-    protected final List<ChunkDetectionFilter> filters;
+    protected final List<? extends ChunkDetectionFilter> filters;
 
     public ChunkDetector() {
         filters = getFilters();
@@ -84,7 +84,7 @@ public abstract class ChunkDetector {
 
     protected abstract List<Pair<Label, Pattern>> getPatterns();
 
-    protected abstract List<ChunkDetectionFilter> getFilters();
+    protected abstract List<? extends ChunkDetectionFilter> getFilters();
 
     protected abstract Entity getEntity();
 

@@ -9,5 +9,5 @@ import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 
 public abstract class ChunkDetectionFilter {
 
-    public abstract boolean accept(Label result, TaggedWords taggedWords, int startIndex, int endIndex);
+    public abstract boolean accept(Label label, TaggedWords taggedWords, int startIndex, int endIndex);
 }

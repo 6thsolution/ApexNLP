@@ -1,11 +1,19 @@
-# ApexNLP
+<p align="center">
+<img  src="https://raw.githubusercontent.com/6thsolution/ApexNLP/master/logo.png" width="200" height="200" />
+</p>
+
+[![Build Status](https://travis-ci.org/6thsolution/ApexNLP.svg?branch=master)](https://travis-ci.org/6thsolution/ApexNLP) 
+[![codecov](https://codecov.io/gh/6thsolution/ApexNLP/branch/master/graph/badge.svg)](https://codecov.io/gh/6thsolution/ApexNLP)
+[![GitHub Issues](https://img.shields.io/github/issues/6thsolution/ApexNLP.svg)](https://github.com/6thsolution/ApexNLP/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/6thsolution/ApexNLP.svg)](https://github.com/6thsolution/ApexNLP/stargazers)
+
 A natural language processing tool that makes it easy to create events like `Piano lessons Tuesdays at 6pm`. 
 
 ApexNLP is a deterministic rule-based system designed for recognizing and normalizing event expressions.  It will convert given sentences to a simple [`Event`](https://github.com/6thsolution/ApexNLP/blob/master/apex/src/main/java/com/sixthsolution/apex/model/Event.java) class.
 
 - [Features](#-features)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Example](#example)
 - [Documentation](#-documentation)
 - [License](#license)
 
@@ -18,7 +26,7 @@ ApexNLP is a deterministic rule-based system designed for recognizing and normal
 
 ## Installation
 
-## Usage
+## Example
 
 ## 📖 Documentation
 

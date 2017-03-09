@@ -2,6 +2,7 @@ package com.sixthsolution.apex.nlp.english;
 
 import com.nobigsoftware.dfalex.Matchable;
 import com.nobigsoftware.dfalex.Pattern;
+import com.sixthsolution.apex.nlp.english.filter.TimeDetectionFilter;
 import com.sixthsolution.apex.nlp.ner.Entity;
 import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.regex.ChunkDetectionFilter;
@@ -34,6 +35,9 @@ public class TimeDetector extends ChunkDetector {
         return match(TIME_RELATIVE.toString());
     }
 
+    /**
+     * @return returns hh:mm am/pm
+     */
     private static Matchable time_hour_min() {
         return match(NUMBER.toString()).thenMaybe(
                 match(TIME_SEPARATOR.toString()).then(NUMBER.toString()))
@@ -55,8 +59,8 @@ public class TimeDetector extends ChunkDetector {
     }
 
     @Override
-    protected List<ChunkDetectionFilter> getFilters() {
-        return null;
+    protected List<? extends ChunkDetectionFilter> getFilters() {
+        return Arrays.asList(new TimeDetectionFilter());
     }
 
     @Override
