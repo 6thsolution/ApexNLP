@@ -1,4 +1,4 @@
-# dfalex
+# dfalex backport
 
 Scanning / Lexical Analysis Without All The Fuss
 ================================================
@@ -21,8 +21,7 @@ Start Here:
 Requirements
 ------------
 
-DFALex needs Java 8 or better.  No special libraries are required. The latest release is in the releases tab, or you can grab the very latest source (new features that might be broken!) from src/.
-
+DFALex needs Java 7 or better.  No special libraries are required. 
 If you want to run the tests, you'll need JUnit4.
 
 About
