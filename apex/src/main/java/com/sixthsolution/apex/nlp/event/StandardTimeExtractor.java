@@ -19,35 +19,59 @@ public class StandardTimeExtractor implements Extractor {
     public void extract(EventBuilder builder, LocalDateTime source, ChunkedPart chunkedPart) {
         switch (chunkedPart.getLabel()) {
             case FIXED_TIME:
-                Pair<LocalTime, LocalTime> time = getFixedTime(source, chunkedPart);
+            case RANGE_TIME:
+                Pair<LocalTime, LocalTime> time = getFixedOrRangeTime(source, chunkedPart);
                 builder.setStartTime(time.first);
                 builder.setEndTime(time.second);
                 break;
+
         }
     }
 
-    private Pair<LocalTime, LocalTime> getFixedTime(LocalDateTime source,
-                                                    ChunkedPart chunkedPart) {
-        int hour = -1, min = 0;
+    private Pair<LocalTime, LocalTime> getFixedOrRangeTime(LocalDateTime source,
+                                                           ChunkedPart chunkedPart) {
+        int startHour = -1, startMin = 0;
+        int endHour = -1, endMin = 0;
+        boolean switchToEnd = false;
         for (TaggedWord taggedWord : chunkedPart.getTaggedWords()) {
             TagValue number = taggedWord.getTags().containsTagByValue(Tag.NUMBER);
             if (number == null) {
                 number = taggedWord.getTags().containsTagByValue(Tag.TIME_RELATIVE);
             }
             if (number != null) {
-                if (hour == -1) {
-                    hour = (Integer) number.value;
-                } else {
-                    min = (Integer) number.value;
+                int numberVal = (Integer) number.value;
+                if (!switchToEnd && startHour == -1) {
+                    startHour = numberVal;
+                } else if (!switchToEnd) {
+                    startMin = numberVal;
+                } else if (switchToEnd && endHour == -1) {
+                    endHour = numberVal;
+                } else if (switchToEnd) {
+                    endMin = numberVal;
                 }
             } else {
                 TagValue med = taggedWord.getTags().containsTagByValue(Tag.TIME_MERIDIEM);
                 if (med != null) {
-                    hour += (Integer) med.value;
+                    if (!switchToEnd) {
+                        startHour += (Integer) med.value;
+                    } else {
+                        endHour += (Integer) med.value;
+                    }
+                } else {
+                    TagValue rangeSwitch = taggedWord.getTags().containsTagByValue(Tag.TIME_RANGE);
+                    if (rangeSwitch != null) {
+                        switchToEnd = true;
+                    }
                 }
             }
         }
-        LocalTime startTime = source.toLocalTime().withHour(hour).withMinute(min);
-        return new Pair<>(startTime, startTime.plusHours(1));
+        LocalTime startTime = source.toLocalTime().withHour(startHour).withMinute(startMin);
+        LocalTime endTime = null;
+        if (endHour == -1) {
+            endTime = startTime.plusHours(1);
+        } else {
+            endTime = source.toLocalTime().withHour(endHour).withMinute(endMin);
+        }
+        return new Pair<>(startTime, endTime);
     }
 }

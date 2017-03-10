@@ -50,11 +50,17 @@ public class ParserAssertion {
             return this;
         }
 
+        public EventAssertion endTime(String exceptedFormat) {
+            assertTime(event.end().toLocalTime(), exceptedFormat);
+            return this;
+        }
+
         private void assertTime(LocalTime actual, String exceptedFormat) {
             LocalTime excepted = LocalTime.parse(exceptedFormat);
             assertEquals(excepted.getHour(), actual.getHour());
             assertEquals(excepted.getMinute(), actual.getMinute());
 
         }
+
     }
 }

@@ -22,7 +22,12 @@ public class EventTest {
 
     @Test
     public void foo() {
-        assertEvent("Grocery shopping at Wegmans Thursday at 5pm").startTime("17:00");
+        assertEvent("Grocery shopping at Wegmans Thursday at 5pm")
+                .startTime("17:00")
+                .endTime("18:00");
+        assertEvent("12/09 Meet John at Mall from 9:30 to 12:00").
+                startTime("09:30")
+                .endTime("12:00");
     }
 
 }
