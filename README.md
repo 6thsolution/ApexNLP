@@ -65,7 +65,7 @@ public class ExampleActivity extends Activity {
     <td><p>Java doc for ApexNLP's API.</p></td>
   </tr>
   <tr>
-    <td><a href="">Support New Languages</a></td>
+    <td><a href="https://github.com/6thsolution/ApexNLP/wiki/Multiple-Languages-Support">Multiple Languages Support</a></td>
     <td><p>How to add and support a new language to the ApexNLP project. </p></td>
   </tr>
 </table>
