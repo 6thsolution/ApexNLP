@@ -24,6 +24,17 @@ public class Tags extends ArrayList<TagValue> {
         return false;
     }
 
+    public TagValue containsTagByValue(Tag tag) {
+        Iterator<TagValue> iterator = iterator();
+        while (iterator.hasNext()) {
+            TagValue next = iterator.next();
+            if (next.tag.equals(tag)) {
+                return next;
+            }
+        }
+        return null;
+    }
+
     public boolean containsTag(Tag... tags) {
         return containsTag(Arrays.asList(tags));
     }

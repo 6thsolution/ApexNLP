@@ -33,8 +33,8 @@ public class TaggedWord {
         return tags;
     }
 
-    public boolean hasTag(Collection<Tag> validTags) {
-        return getTags().containsTag(validTags);
+    public boolean hasTag(Tag... tags) {
+        return getTags().containsTag(tags);
     }
 
     @Override

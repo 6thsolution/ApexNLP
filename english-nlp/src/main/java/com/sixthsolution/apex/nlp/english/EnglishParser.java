@@ -1,5 +1,7 @@
 package com.sixthsolution.apex.nlp.english;
 
+import com.sixthsolution.apex.nlp.event.EventDetector;
+import com.sixthsolution.apex.nlp.event.StandardEventDetector;
 import com.sixthsolution.apex.nlp.ner.Chunker;
 import com.sixthsolution.apex.nlp.ner.regex.RegExChunker;
 import com.sixthsolution.apex.nlp.parser.StandardParserBase;
@@ -28,5 +30,10 @@ public class EnglishParser extends StandardParserBase {
     @Override
     protected Chunker provideChunker() {
         return new RegExChunker(Arrays.asList(new TimeDetector()));
+    }
+
+    @Override
+    protected EventDetector provideEventDetector() {
+        return new StandardEventDetector();
     }
 }
