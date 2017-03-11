@@ -14,9 +14,11 @@ import java.util.List;
 public class StandardEventDetector implements EventDetector {
 
     protected Extractor timeExtractor;
+    protected Extractor dateExtractor;
 
     public StandardEventDetector() {
         timeExtractor = provideTimeExtractor();
+        dateExtractor = provideDateExtractor();
     }
 
     @Override
@@ -27,6 +29,9 @@ public class StandardEventDetector implements EventDetector {
                 case TIME:
                     timeExtractor.extract(builder, source, part);
                     break;
+                case DATE:
+                    dateExtractor.extract(builder, source, part);
+                    break;
             }
         }
         return builder.build(source);
@@ -34,5 +39,9 @@ public class StandardEventDetector implements EventDetector {
 
     protected Extractor provideTimeExtractor() {
         return new StandardTimeExtractor();
+    }
+
+    protected Extractor provideDateExtractor() {
+        return new StandardDateExtractor();
     }
 }

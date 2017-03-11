@@ -2,6 +2,7 @@ package com.sixthsolution.apex.nlp.event;
 
 import com.sixthsolution.apex.model.Event;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 
@@ -13,6 +14,8 @@ public class EventBuilder {
 
     private LocalTime startTime = null;
     private LocalTime endTime = null;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Event build(LocalDateTime source) {
         if (startTime == null) {
@@ -21,8 +24,15 @@ public class EventBuilder {
         if (endTime == null) {
             endTime = startTime.plusHours(1);
         }
-        LocalDateTime startDateTime = LocalDateTime.of(source.toLocalDate(), startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(source.toLocalDate(), endTime);
+        if (startDate == null) {
+            startDate = source.toLocalDate();
+        }
+        if (endDate == null) {
+            endDate = startDate;
+        }
+
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
         return new Event("", startDateTime, endDateTime, false, null);
     }
@@ -36,4 +46,11 @@ public class EventBuilder {
     }
 
 
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 }

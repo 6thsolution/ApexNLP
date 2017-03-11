@@ -3,6 +3,7 @@ package com.sixthsolution.apex.nlp.test;
 import com.sixthsolution.apex.model.Event;
 import com.sixthsolution.apex.nlp.parser.Parser;
 
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
@@ -39,28 +40,64 @@ public class ParserAssertion {
     public static class EventAssertion {
 
         private final Event event;
-        private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
         public EventAssertion(Event event) {
             this.event = event;
         }
 
-        public EventAssertion startTime(String exceptedFormat) {
-            assertTime(event.start().toLocalTime(), exceptedFormat);
+        public EventAssertion start(String expectedAsString) {
+            assertDateTime(event.start(), expectedAsString);
             return this;
         }
 
-        public EventAssertion endTime(String exceptedFormat) {
-            assertTime(event.end().toLocalTime(), exceptedFormat);
+        public EventAssertion end(String expectedAsString) {
+            assertDateTime(event.end(), expectedAsString);
             return this;
         }
 
-        private void assertTime(LocalTime actual, String exceptedFormat) {
-            LocalTime excepted = LocalTime.parse(exceptedFormat);
-            assertEquals(excepted.getHour(), actual.getHour());
-            assertEquals(excepted.getMinute(), actual.getMinute());
+        private void assertDateTime(LocalDateTime actual, String expectedAsString) {
+            LocalDateTime expected = LocalDateTime.parse(expectedAsString, formatter);
+            assertEquals(expected.getYear(), actual.getYear());
+            assertEquals(expected.getDayOfMonth(), actual.getDayOfMonth());
+            assertEquals(expected.getMonthValue(), actual.getMonthValue());
+            assertEquals(expected.getHour(), actual.getHour());
+            assertEquals(expected.getMinute(), actual.getMinute());
+        }
+
+        public EventAssertion startTime(String expectedAsString) {
+            assertTime(event.start().toLocalTime(), expectedAsString);
+            return this;
+        }
+
+        public EventAssertion endTime(String expectedAsString) {
+            assertTime(event.end().toLocalTime(), expectedAsString);
+            return this;
+        }
+
+        private void assertTime(LocalTime actual, String expectedAsString) {
+            LocalTime expected = LocalTime.parse(expectedAsString);
+            assertEquals(expected.getHour(), actual.getHour());
+            assertEquals(expected.getMinute(), actual.getMinute());
 
         }
 
+        public EventAssertion startDate(String expectedAsString) {
+            assertDate(event.start().toLocalDate(), expectedAsString);
+            return this;
+        }
+
+        public EventAssertion endDate(String expectedAsString) {
+            assertDate(event.end().toLocalDate(), expectedAsString);
+            return this;
+        }
+
+        private void assertDate(LocalDate actual, String expectedAsString) {
+            LocalDate expected = LocalDate.parse(expectedAsString);
+            assertEquals(expected.getYear(), actual.getYear());
+            assertEquals(expected.getDayOfMonth(), actual.getDayOfMonth());
+            assertEquals(expected.getMonthValue(), actual.getMonthValue());
+
+        }
     }
 }
