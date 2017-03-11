@@ -11,7 +11,7 @@ android:
     - sys-img-armeabi-v7a-android-18
 
 jdk:
-  - oraclejdk8
+  - oraclejdk7
 
 cache:
   directories:
