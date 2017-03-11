@@ -17,13 +17,13 @@ buildscript {
 group GROUP
 version VERSION_NAME
 
-def noCommonModules = ["sample-android", "dfalex"]
+def ingoreModules = ["sample-android", "dfalex"]
 subprojects { subproj ->
     group GROUP
     version VERSION_NAME
 //    apply plugin: 'idea'
 //
-    if (!noCommonModules.contains(subproj.name)) {
+    if (!ingoreModules.contains(subproj.name)) {
         apply plugin: 'java'
         sourceCompatibility = 1.7
         targetCompatibility = 1.7

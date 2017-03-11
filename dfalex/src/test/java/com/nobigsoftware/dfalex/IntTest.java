@@ -20,7 +20,7 @@ public class IntTest extends TestBase
             builder.addPattern(Pattern.match(Integer.toString(i)), i%7);
         }
         long tstart = System.currentTimeMillis();
-        DfaState<?> start = builder.build(null);
+        DfaState<Integer> start = builder.build(null);
         int numstates = _countStates(start);
         long telapsed = System.currentTimeMillis() - tstart;
         System.out.printf("Mininmized 100000 numbers -> value mod 7 (down to %d states) in %1.3f seconds",
@@ -29,7 +29,7 @@ public class IntTest extends TestBase
         Assert.assertEquals(null, StringMatcher.matchWholeString(start, "100001"));
         for (int i=0;i<100000;++i)
         {
-            Assert.assertEquals(i%7, StringMatcher.matchWholeString(start, Integer.toString(i)));
+            Assert.assertEquals(Integer.valueOf(i%7), StringMatcher.matchWholeString(start, Integer.toString(i)));
         }
         Assert.assertEquals(36, numstates);
     }
