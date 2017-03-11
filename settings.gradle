@@ -1,4 +1,4 @@
-include ':sample-android'
+//include ':sample-android'
 rootProject.name = 'ApexNLP'
 include 'apex'
 include 'english-nlp'
