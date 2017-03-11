@@ -6,6 +6,10 @@
         <img src="https://travis-ci.org/6thsolution/ApexNLP.svg?branch=master"
              alt="Build Status">
     </a>
+     <a href="https://bintray.com/6thsolution/apexnlp/apex/_latestVersion">
+        <img src="https://api.bintray.com/packages/6thsolution/apexnlp/apex/images/download.svg"
+             alt="Latest Version">
+    </a>
     <a href="https://codecov.io/gh/6thsolution/ApexNLP">
         <img src="https://codecov.io/gh/6thsolution/ApexNLP/branch/master/graph/badge.svg"
              alt="codecov">
