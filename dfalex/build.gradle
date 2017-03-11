@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply from: rootProject.file('gradle/jfrog-uploader.gradle')
-apply from: rootProject.file('gradle/jacoco.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 
 sourceCompatibility = 1.8
@@ -11,6 +10,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-
-
+test {
+    exclude 'com/nobigsoftware/**'
+}
 
