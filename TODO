@@ -1,7 +1,7 @@
 # English NLP
 1. Support Go to [place name]
 2. Support time like( half past ten, next hour)
-
+3. Support 930am
 
 http://www.nltk.org/book/ch07.html
 http://www.slideshare.net/gagan1667/opennlp-demo

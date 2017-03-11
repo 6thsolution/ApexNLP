@@ -46,11 +46,18 @@ public class ExampleApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
-    //TODO
+    Apex.init(new Apex.ApexBuilder()
+                 .addParser("en", new EnglishParser())
+                    .build()); 
   }
+  
 }
 
 public class ExampleActivity extends Activity {
+
+     public Event getEvent(String sentence){
+         return Apex.nlp("en", sentence);                    
+     }
 }
 ```
 

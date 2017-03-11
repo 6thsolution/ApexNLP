@@ -33,10 +33,14 @@ public class StandardTimeExtractor implements Extractor {
         int startHour = -1, startMin = 0;
         int endHour = -1, endMin = 0;
         boolean switchToEnd = false;
+        boolean appliedMeridiemToStartHour = false;
         for (TaggedWord taggedWord : chunkedPart.getTaggedWords()) {
             TagValue number = taggedWord.getTags().containsTagByValue(Tag.NUMBER);
             if (number == null) {
                 number = taggedWord.getTags().containsTagByValue(Tag.TIME_RELATIVE);
+                if (number != null && startHour == -1) {
+                    appliedMeridiemToStartHour = true;
+                }
             }
             if (number != null) {
                 int numberVal = (Integer) number.value;
@@ -52,10 +56,14 @@ public class StandardTimeExtractor implements Extractor {
             } else {
                 TagValue med = taggedWord.getTags().containsTagByValue(Tag.TIME_MERIDIEM);
                 if (med != null) {
-                    if (!switchToEnd) {
+                    if (!switchToEnd && startHour <= 12) {
                         startHour += (Integer) med.value;
-                    } else {
+                        appliedMeridiemToStartHour = true;
+                    } else if (endHour <= 12) {
                         endHour += (Integer) med.value;
+                        if (!appliedMeridiemToStartHour && startHour <= 12) {
+                            startHour += (Integer) med.value;
+                        }
                     }
                 } else {
                     TagValue rangeSwitch = taggedWord.getTags().containsTagByValue(Tag.TIME_RANGE);

@@ -18,6 +18,12 @@ import java.util.Arrays;
 public class EnglishParser extends StandardParserBase {
 
     @Override
+    public void initialize() {
+        super.initialize();
+        //TODO need some training sentences
+    }
+
+    @Override
     protected Tagger provideTagger() {
         return new StandardTagger(EnglishVocabulary.build());
     }
