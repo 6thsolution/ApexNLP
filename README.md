@@ -42,6 +42,28 @@ A natural language processing tool that makes it easy to create events like `Pia
 *  Support most date/time formats
 
 ## Installation
+First add our repository:
+```groovy
+repositories {
+    //...
+    maven {
+        url  "http://dl.bintray.com/6thsolution/apexnlp"
+    }
+
+}
+```
+Then add needed libraries:
+```groovy
+dependencies{
+    //ApexNLP core library
+    compile 'com.sixthsolution.apex:apex:0.1.0-alpha1'
+    //NLP for English
+    compile 'com.sixthsolution.apex:english-nlp:0.1.0-alpha1'
+    //ThreeTen 
+    compile 'org.threeten:threetenbp:1.3.3'
+}
+```
+**Note:** If you are using android, replace _threeten_ dependency with [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP)
 
 ## Example
 Below you can see a sample usage of **ApexNLP** in android:
