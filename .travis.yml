@@ -1,14 +1,4 @@
-language: android
-install: true
-
-android:
-  components:
-    - tools
-    - platform-tools
-    - build-tools-25.0.0
-    - android-25
-    - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-18
+language: java
 
 jdk:
   - oraclejdk7
