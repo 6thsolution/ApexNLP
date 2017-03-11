@@ -55,9 +55,10 @@ public class ExampleApplication extends Application {
 
 public class ExampleActivity extends Activity {
 
-     public Event getEvent(String sentence){
-         return Apex.nlp("en", sentence);                    
-     }
+  public Event getEvent(String sentence){
+    return Apex.nlp("en", sentence);                    
+  }
+  
 }
 ```
 

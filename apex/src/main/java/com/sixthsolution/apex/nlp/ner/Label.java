@@ -6,6 +6,7 @@ package com.sixthsolution.apex.nlp.ner;
 
 public enum Label {
     NONE, DATE, TIME, LOCATION, TITLE,
-    FIXED_TIME, RELATIVE_TIME, RANGE_TIME;
+    FIXED_TIME, RELATIVE_TIME, RANGE_TIME,
+    FORMAL_DATE
 
 }
