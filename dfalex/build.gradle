@@ -1,4 +1,6 @@
 apply plugin: 'java'
+apply from: rootProject.file('gradle/jfrog-uploader.gradle')
+apply from: rootProject.file('gradle/jacoco.gradle')
 apply plugin: 'me.tatarka.retrolambda'
 
 sourceCompatibility = 1.8

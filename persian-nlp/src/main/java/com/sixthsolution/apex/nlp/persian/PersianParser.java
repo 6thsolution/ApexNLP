@@ -2,9 +2,15 @@ package com.sixthsolution.apex.nlp.persian;
 
 import com.sixthsolution.apex.nlp.dict.Dictionary;
 import com.sixthsolution.apex.nlp.dict.DictionaryBuilder;
+import com.sixthsolution.apex.nlp.event.EventDetector;
+import com.sixthsolution.apex.nlp.event.StandardEventDetector;
+import com.sixthsolution.apex.nlp.ner.Chunker;
+import com.sixthsolution.apex.nlp.ner.regex.RegExChunker;
 import com.sixthsolution.apex.nlp.parser.StandardParserBase;
 import com.sixthsolution.apex.nlp.tagger.Tagger;
 import com.sixthsolution.apex.nlp.tokenization.Tokenizer;
+
+import java.util.Arrays;
 
 import static com.sixthsolution.apex.nlp.dict.Tag.DATE_SEPARATOR;
 import static com.sixthsolution.apex.nlp.dict.Tag.MONTH_NAME;
@@ -128,5 +134,15 @@ public class PersianParser extends StandardParserBase {
     @Override
     protected Tokenizer provideTokenizer() {
         return new PersianTokenizer();
+    }
+
+    @Override
+    protected Chunker provideChunker() {
+        return new RegExChunker(null);
+    }
+
+    @Override
+    protected EventDetector provideEventDetector() {
+        return new StandardEventDetector();
     }
 }

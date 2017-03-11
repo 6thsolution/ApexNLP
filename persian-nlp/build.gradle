@@ -1,3 +1,6 @@
+apply from: rootProject.file('gradle/jfrog-uploader.gradle')
+apply from: rootProject.file('gradle/jacoco.gradle')
+
 dependencies {
     compile project(':apex')
 

@@ -1,0 +1,33 @@
+language: android
+install: true
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-25.0.0
+    - android-25
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-18
+
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
+
+before_script:
+    - chmod +x gradlew
+    - chmod +x .script/deploy_artifacts.sh
+
+script:
+  - ./gradlew clean build --info
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - .script/deploy_artifacts.sh
+
+notifications:
+  email: false

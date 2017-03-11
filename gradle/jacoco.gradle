@@ -1,0 +1,28 @@
+apply plugin: "jacoco"
+
+jacocoTestReport {
+    dependsOn = [test]
+    group = "Jacoco Reporting"
+    description = "Aggregate Jacoco coverage reports."
+    additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    executionData = fileTree(dir: 'build/jacoco', include: '**/*.exec')
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        csv.enabled = false
+        html.destination = "${buildDir}/reports/jacoco/test/html"
+        xml.destination = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+    }
+    onlyIf = {
+        true
+    }
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
+    }
+}
+
+check.dependsOn jacocoTestReport
