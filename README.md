@@ -26,13 +26,41 @@
 
 A natural language processing tool that makes it easy to create events like `Piano lessons Tuesdays at 6pm`. 
 
-**ApexNLP** is a deterministic rule-based system designed for recognizing and normalizing event expressions.  It will convert given sentences to a simple [`Event`](https://github.com/6thsolution/ApexNLP/blob/master/apex/src/main/java/com/sixthsolution/apex/model/Event.java) class.
+**ApexNLP** is a deterministic rule-based system designed for recognizing and normalizing different formats of event expressions.  It will convert given sentences to a simple [`Event`](https://github.com/6thsolution/ApexNLP/blob/master/apex/src/main/java/com/sixthsolution/apex/model/Event.java) class. Out-of-the-box, it expects and processes English language text. But, it was designed to work with multiple human languages
 
+- [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
 - [Example](#example)
 - [Documentation](#documentation)
 - [License](#license)
+
+## Overview
+There are many date/time parsers like [natty](natty.joestelmach.com) or [chrono](https://github.com/wanasit/chrono). But ApexNLP is not another date/time parser, It is an event parser with some NLP tasks which helps you to easily create a calendar Event. It support most event formats from simple to complex:
+
+For example, this event `Lunch at noon for 30 minutes` will convert to:
+```javascript
+{
+  "title" : "Lunch",
+  "location" : "",
+  "startDateTime" : "2017/4/13 12:00",
+  "endDateTime" : "2017/4/13 12:30",
+  "isAllDay" : false,
+  "recurrence" : null
+}
+```
+or `Family Vacation at Singapore from 12/4 for six days`:
+
+```javascript
+{
+  "title" : "Family Vacation ",
+  "location" : "Singapore",
+  "startDateTime" : "2017/12/04",
+  "endDateTime" : "2017/12/09",
+  "isAllDay" : true,
+  "recurrence" : null
+}
+```
 
 ## Features
 *  Robust and Fast
@@ -91,7 +119,7 @@ public class ExampleActivity extends Activity {
 ## Documentation
 <table>
   <tr>
-    <td><a href="">Usage Workflows</a></td>
+    <td><a href="https://github.com/6thsolution/ApexNLP/wiki/Usage-Workflows">Usage Workflows</a></td>
     <td><p>How to use ApexNLP and its features.</p></td>
   </tr>
   <tr>
