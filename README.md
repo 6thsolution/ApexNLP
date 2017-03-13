@@ -36,7 +36,7 @@ A natural language processing tool that makes it easy to create events like `Pia
 - [License](#license)
 
 ## Overview
-There are many date/time parsers like [natty](natty.joestelmach.com) or [chrono](https://github.com/wanasit/chrono). But ApexNLP is not another date/time parser, It is an event parser with some NLP tasks which helps you to easily create a calendar Event. It support most event formats from simple to complex:
+There are many date/time parsers like [natty](https://natty.joestelmach.com) or [chrono](https://github.com/wanasit/chrono). But ApexNLP is not another date/time parser, It is an event parser with some NLP tasks which helps you to easily create a calendar Event. It support most event formats from simple to complex:
 
 For example, this event `Lunch at noon for 30 minutes` will convert to:
 ```javascript
