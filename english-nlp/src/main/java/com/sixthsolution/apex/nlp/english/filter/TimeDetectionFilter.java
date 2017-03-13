@@ -36,6 +36,8 @@ public class TimeDetectionFilter extends ChunkDetectionFilter {
                     return false;
                 }
                 return true;
+            case RELATIVE_TIME:
+                return true;
         }
         return false;
     }

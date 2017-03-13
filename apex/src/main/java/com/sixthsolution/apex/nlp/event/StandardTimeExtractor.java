@@ -9,6 +9,14 @@ import com.sixthsolution.apex.nlp.util.Pair;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_HOUR;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MIN;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
+
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
  */
@@ -17,14 +25,19 @@ public class StandardTimeExtractor implements Extractor {
 
     @Override
     public void extract(EventBuilder builder, LocalDateTime source, ChunkedPart chunkedPart) {
+        Pair<LocalTime, LocalTime> time = null;
         switch (chunkedPart.getLabel()) {
             case FIXED_TIME:
             case RANGE_TIME:
-                Pair<LocalTime, LocalTime> time = getFixedOrRangeTime(source, chunkedPart);
+                time = getFixedOrRangeTime(source, chunkedPart);
                 builder.setStartTime(time.first);
                 builder.setEndTime(time.second);
                 break;
-
+            case RELATIVE_TIME:
+                time = getRelativeTime(source, chunkedPart);
+                builder.setStartTime(time.first);
+                builder.setEndTime(time.second);
+                break;
         }
     }
 
@@ -82,4 +95,59 @@ public class StandardTimeExtractor implements Extractor {
         }
         return new Pair<>(startTime, endTime);
     }
+
+    private Pair<LocalTime, LocalTime> getRelativeTime(LocalDateTime source,
+                                                       ChunkedPart chunkedPart) {
+        Iterator<TaggedWord> itr = chunkedPart.getTaggedWords().iterator();
+        int seekOffset = 0;
+        SeekBy seekBy = null;
+        boolean forwarding = true;
+        LocalTime startTime = source.toLocalTime();
+        while (itr.hasNext()) {
+            TaggedWord next = itr.next();
+            if (next.hasTag(Tag.NUMBER)) {
+                seekOffset = (Integer) next.getTags().containsTagByValue(Tag.NUMBER).value;
+            } else if (next.hasTag(TIME_HOUR)) {
+                seekBy = (SeekBy) next.getTags().containsTagByValue(Tag.TIME_HOUR).value;
+            } else if (next.hasTag(TIME_MIN)) {
+                seekBy = (SeekBy) next.getTags().containsTagByValue(Tag.TIME_MIN).value;
+            } else if (next.hasTag(TIME_RELATIVE_INDICATOR)) {
+                forwarding =
+                        (Boolean) next.getTags()
+                                .containsTagByValue(Tag.TIME_RELATIVE_INDICATOR).value;
+                List<TaggedWord> formalTaggedWords = new ArrayList<>();
+                while (itr.hasNext()) {
+                    formalTaggedWords.add(itr.next());
+                }
+                ChunkedPart formalPart =
+                        new ChunkedPart(chunkedPart.getEntity(), chunkedPart.getLabel(),
+                                formalTaggedWords);
+                startTime = getFixedOrRangeTime(source, formalPart).first;
+                break;
+            }
+        }
+        LocalTime endTime = null;
+        switch (seekBy) {
+            case HOUR:
+                if (forwarding) {
+                    endTime = startTime.plusHours(seekOffset);
+                } else {
+                    endTime = startTime.minusHours(seekOffset);
+                }
+                break;
+            case MIN:
+                if (forwarding) {
+                    endTime = startTime.plusMinutes(seekOffset);
+                } else {
+                    endTime = startTime.minusMinutes(seekOffset);
+                }
+                break;
+        }
+        //start time is greater, so swap them
+        if (startTime.compareTo(endTime) > 0) {
+            return new Pair<>(endTime, startTime);
+        }
+        return new Pair<>(startTime, endTime);
+    }
+
 }

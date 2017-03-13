@@ -2,6 +2,7 @@ package com.sixthsolution.apex.nlp.english;
 
 import com.sixthsolution.apex.nlp.dict.Dictionary;
 import com.sixthsolution.apex.nlp.dict.DictionaryBuilder;
+import com.sixthsolution.apex.nlp.event.SeekBy;
 
 import static com.sixthsolution.apex.nlp.dict.Tag.DATE_DURATION_SUFFIX;
 import static com.sixthsolution.apex.nlp.dict.Tag.DATE_PREPOSITION;
@@ -23,6 +24,7 @@ import static com.sixthsolution.apex.nlp.dict.Tag.TIME_PREFIX;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RANGE;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_PREFIX;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_SEC;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_SEPARATOR;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_START_RANGE;
@@ -73,15 +75,18 @@ public final class EnglishVocabulary {
                 .e("at", "in");
         vb.tag(TIME_RANGE, TIME)
                 .e("-");
+        vb.tag(TIME_RELATIVE_PREFIX, TIME)
+                .e("for");
         vb.tag(TIME_RELATIVE, TIME)
                 .e(9, "morning")
                 .e(12, "noon")
-                .e(16, "in_the_evening", "in_the_afternoon", "in_the_after-noon")
+                .e(16, "in_the_evening", "in_the_afternoon", "in_the_after-noon", "evening")
                 .e(21, "night")
                 .e(23, "midnight", "mid-night")
                 .e(0, "now");//TODO current time
         vb.tag(TIME_RELATIVE_INDICATOR, TIME)
-                .e("before", "after");
+                .e(false, "before")
+                .e(true, "after");
         vb.tag(TIME_START_RANGE, TIME)
                 .e("from");
         vb.tag(TIME_RANGE, TIME)
@@ -92,9 +97,9 @@ public final class EnglishVocabulary {
                 .e(0, "am", "a.m", "a.m.", "a_m", "a")
                 .e(12, "pm", "p.m.", "p.m", "p_m", "p");
         vb.tag(TIME_HOUR, TIME)
-                .e("hour", "hours", "hr", "hr.", "hrs", "hrs.", "h");
+                .e(SeekBy.HOUR, "hour", "hours", "hr", "hr.", "hrs", "hrs.", "h");
         vb.tag(TIME_MIN, TIME)
-                .e("minutes", "min", "min.", "mins", "mins.");
+                .e(SeekBy.MIN, "minutes", "min", "min.", "mins", "mins.");
         vb.tag(TIME_SEC, TIME)
                 .e("second", "seconds", "sec", "secs");
 

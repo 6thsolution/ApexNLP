@@ -22,13 +22,18 @@ public class EventTest {
 
     @Test
     public void test_time_extraction() {
+        //formal
         assertEvent("in the evening").startTime("16:00").endTime("17:00");
+        //range
         assertEvent("from morning - 9 pm").startTime("09:00").endTime("21:00");
         assertEvent("from 5pm till 6pm").startTime("17:00").endTime("18:00");
         assertEvent("at 5-6pm").startTime("17:00").endTime("18:00");
         assertEvent("at nine till eleven").startTime("09:00").endTime("11:00");
         assertEvent("from 5am to 6pm").startTime("05:00").endTime("18:00");
         assertEvent("from 9:30 to 10:30").startTime("09:30").endTime("10:30");
+        //relative
+        assertEvent("for 2 hours before noon").startTime("10:00").endTime("12:00");
+        assertEvent("for two hours").startTime("09:30").endTime("11:30");
         //TODO no idea how to support
         //        assertEvent("from 11.5 - 12.5 ").startTime("11:")
     }
@@ -59,6 +64,8 @@ public class EventTest {
         assertEvent("Wash the Car at Mall at 8.45pm 5/12/13")
                 .start("2013/05/12 20:45")
                 .end("2013/05/12 21:45");
+        assertEvent("meeting with Tom for two hours after noon")
+                .start("2017/04/10 12:00").end("2017/04/10 14:00");
     }
 
 }

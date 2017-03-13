@@ -12,6 +12,7 @@ import org.junit.Test;
 import static com.sixthsolution.apex.nlp.ner.Entity.TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.FIXED_TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.RANGE_TIME;
+import static com.sixthsolution.apex.nlp.ner.Label.RELATIVE_TIME;
 import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunkedPart;
 
 /**
@@ -66,6 +67,21 @@ public class TimeDetectorTest {
     }
 
     @Test
-    public void test_invalid_range_time() {
+    public void test_relative_time() {
+        assertChunkedPart("2 hours").text("2 hours")
+                .label(RELATIVE_TIME).entity(TIME);
+        assertChunkedPart("2 hours before noon").text("2 hours before noon")
+                .label(RELATIVE_TIME).entity(TIME);
+        assertChunkedPart("3 hours after midnight").text("3 hours after midnight")
+                .label(RELATIVE_TIME).entity(TIME);
+        assertChunkedPart("2 minutes from now").text("2 minutes")
+                .label(RELATIVE_TIME).entity(TIME);
+        assertChunkedPart("for two hours").text("for two hours")
+                .label(RELATIVE_TIME).entity(TIME);
+        assertChunkedPart("an hour after noon").text("an hour after noon")
+                .label(RELATIVE_TIME).entity(TIME);
+        assertChunkedPart("for 31 minutes").text("for 31 minutes")
+                .label(RELATIVE_TIME).entity(TIME);
+
     }
 }

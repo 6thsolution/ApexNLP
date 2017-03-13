@@ -13,7 +13,8 @@ public enum Tag {
     //TIME
     TIME_PREFIX(102),                //e.g. at, in ,the
     TIME_START_RANGE(103),       //e.g. from
-    TIME_RANGE(104),                 //e.g. till, until, -
+    TIME_RANGE(104),
+    TIME_RELATIVE_PREFIX(122),   //e.g. for
     TIME_RELATIVE(105),              //e.g. morning
     TIME_RELATIVE_INDICATOR(106),   //e.g. before,after
     TIME_HOUR(107),                 //e.g. hour
