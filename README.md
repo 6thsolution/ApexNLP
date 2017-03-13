@@ -36,9 +36,20 @@ A natural language processing tool that makes it easy to create events like `Pia
 - [License](#license)
 
 ## Overview
-There are many date/time parsers like [natty](https://natty.joestelmach.com) or [chrono](https://github.com/wanasit/chrono). But ApexNLP is not another date/time parser, It is an event parser with some NLP tasks which helps you to easily create a calendar Event. It support most event formats from simple to complex:
+There are many date/time parsers like [natty](https://natty.joestelmach.com) or [chrono](https://github.com/wanasit/chrono). But ApexNLP is not another date/time parser, It is an event parser with some NLP tasks which helps you to easily create a calendar Event. It support most event formats from simple to complex such as:
+- Family Dine Out on the 2nd Friday of every month at 6-9p
+- Meet John on monday at Mall
+- Tennis on Mondays, Tuesdays, Fridays at 10
+- Paying bills day repeat on the 3rd Tuesday of each month
+- Piano lessons Tuesdays and Thursdays at 5-6pm from 1/21 to 2/23
+- Meeting with John tomorrow every day until 12.10.2018"
 
-For example, this event `Lunch at noon for 30 minutes` will convert to:
+Here are some sample outputs:
+
+**input sentence:** `Lunch at noon for 30 minutes`
+
+**event response:**
+
 ```javascript
 {
   "title" : "Lunch",
@@ -49,7 +60,9 @@ For example, this event `Lunch at noon for 30 minutes` will convert to:
   "recurrence" : null
 }
 ```
-or `Family Vacation at Singapore from 12/4 for six days`:
+**input sentence:**  `Family Vacation at Singapore from 12/4 for six days`:
+
+**event response:**
 
 ```javascript
 {
