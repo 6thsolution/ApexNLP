@@ -16,6 +16,27 @@ public class EventBuilder {
     private LocalTime endTime = null;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String location = "";
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public Event build(LocalDateTime source) {
         if (startTime == null) {
@@ -34,23 +55,7 @@ public class EventBuilder {
         LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
-        return new Event("", startDateTime, endDateTime, false, null);
+        return new Event("", location, startDateTime, endDateTime, false, null);
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
 }

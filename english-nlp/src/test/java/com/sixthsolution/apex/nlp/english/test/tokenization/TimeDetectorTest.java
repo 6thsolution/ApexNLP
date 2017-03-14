@@ -1,12 +1,8 @@
 package com.sixthsolution.apex.nlp.english.test.tokenization;
 
-import com.sixthsolution.apex.nlp.english.EnglishTokenizer;
-import com.sixthsolution.apex.nlp.english.EnglishVocabulary;
 import com.sixthsolution.apex.nlp.english.TimeDetector;
-import com.sixthsolution.apex.nlp.tagger.StandardTagger;
-import com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion;
+import com.sixthsolution.apex.nlp.ner.regex.ChunkDetector;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static com.sixthsolution.apex.nlp.ner.Entity.TIME;
@@ -19,13 +15,7 @@ import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunk
  * @author Saeed Masoumi (s-masoumi@live.com)
  */
 
-public class TimeDetectorTest {
-
-    @Before
-    public void setUp() {
-        ChunkDetectorAssertion.init(new EnglishTokenizer(),
-                new StandardTagger(EnglishVocabulary.build()), new TimeDetector());
-    }
+public class TimeDetectorTest extends EnglishDetectorTest {
 
     @Test
     public void test_fixed_time() {
@@ -83,5 +73,10 @@ public class TimeDetectorTest {
         assertChunkedPart("for 31 minutes").text("for 31 minutes")
                 .label(RELATIVE_TIME).entity(TIME);
 
+    }
+
+    @Override
+    protected ChunkDetector provideDetector() {
+        return new TimeDetector();
     }
 }

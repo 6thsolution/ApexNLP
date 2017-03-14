@@ -20,7 +20,7 @@ elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
   echo "Skipping deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
 else
-  echo "Deploying snapshots..."
-  ./gradlew publishFromCI
-  echo "Snapshots deployed!"
+  echo "Deploying artifacts..."
+  ./gradlew publishFromCI --info
+  echo "Artifacts deployed!"
 fi

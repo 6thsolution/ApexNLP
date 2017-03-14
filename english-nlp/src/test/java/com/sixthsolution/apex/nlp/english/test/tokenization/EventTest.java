@@ -47,21 +47,26 @@ public class EventTest {
     @Test
     public void test_full_sentence() {
         assertEvent("Grocery shopping at Wegmans Thursday at 5pm")
+                .location("Wegmans")
                 .startTime("17:00")
                 .endTime("18:00");
-        assertEvent("12/09 Meet John at Mall from 9:30 to 12:00").
-                startTime("09:30")
+        assertEvent("12/09 Meet John at Mall from 9:30 to 12:00")
+                .location("Mall")
+                .startTime("09:30")
                 .endTime("12:00");
         assertEvent("Meet John on monday at Mall")
+                .location("Mall")
                 .start("2017/04/10 09:30")
                 .end("2017/04/10 10:30");
         assertEvent("Family Dine Out on the 2nd Friday of every month at 6-9p")
                 .startTime("18:00")
                 .endTime("21:00");
         assertEvent("Mission Trip at Jakarta on Nov 13-17 calendar Church")
+                .location("Jakarta")
                 .startTime("09:30")
                 .endTime("10:30");
         assertEvent("Wash the Car at Mall at 8.45pm 5/12/13")
+                .location("Mall")
                 .start("2013/05/12 20:45")
                 .end("2013/05/12 21:45");
         assertEvent("meeting with Tom for two hours after noon")

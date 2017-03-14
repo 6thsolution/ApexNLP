@@ -15,10 +15,12 @@ public class StandardEventDetector implements EventDetector {
 
     protected Extractor timeExtractor;
     protected Extractor dateExtractor;
+    protected Extractor locationExtractor;
 
     public StandardEventDetector() {
         timeExtractor = provideTimeExtractor();
         dateExtractor = provideDateExtractor();
+        locationExtractor = provideLocationExtractor();
     }
 
     @Override
@@ -32,6 +34,9 @@ public class StandardEventDetector implements EventDetector {
                 case DATE:
                     dateExtractor.extract(builder, source, part);
                     break;
+                case LOCATION:
+                    locationExtractor.extract(builder, source, part);
+                    break;
             }
         }
         return builder.build(source);
@@ -43,5 +48,9 @@ public class StandardEventDetector implements EventDetector {
 
     protected Extractor provideDateExtractor() {
         return new StandardDateExtractor();
+    }
+
+    protected Extractor provideLocationExtractor() {
+        return new StandardLocationExtractor();
     }
 }

@@ -35,7 +35,8 @@ public class EnglishParser extends StandardParserBase {
 
     @Override
     protected Chunker provideChunker() {
-        return new RegExChunker(Arrays.asList(new TimeDetector(), new DateDetector()));
+        return new RegExChunker(
+                Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector()));
     }
 
     @Override

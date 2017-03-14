@@ -99,5 +99,10 @@ public class ParserAssertion {
             assertEquals(expected.getMonthValue(), actual.getMonthValue());
 
         }
+
+        public EventAssertion location(String expectedLocation) {
+            assertEquals(expectedLocation, event.location());
+            return this;
+        }
     }
 }

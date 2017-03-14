@@ -16,6 +16,7 @@ import com.sixthsolution.apex.nlp.util.Pair;
 
 import java.util.List;
 
+import static com.sixthsolution.apex.nlp.dict.Tag.NONE;
 import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
 
 /**
@@ -84,6 +85,9 @@ public abstract class ChunkDetector {
         }
         if (tags.containsTag(NUMBER)) {
             return Tag.NUMBER;
+        }
+        if (!tags.containsTag(NONE)) {
+            return tags.get(0).tag;
         }
         return Tag.NONE;
     }

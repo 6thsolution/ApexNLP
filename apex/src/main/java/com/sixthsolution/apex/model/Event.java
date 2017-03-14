@@ -26,6 +26,7 @@ import org.threeten.bp.LocalDateTime;
 public class Event {
 
     private String title = "";
+    private String location = "";
     private LocalDateTime startDateTime = null;
     private LocalDateTime endDateTime = null;
     private boolean isAllDay = false;
@@ -35,9 +36,11 @@ public class Event {
 
     }
 
-    public Event(String title, LocalDateTime startDateTime, LocalDateTime endDateTime,
+    public Event(String title, String location, LocalDateTime startDateTime,
+                 LocalDateTime endDateTime,
                  boolean isAllDay, Recurrence recurrence) {
         this.title = title;
+        this.location = location;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.isAllDay = isAllDay;
@@ -58,6 +61,10 @@ public class Event {
 
     public String title() {
         return title;
+    }
+
+    public String location() {
+        return location;
     }
 
     public LocalDateTime start() {
