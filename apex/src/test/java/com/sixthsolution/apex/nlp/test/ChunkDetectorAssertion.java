@@ -8,7 +8,6 @@ import com.sixthsolution.apex.nlp.tagger.TaggedWord;
 import com.sixthsolution.apex.nlp.tagger.Tagger;
 import com.sixthsolution.apex.nlp.tokenization.Tokenizer;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 import static junit.framework.TestCase.assertEquals;
