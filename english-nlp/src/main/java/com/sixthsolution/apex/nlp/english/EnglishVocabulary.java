@@ -4,31 +4,7 @@ import com.sixthsolution.apex.nlp.dict.Dictionary;
 import com.sixthsolution.apex.nlp.dict.DictionaryBuilder;
 import com.sixthsolution.apex.nlp.event.SeekBy;
 
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_DURATION_SUFFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_PREPOSITION;
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_SEEKBY;
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_SEPARATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_START_RANGE;
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_SUFFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.LOCATION_PREFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.LOCATION_SUFFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.MONTH_NAME;
-import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
-import static com.sixthsolution.apex.nlp.dict.Tag.PREPOSITION;
-import static com.sixthsolution.apex.nlp.dict.Tag.REC_WEEK_DAYS;
-import static com.sixthsolution.apex.nlp.dict.Tag.SEASON;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_HOUR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MERIDIEM;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MIN;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_PREFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RANGE;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_PREFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_SEC;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_SEPARATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_START_RANGE;
-import static com.sixthsolution.apex.nlp.dict.Tag.WEEK_DAY;
+import static com.sixthsolution.apex.nlp.dict.Tag.*;
 import static com.sixthsolution.apex.nlp.ner.Entity.DATE;
 import static com.sixthsolution.apex.nlp.ner.Entity.LOCATION;
 import static com.sixthsolution.apex.nlp.ner.Entity.NONE;
@@ -52,6 +28,16 @@ public final class EnglishVocabulary {
                 .e(5, "friday", "fri", "fri.")
                 .e(6, "saturday", "sat", "sat.")
                 .e(7, "sunday", "sun", "sun.");
+        //***************************************
+        //RELATIVE DATE
+        //***************************************
+        vb.tag(NAMED_DATE, DATE)
+                .e(1, "today")
+                .e(2, "tonight")
+                .e(3, "tomorrow");
+        vb.tag(GLOBAL_PREPOSITION,DATE)
+                .e(true, "after")
+                .e(false, "before");
         //***************************************
         //MONTH_NAME NAMES
         //***************************************
@@ -106,6 +92,12 @@ public final class EnglishVocabulary {
         //***************************************
         //DATE
         //***************************************
+        vb.tag(DATE_RECURRENCE,DATE)
+                .e("every");
+        vb.tag(DATE_RANGE,DATE)
+                .e("till", "until", "-", "for", "to");
+        vb.tag(DATE_FOREVER_KEY,DATE)
+                .e("other");
         vb.tag(DATE_SEPARATOR, DATE)
                 .e("/", "-", ".");
         vb.tag(DATE_PREPOSITION, DATE)
@@ -121,6 +113,9 @@ public final class EnglishVocabulary {
                 .e("th", "from");
         vb.tag(DATE_DURATION_SUFFIX, DATE)
                 .e("day", "days");
+        vb.tag(DATE_PREFIX, DATE)
+                .e("of");
+
         //***************************************
         //SEASONS
         //***************************************
@@ -178,6 +173,10 @@ public final class EnglishVocabulary {
         //***************************************
         vb.tag(PREPOSITION, NONE)
                 .e("on", "in", "at", "of", "to", "with");
+        vb.tag(RELATIVE_PREPOSITION , NONE)
+                .e("next");
+        vb.tag(RELATIVE_SUFFIX,NONE)
+                .e("from_today","from_now","after_next");
 
         return vb.build();
     }

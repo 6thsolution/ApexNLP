@@ -11,13 +11,10 @@ import com.sixthsolution.apex.nlp.util.Pair;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.nobigsoftware.dfalex.Pattern.anyOf;
-import static com.nobigsoftware.dfalex.Pattern.match;
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_SEPARATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.MONTH_NAME;
-import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
+import static com.nobigsoftware.dfalex.Pattern.*;
+import static com.sixthsolution.apex.nlp.dict.Tag.*;
 import static com.sixthsolution.apex.nlp.ner.Entity.DATE;
-import static com.sixthsolution.apex.nlp.ner.Label.FORMAL_DATE;
+import static com.sixthsolution.apex.nlp.ner.Label.*;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
@@ -35,11 +32,122 @@ public class DateDetector extends ChunkDetector {
                 .then(NUMBER.toString());
     }
 
+    /**
+     * @return april, april 20, april 20th, april 20 2012
+     */
+    private static Pattern relax_date_type1() {
+        return month_name().then(maybe(NUMBER.toString()).then(maybe(DATE_SUFFIX.toString())).then(maybe(NUMBER.toString())));
+    }
+
+    /**
+     * @return 20 april, 20th april, 20 of april, 20 of april 2012
+     */
+    private static Pattern relax_date_type2() {
+        return match(NUMBER.toString()).then(maybe(DATE_SUFFIX.toString())).then(maybe(DATE_PREFIX.toString())).then(month_name()).then(maybe(NUMBER.toString()));
+    }
+
+    /**
+     * @return april, may...
+     */
+    private static Pattern month_name(){
+        return match(MONTH_NAME.toString());
+    }
+
+    /**
+     * @return sunday, monday...
+     */
+    private static Pattern week_day(){
+        return match(WEEK_DAY.toString());
+    }
+
+    /**
+     * @return april 20, 20 of april 2012, monday, april
+     */
+    private static Pattern relax_date(){
+        return match(anyOf(relax_date_type1(),relax_date_type2(),week_day()));
+    }
+
+
+    /**
+     * @return today, tomorrow, tonight, ...
+     */
+    private static Pattern relative_date_type1(){
+        return match(NAMED_DATE.toString());
+    }
+
+    /**
+     * @return next sunday, two monday from today,...
+     */
+    private static Pattern relative_date_type2(){
+        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(WEEK_DAY.toString())
+                ,match(NUMBER.toString()).then(WEEK_DAY.toString()).then(RELATIVE_SUFFIX.toString())));
+    }
+
+    /**
+     * @return next april, next april 20th , 20 day of next april,...
+     */
+    private static Pattern relative_date_type3(){
+        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString()).then(maybe(NUMBER.toString()))
+        ,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
+    }
+
+    /**
+     * @return 2 summer from today, winter 2014, next spring,...
+     */
+    private static Pattern relative_date_type4(){
+        return match(anyOf(match(NUMBER.toString()).then(SEASON.toString()).then(RELATIVE_SUFFIX.toString())
+        ,match(RELATIVE_PREPOSITION.toString()).then(SEASON.toString()).then(maybe(relax_date()))
+        ,match(SEASON.toString()).then(NUMBER.toString())));
+    }
+
+    /**
+     * @return next week third day, 4 week from now, next year may 20th
+     */
+    private static Pattern relative_date_type5(){
+        return match(anyOf(match(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(RELATIVE_SUFFIX.toString())
+        ,match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()).then(maybe(relax_date()))
+        ,match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()).then(NUMBER.toString()).then(DATE_SEEKBY.toString())));
+    }
+
+    /**
+     * @return 5 types of relative date structure
+     */
+    private static Pattern relative_date(){
+        return match(anyOf(relative_date_type1(),relative_date_type2(),relative_date_type3(),relative_date_type4(),relative_date_type5()));
+    }
+
+
+    /**
+     * @return the day after tomorrow, one week before sunday
+     */
+    private static Pattern global_date(){
+        return match(maybe(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(GLOBAL_PREPOSITION.toString()).then(anyOf(relative_date(),formal_date(),relax_date())));
+    }
+
+    /**
+     * @return every other day, every 2 weeks, every june
+     */
+    private static Pattern forever_date(){
+        return match(DATE_RECURRENCE.toString()).then(anyOf(DATE_FOREVER_KEY.toString(),NUMBER.toString()).then(anyOf(DATE_SEEKBY.toString(),WEEK_DAY.toString(),MONTH_NAME.toString()).then(maybe(DATE_RANGE.toString()).then(maybe(anyOf(relax_date(),relative_date(),formal_date()))))));
+    }
+
+    /**
+     * @return till next month, from 12/3/2012 until june,..
+     */
+    private static Pattern limited_date(){
+        return match(maybe(DATE_START_RANGE.toString()).then(maybe(anyOf(relative_date(),relax_date(),formal_date()).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())))));
+    }
+
     @Override
     protected List<Pair<Label, Pattern>> getPatterns() {
         return Arrays.asList(
-                //#### FORMAL DATE
                 newPattern(FORMAL_DATE, formal_date())
+                ,newPattern(RELAX_DATE, relax_date())
+                ,newPattern(RELATIVE_DATE, relative_date())
+                ,newPattern(GLOBAL_DATE, global_date())
+//                ,newPattern(FOREVER_DATE,forever_date())
+                //must debug
+                ,newPattern(LIMITED_DATE,limited_date())
         );
     }
 

@@ -70,12 +70,16 @@ public class ChunkDetectorAssertion {
         public ChunkedPartAssertion text(String text) {
             StringBuilder sb = new StringBuilder();
             Iterator<TaggedWord> itr = chunkedPart.getTaggedWords().iterator();
+//            System.out.println(itr.next().toString()+"**");
+
             while (itr.hasNext()) {
+//                System.out.println(itr.next().toString()+"**");
                 sb.append(itr.next().getWord());
                 if (itr.hasNext()) {
                     sb.append(" ");
                 }
             }
+            System.out.println(sb.toString()+"*");
             assertEquals(text, sb.toString());
             return this;
         }
