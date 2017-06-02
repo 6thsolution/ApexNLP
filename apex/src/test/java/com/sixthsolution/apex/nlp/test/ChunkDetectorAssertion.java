@@ -8,6 +8,7 @@ import com.sixthsolution.apex.nlp.tagger.TaggedWord;
 import com.sixthsolution.apex.nlp.tagger.Tagger;
 import com.sixthsolution.apex.nlp.tokenization.Tokenizer;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import static junit.framework.TestCase.assertEquals;
@@ -63,23 +64,22 @@ public class ChunkDetectorAssertion {
 
 
         public ChunkedPartAssertion label(Label label) {
-            assertTrue(chunkedPart.getLabel().equals(label));
+            assertEquals(label, chunkedPart.getLabel());
             return this;
         }
 
         public ChunkedPartAssertion text(String text) {
             StringBuilder sb = new StringBuilder();
             Iterator<TaggedWord> itr = chunkedPart.getTaggedWords().iterator();
-//            System.out.println(itr.next().toString()+"**");
+            //            System.out.println(itr.next().toString()+"**");
 
             while (itr.hasNext()) {
-//                System.out.println(itr.next().toString()+"**");
+                //                System.out.println(itr.next().toString()+"**");
                 sb.append(itr.next().getWord());
                 if (itr.hasNext()) {
                     sb.append(" ");
                 }
             }
-            System.out.println(sb.toString()+"*");
             assertEquals(text, sb.toString());
             return this;
         }

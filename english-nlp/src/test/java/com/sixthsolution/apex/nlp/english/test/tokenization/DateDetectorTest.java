@@ -24,19 +24,19 @@ public class DateDetectorTest extends EnglishDetectorTest {
         assertChunkedPart("03/apr/2016").text("03 / apr / 2016").label(FORMAL_DATE).entity(DATE);
         assertChunkedPart("12/12/16").text("12 / 12 / 16").label(FORMAL_DATE).entity(DATE);
         assertChunkedPart("2016/apr/21").text("2016 / apr / 21").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("2001-12-12").text("2001 - 12 - 12").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("2001-12-12").text("2001 - 12 - 12").label(FORMAL_DATE).entity(DATE);
 
     }
 
     @Test
     public void test_relax_date() {
-//        assertChunkedPart("20apr").text("20 apr").label(RELAX_DATE).entity(DATE);
-        assertChunkedPart("3/14/16").text("3 / 14 / 16").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("03/14/16").text("03 / 14 / 16").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("03/apr/2016").text("03 / apr / 2016").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("12/12/16").text("12 / 12 / 16").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("2016/apr/21").text("2016 / apr / 21").label(FORMAL_DATE).entity(DATE);
-////        assertChunkedPart("2001-12-12").text("2001 - 12 - 12").label(FORMAL_DATE).entity(DATE);
+//        assertChunkedPart("20 april").text("20 apr").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("3/14/16").text("3 / 14 / 16").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("03/14/16").text("03 / 14 / 16").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("03/apr/2016").text("03 / apr / 2016").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("12/12/16").text("12 / 12 / 16").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("2016/apr/21").text("2016 / apr / 21").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("2001-12-12").text("2001 - 12 - 12").label(FORMAL_DATE).entity(DATE);
 
     }
 

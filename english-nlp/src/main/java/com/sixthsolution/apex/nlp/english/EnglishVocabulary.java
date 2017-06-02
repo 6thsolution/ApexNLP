@@ -95,7 +95,7 @@ public final class EnglishVocabulary {
         vb.tag(DATE_RECURRENCE,DATE)
                 .e("every");
         vb.tag(DATE_RANGE,DATE)
-                .e("till", "until", "-", "for", "to");
+                .e("till", "until", "for", "to");
         vb.tag(DATE_FOREVER_KEY,DATE)
                 .e("other");
         vb.tag(DATE_SEPARATOR, DATE)
