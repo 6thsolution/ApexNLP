@@ -107,6 +107,16 @@ public final class EnglishVocabulary {
                 .e("week", "weeks", "wks", "wks.")
                 .e("month", "months")
                 .e("year", "years", "yrs");
+        vb.tag(YEAR_SEEK,DATE)
+                .e("year", "years", "yrs");
+        vb.tag(MONTH_SEEK,DATE)
+                .e("month", "months");
+        vb.tag(WEEK_SEEK,DATE)
+                .e("week", "weeks", "wks", "wks.");
+        vb.tag(DAY_SEEK,DATE)
+                .e("day", "days");
+
+
         vb.tag(DATE_START_RANGE, DATE)
                 .e("from", "starts");
         vb.tag(DATE_SUFFIX, DATE)
@@ -114,7 +124,9 @@ public final class EnglishVocabulary {
         vb.tag(DATE_DURATION_SUFFIX, DATE)
                 .e("day", "days");
         vb.tag(DATE_PREFIX, DATE)
-                .e("of");
+                .e("of" , "in");
+        vb.tag(DATE_BAND,DATE)
+                .e("at_the_beginning","start","end","last","first");
 
         //***************************************
         //SEASONS
@@ -177,7 +189,8 @@ public final class EnglishVocabulary {
                 .e("next");
         vb.tag(RELATIVE_SUFFIX,NONE)
                 .e("from_today","from_now","after_next");
-
+        vb.tag(THE_PREFIX,NONE)
+                .e("the","this","current");
         return vb.build();
     }
 }

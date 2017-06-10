@@ -17,9 +17,12 @@ public enum Label {
     FORMAL_DATE,
     RELAX_DATE,
     RELATIVE_DATE,
+    EXPLICIT_RELATIVE_DATE,
     GLOBAL_DATE,
     FOREVER_DATE,
     LIMITED_DATE,
+    DATE_RULES,
+    RECURRENCE,
 
 
 }

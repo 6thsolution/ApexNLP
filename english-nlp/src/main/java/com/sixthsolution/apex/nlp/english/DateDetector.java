@@ -144,16 +144,61 @@ public class DateDetector extends ChunkDetector {
         return match(maybe(DATE_START_RANGE.toString()).then(maybe(anyOf(relative_date(),relax_date(),formal_date()).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())))));
     }
 
+    private static Pattern year_part(){
+        return match(anyOf(
+                match(maybe(anyOf(THE_PREFIX.toString(),NUMBER.toString(),RELATIVE_PREPOSITION.toString()))).then(YEAR_SEEK.toString()).then(maybe(RELATIVE_SUFFIX.toString())),
+                maybe(THE_PREFIX.toString()).then(maybe(YEAR_SEEK.toString())).then(NUMBER.toString())));
+    }
+    private static Pattern month_part(){
+        return match(anyOf(
+                match(maybe(anyOf(THE_PREFIX.toString(),NUMBER.toString(),RELATIVE_PREPOSITION.toString()))).then(anyOf(MONTH_SEEK.toString(),MONTH_NAME.toString())).then(maybe(RELATIVE_SUFFIX.toString())),
+                maybe(NUMBER.toString()).then(MONTH_SEEK.toString())).then(maybe(DATE_PREFIX.toString())).then(maybe(year_part())));
+    }
+
+    private static Pattern week_part(){
+        return match(anyOf(
+                match(maybe(anyOf(THE_PREFIX.toString(),NUMBER.toString(),RELATIVE_PREPOSITION.toString()))).then(anyOf(WEEK_SEEK.toString(),WEEK_DAY.toString())).then(maybe(RELATIVE_SUFFIX.toString())),
+                maybe(NUMBER.toString()).then(WEEK_SEEK.toString())).then(maybe(DATE_PREFIX.toString())).then(maybe(month_part())).then(maybe(year_part())));
+
+    }
+    private static Pattern start_with_number(){
+        return match(NUMBER.toString()).then(maybe(DATE_SEEKBY.toString())).then(DATE_PREFIX.toString()).then(anyOf(year_part(),month_part(),week_part()));
+    }
+
+    private static Pattern start_with_day_band(){
+        return match(DATE_BAND.toString()).then(maybe(anyOf(DATE_SEEKBY.toString(),WEEK_DAY.toString(),MONTH_NAME.toString()))).then(DATE_PREFIX.toString()).then(anyOf(year_part(),month_part(),week_part()));
+    }
+
+    private static Pattern start_with_day_of_week(){
+        return match(WEEK_DAY.toString()).then(DATE_PREFIX.toString()).then(anyOf(year_part(),month_part(),week_part()));
+    }
+
+    private static Pattern explicit_relative_date(){
+        return match(anyOf(start_with_day_band(),start_with_day_of_week(),start_with_number()));
+    }
+
+
+//    //TODO debug explicite relative date
+//    private static Pattern date_rules(){
+//        return match(anyOf(formal_date(),relax_date(),relative_date(),/*explicit_relative_date(),*/global_date()));
+//    }
+//    //TODO add lists
+//    private static Pattern recurrence(){
+//        return match(anyOf(forever_date(),limited_date()/*,lists()*/));
+//    }
     @Override
     protected List<Pair<Label, Pattern>> getPatterns() {
         return Arrays.asList(
                 newPattern(FORMAL_DATE, formal_date())
                 ,newPattern(RELAX_DATE, relax_date())
                 ,newPattern(RELATIVE_DATE, relative_date())
+//                ,newPattern(EXPLICIT_RELATIVE_DATE,explicit_relative_date())
                 ,newPattern(GLOBAL_DATE, global_date())
                 ,newPattern(FOREVER_DATE,forever_date())
                 //must debug
                 ,newPattern(LIMITED_DATE,limited_date())
+//                newPattern(DATE_RULES,date_rules())
+//                ,newPattern(RECURRENCE,recurrence())
         );
     }
 

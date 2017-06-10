@@ -41,7 +41,13 @@ public enum Tag {
     GLOBAL_PREPOSITION(127),
     DATE_RECURRENCE(128),
     DATE_RANGE(129),
-    DATE_FOREVER_KEY(130);
+    DATE_FOREVER_KEY(130),
+    THE_PREFIX(131),
+    DATE_BAND(132),
+    YEAR_SEEK(133),
+    MONTH_SEEK(134),
+    WEEK_SEEK(135),
+    DAY_SEEK(136);
 
     public int id;
 
