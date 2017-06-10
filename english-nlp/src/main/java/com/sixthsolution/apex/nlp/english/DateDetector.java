@@ -125,10 +125,16 @@ public class DateDetector extends ChunkDetector {
     }
 
     /**
-     * @return every other day, every 2 weeks, every june
+     * @return day,month,year,week
+     */
+    private static Pattern forever_seek(){
+        return match(anyOf(DATE_SEEKBY.toString(),WEEK_DAY.toString()));
+    }
+    /**
+     * @return every other day, every 2 weeks
      */
     private static Pattern forever_date(){
-        return match(DATE_RECURRENCE.toString()).then(anyOf(DATE_FOREVER_KEY.toString(),NUMBER.toString()).then(anyOf(DATE_SEEKBY.toString(),WEEK_DAY.toString(),MONTH_NAME.toString()).then(maybe(DATE_RANGE.toString()).then(maybe(anyOf(relax_date(),relative_date(),formal_date()))))));
+        return match(DATE_RECURRENCE.toString()).then(maybe(anyOf(DATE_FOREVER_KEY.toString(),NUMBER.toString()))).then(forever_seek()).then(maybe(DATE_RANGE.toString())).then(maybe(anyOf(relax_date(),relative_date(),formal_date())));
     }
 
     /**
@@ -145,7 +151,7 @@ public class DateDetector extends ChunkDetector {
                 ,newPattern(RELAX_DATE, relax_date())
                 ,newPattern(RELATIVE_DATE, relative_date())
                 ,newPattern(GLOBAL_DATE, global_date())
-//                ,newPattern(FOREVER_DATE,forever_date())
+                ,newPattern(FOREVER_DATE,forever_date())
                 //must debug
                 ,newPattern(LIMITED_DATE,limited_date())
         );

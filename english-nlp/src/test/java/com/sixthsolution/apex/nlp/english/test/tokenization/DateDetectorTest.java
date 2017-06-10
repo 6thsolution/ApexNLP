@@ -77,6 +77,14 @@ public class DateDetectorTest extends EnglishDetectorTest {
 
     }
 
+    @Test
+    public void test_forever_date(){
+        assertChunkedPart("every other day").text("every other day").label(FOREVER_DATE).entity(DATE);
+        assertChunkedPart("every day").text("every day").label(FOREVER_DATE).entity(DATE);
+        assertChunkedPart("every 2 sunday").text("every 2 sunday").label(FOREVER_DATE).entity(DATE);
+        assertChunkedPart("every day until june").text("every day until june").label(FOREVER_DATE).entity(DATE);
+
+    }
     @Override
     protected ChunkDetector provideDetector() {
         return new DateDetector();
