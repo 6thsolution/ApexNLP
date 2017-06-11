@@ -13,6 +13,11 @@ public class DateDetectionFilter extends ChunkDetectionFilter {
     public boolean accept(Label label, TaggedWords taggedWords, int startIndex, int endIndex) {
         switch (label) {
             case FORMAL_DATE:
+            case RELAX_DATE:
+            case FOREVER_DATE:
+            case GLOBAL_DATE:
+            case RELATIVE_DATE:
+            case LIMITED_DATE:
                 return true;
         }
         return false;

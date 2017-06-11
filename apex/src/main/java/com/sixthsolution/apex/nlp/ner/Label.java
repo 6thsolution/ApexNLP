@@ -14,6 +14,15 @@ public enum Label {
      * separated by a common separator character. The year is optional and may proceed the month or
      * succeed the day of month. If a two-digit year is given, it must succeed the day of month.
      */
-    FORMAL_DATE
+    FORMAL_DATE,
+    RELAX_DATE,
+    RELATIVE_DATE,
+    EXPLICIT_RELATIVE_DATE,
+    GLOBAL_DATE,
+    FOREVER_DATE,
+    LIMITED_DATE,
+    DATE_RULES,
+    RECURRENCE,
+
 
 }
