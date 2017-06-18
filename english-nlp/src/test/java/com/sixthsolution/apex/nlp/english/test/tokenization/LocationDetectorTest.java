@@ -36,5 +36,7 @@ public class LocationDetectorTest extends EnglishDetectorTest {
                 .label(Label.LOCATION).entity(Entity.LOCATION);
         assertChunkedPart("Meet John at Mall from 9:30 to 12:00").text("at Mall")
                 .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("Bring Negin lunch at 123 st.").text("at 123 st.")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
     }
 }

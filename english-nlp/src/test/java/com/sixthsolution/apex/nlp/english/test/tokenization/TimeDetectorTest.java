@@ -17,6 +17,8 @@ import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunk
 
 public class TimeDetectorTest extends EnglishDetectorTest {
 
+    //TODO add every x hours
+
     @Test
     public void test_fixed_time() {
         assertChunkedPart("at 10 am").text("at 10 am").label(FIXED_TIME).entity(TIME);
