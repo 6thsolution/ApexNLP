@@ -42,14 +42,17 @@ public class EventTest {
     public void test_date_extraction(){
         //formal date
         assertEvent("15/apr/2012").start("2012/04/15 09:30").end("2012/04/15 10:30");
+        assertEvent("until 2017/09/10").end("2017/09/10 10:30");
+        assertEvent("till 15/apr/2012").end("15/apr/2012 10:30");
 
     }
+
     @Test
     public void test_full_sentence() {
-        assertEvent("Grocery shopping at Wegmans Thursday at 5pm")
-                .location("Wegmans")
-                .startTime("17:00")
-                .endTime("18:00");
+//        assertEvent("Grocery shopping at Wegmans Thursday at 5pm")
+//                .location("Wegmans")
+//                .startTime("17:00")
+//                .endTime("18:00");
         assertEvent("12/09 Meet John at Mall from 9:30 to 12:00")
                 .location("Mall")
                 .startTime("09:30")

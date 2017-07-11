@@ -91,7 +91,7 @@ public class DateDetector extends ChunkDetector {
         ,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
     }
 
-    /**
+    /**+
      * @return 2 summer from today, winter 2014, next spring,...
      */
     private static Pattern relative_date_type4(){

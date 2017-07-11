@@ -29,10 +29,12 @@ public class ChunkedPart {
         return entity;
     }
 
+    public List<TaggedWord> getTaggedWords(int start,int end) {
+        return taggedWords.subList(start,end);
+    }
     public List<TaggedWord> getTaggedWords() {
         return taggedWords;
     }
-
     public String toStringTaggedWords() {
         StringBuilder sb = new StringBuilder();
         for (TaggedWord taggedWord : taggedWords) {
