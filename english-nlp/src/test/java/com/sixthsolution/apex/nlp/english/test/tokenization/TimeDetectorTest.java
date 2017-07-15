@@ -41,19 +41,19 @@ public class TimeDetectorTest extends EnglishDetectorTest {
 
     @Test
     public void test_range_time() {
-        assertChunkedPart("from 5pm till 6pm").text("from 5 pm till 6 pm")
+        assertChunkedPart("at 5pm till 6pm").text("at 5 pm till 6 pm")
                 .label(RANGE_TIME).entity(TIME);
         assertChunkedPart("at 5-6pm").text("at 5 - 6 pm")
                 .label(RANGE_TIME).entity(TIME);
         assertChunkedPart("at nine till eleven").text("at nine till eleven")
                 .label(RANGE_TIME).entity(TIME);
-        assertChunkedPart("from 5pm to 6pm").text("from 5 pm to 6 pm")
+        assertChunkedPart("at 5pm to 6pm").text("at 5 pm to 6 pm")
                 .label(RANGE_TIME).entity(TIME);
-        assertChunkedPart("from 9:30 to 10:30").text("from 9 : 30 to 10 : 30")
+        assertChunkedPart("at 9:30 to 10:30").text("at 9 : 30 to 10 : 30")
                 .label(RANGE_TIME).entity(TIME);
-        assertChunkedPart("from morning - 9pm").text("from morning - 9 pm")
+        assertChunkedPart("at morning - 9pm").text("at morning - 9 pm")
                 .label(RANGE_TIME).entity(TIME);
-        assertChunkedPart("from 11.5 - 12.5 ").text("from 11 . 5 - 12 . 5")
+        assertChunkedPart("at 11.5 - 12.5 ").text("at 11 . 5 - 12 . 5")
                 .label(RANGE_TIME).entity(TIME);
 
     }

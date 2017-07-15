@@ -29,8 +29,8 @@ public class StandardEventDetector implements EventDetector {
         for (ChunkedPart part : chunkedParts) {
             switch (part.getEntity()) {
                 case TIME:
-                    timeExtractor.extract(builder, source, part);
-                    break;
+                timeExtractor.extract(builder, source, part);
+                break;
                 case DATE:
                     dateExtractor.extract(builder, source, part);
                     break;

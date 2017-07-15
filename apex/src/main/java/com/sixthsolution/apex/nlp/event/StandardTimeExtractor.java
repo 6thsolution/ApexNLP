@@ -3,6 +3,7 @@ package com.sixthsolution.apex.nlp.event;
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.dict.TagValue;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
+import com.sixthsolution.apex.nlp.ner.Entity;
 import com.sixthsolution.apex.nlp.tagger.TaggedWord;
 import com.sixthsolution.apex.nlp.util.Pair;
 
@@ -12,10 +13,11 @@ import org.threeten.bp.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.threeten.bp.LocalDate;
 
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_HOUR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MIN;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
+
+import static com.sixthsolution.apex.nlp.dict.Tag.*;
+
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
@@ -23,78 +25,84 @@ import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
 
 public class StandardTimeExtractor implements Extractor {
 
+    LocalTime time;
+
     @Override
     public void extract(EventBuilder builder, LocalDateTime source, ChunkedPart chunkedPart) {
-        Pair<LocalTime, LocalTime> time = null;
         switch (chunkedPart.getLabel()) {
             case FIXED_TIME:
             case RANGE_TIME:
-                time = getFixedOrRangeTime(source, chunkedPart);
-                builder.setStartTime(time.first);
-                builder.setEndTime(time.second);
+                time= getFixedOrRangeTime(source, chunkedPart).first;
+                builder.setStartTime(time);
+                time= getFixedOrRangeTime(source, chunkedPart).second;
+                builder.setEndTime(time);
                 break;
             case RELATIVE_TIME:
-                time = getRelativeTime(source, chunkedPart);
-                builder.setStartTime(time.first);
-                builder.setEndTime(time.second);
+                time = getRelativeTime(source, chunkedPart).first;
+                builder.setStartTime(time);
+                time = getRelativeTime(source, chunkedPart).second;
+                builder.setEndTime(time);
                 break;
         }
     }
 
-    private Pair<LocalTime, LocalTime> getFixedOrRangeTime(LocalDateTime source,
+    private Pair<LocalTime,LocalTime>getFixedOrRangeTime(LocalDateTime source,
                                                            ChunkedPart chunkedPart) {
-        int startHour = -1, startMin = 0;
-        int endHour = -1, endMin = 0;
-        boolean switchToEnd = false;
-        boolean appliedMeridiemToStartHour = false;
-        for (TaggedWord taggedWord : chunkedPart.getTaggedWords()) {
-            TagValue number = taggedWord.getTags().containsTagByValue(Tag.NUMBER);
-            if (number == null) {
-                number = taggedWord.getTags().containsTagByValue(Tag.TIME_RELATIVE);
-                if (number != null && startHour == -1) {
-                    appliedMeridiemToStartHour = true;
-                }
-            }
-            if (number != null) {
-                int numberVal = (Integer) number.value;
-                if (!switchToEnd && startHour == -1) {
-                    startHour = numberVal;
-                } else if (!switchToEnd) {
-                    startMin = numberVal;
-                } else if (switchToEnd && endHour == -1) {
-                    endHour = numberVal;
-                } else if (switchToEnd) {
-                    endMin = numberVal;
-                }
-            } else {
-                TagValue med = taggedWord.getTags().containsTagByValue(Tag.TIME_MERIDIEM);
-                if (med != null) {
-                    if (!switchToEnd && startHour <= 12) {
-                        startHour += (Integer) med.value;
+
+            int startHour = -1, startMin = 0;
+            int endHour = -1, endMin = 0;
+            boolean switchToEnd = false;
+            boolean appliedMeridiemToStartHour = false;
+            for (TaggedWord taggedWord : chunkedPart.getTaggedWords()) {
+                TagValue number = taggedWord.getTags().containsTagByValue(Tag.NUMBER);
+                if (number == null) {
+                    number = taggedWord.getTags().containsTagByValue(Tag.TIME_RELATIVE);
+                    if (number != null && startHour == -1) {
                         appliedMeridiemToStartHour = true;
-                    } else if (endHour <= 12) {
-                        endHour += (Integer) med.value;
-                        if (!appliedMeridiemToStartHour && startHour <= 12) {
-                            startHour += (Integer) med.value;
-                        }
+                    }
+                }
+                if (number != null) {
+                    int numberVal = (Integer) number.value;
+                    if (!switchToEnd && startHour == -1) {
+                        startHour = numberVal;
+                    } else if (!switchToEnd) {
+                        startMin = numberVal;
+                    } else if (switchToEnd && endHour == -1) {
+                        endHour = numberVal;
+                    } else if (switchToEnd) {
+                        endMin = numberVal;
                     }
                 } else {
-                    TagValue rangeSwitch = taggedWord.getTags().containsTagByValue(Tag.TIME_RANGE);
-                    if (rangeSwitch != null) {
-                        switchToEnd = true;
+                    TagValue med = taggedWord.getTags().containsTagByValue(Tag.TIME_MERIDIEM);
+                    if (med != null) {
+                        if (!switchToEnd && startHour <= 12) {
+                            startHour += (Integer) med.value;
+                            appliedMeridiemToStartHour = true;
+                        } else if (endHour <= 12) {
+                            endHour += (Integer) med.value;
+                            if (!appliedMeridiemToStartHour && startHour <= 12) {
+                                startHour += (Integer) med.value;
+                            }
+                        }
+                    } else {
+                        TagValue rangeSwitch = taggedWord.getTags().containsTagByValue(Tag.TIME_RANGE);
+                        if (rangeSwitch != null) {
+                            switchToEnd = true;
+                        }
                     }
                 }
             }
-        }
-        LocalTime startTime = source.toLocalTime().withHour(startHour).withMinute(startMin);
-        LocalTime endTime = null;
-        if (endHour == -1) {
-            endTime = startTime.plusHours(1);
-        } else {
-            endTime = source.toLocalTime().withHour(endHour).withMinute(endMin);
-        }
-        return new Pair<>(startTime, endTime);
+            LocalTime startTime = source.toLocalTime().withHour(startHour).withMinute(startMin);
+            LocalTime endTime = null;
+            if (endHour == -1) {
+                endTime = startTime.plusHours(1);
+            } else {
+                endTime = source.toLocalTime().withHour(endHour).withMinute(endMin);
+            }
+            return new Pair<>(startTime, endTime);
+
     }
+
 
     private Pair<LocalTime, LocalTime> getRelativeTime(LocalDateTime source,
                                                        ChunkedPart chunkedPart) {

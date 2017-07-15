@@ -141,7 +141,7 @@ public class DateDetector extends ChunkDetector {
      * @return till next month, from 12/3/2012 until june,..
      */
     private static Pattern limited_date(){
-        return match(maybe(DATE_START_RANGE.toString()).then(maybe(anyOf(relative_date(),relax_date(),formal_date()).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())))));
+        return match(maybe(DATE_START_RANGE.toString()).then(maybe(/*anyOf(relative_date(),relax_date(),*/(formal_date()).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())))));
     }
 
     private static Pattern year_part(){

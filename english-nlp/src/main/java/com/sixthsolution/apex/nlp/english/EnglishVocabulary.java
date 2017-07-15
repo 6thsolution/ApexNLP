@@ -74,7 +74,7 @@ public final class EnglishVocabulary {
                 .e(false, "before")
                 .e(true, "after");
         vb.tag(TIME_START_RANGE, TIME)
-                .e("from");
+                .e("at");
         vb.tag(TIME_RANGE, TIME)
                 .e("till", "until", "-", "for", "to","during");
         vb.tag(TIME_SEPARATOR, TIME)

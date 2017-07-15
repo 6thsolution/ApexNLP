@@ -74,7 +74,7 @@ public class DateDetectorTest extends EnglishDetectorTest {
     public void test_limited_date(){
 //        assertChunkedPart("till next month").text("till next month").label(LIMITED_DATE).entity(DATE);
         assertChunkedPart("from sunday until june 20").text("from sunday until june 20").label(LIMITED_DATE).entity(DATE);
-
+        assertChunkedPart("from 7/15/2017 until 8/15/2017").text("from 7 / 15 / 2017 until 8 / 15 / 2017").label(LIMITED_DATE).entity(DATE);
     }
 
     @Test
