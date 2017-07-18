@@ -10,6 +10,13 @@ import java.util.List;
 
 public class TaggedWords extends ArrayList<TaggedWord> {
 
+    public TaggedWords (){
+    }
+
+    public TaggedWords (List<TaggedWord> in){
+        this.addAll(in);
+    }
+
     public void removeRange(int fromIndex, int toIndex) {
         super.removeRange(fromIndex, toIndex);
     }

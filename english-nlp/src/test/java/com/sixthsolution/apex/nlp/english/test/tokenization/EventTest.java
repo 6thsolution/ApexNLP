@@ -68,6 +68,8 @@ public class EventTest {
         assertEvent("until 15/apr/2012").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate("2012-04-15");
         assertEvent("till 2017/04/10").end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         assertEvent("until 15/apr/2012").end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
+        assertEvent("from today until tomorrow").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
+        assertEvent("until april").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+"-04-"+check_zero(String.valueOf(day)));
         //TODO fix startDate of limited date
 
         //relax

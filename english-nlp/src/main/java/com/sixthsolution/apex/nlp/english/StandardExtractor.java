@@ -8,10 +8,12 @@ import com.sixthsolution.apex.nlp.event.Extractor;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
 import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.tagger.TaggedWord;
+import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 import com.sixthsolution.apex.nlp.util.Pair;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
-
+import com.sixthsolution.apex.nlp.ner.regex.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.sixthsolution.apex.nlp.ner.Entity.DATE;
@@ -250,18 +252,16 @@ public class StandardExtractor implements Extractor {
             while (!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) index++;
             List<TaggedWord> taggi = taggedWords.subList(1, index);
             //TODO add for another forms
-            ChunkedPart cp = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi);
+            ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
             List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
-            ChunkedPart cp2 = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi2);
-            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+            ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             StandardExtractor sde2 = new StandardExtractor();
             sde2.extract(new EventBuilder(), LocalDateTime.now(), cp2);
             start = sde.date;
             end = sde2.date;
         } else if (first.containsTag(Tag.DATE_RANGE)) {
             List<TaggedWord> taggi = taggedWords.subList(1, taggedWords.size());
-            ChunkedPart cp = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi);
-            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+            ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             start = LocalDate.now();
             end = sde.date;
 
