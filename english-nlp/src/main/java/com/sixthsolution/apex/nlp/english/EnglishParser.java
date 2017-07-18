@@ -41,6 +41,6 @@ public class EnglishParser extends StandardParserBase {
 
     @Override
     protected EventDetector provideEventDetector() {
-        return new StandardEventDetector();
+        return new StandardEventDetector(new StandardExtractor());
     }
 }

@@ -81,6 +81,12 @@ public class EventTest {
         assertEvent("20 jan 2012").startDate("2012"+"-01-20").endDate("2012"+"-01-20");
         assertEvent("20 of jan").startDate(year+"-01-20").endDate(year+"-01-20");
         assertEvent("20 of jan").start(year+"/01/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/01/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+
+        //relative
+        assertEvent("tomorrow").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
+        assertEvent("today").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day)));
+//        assertEvent("next week").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+7))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+7)));
+
     }
 
 

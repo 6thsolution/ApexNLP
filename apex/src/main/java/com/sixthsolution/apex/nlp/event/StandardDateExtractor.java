@@ -26,33 +26,33 @@ public class StandardDateExtractor implements Extractor {
     @Override
     public void extract(EventBuilder builder, LocalDateTime source, ChunkedPart chunkedPart) {
 
-        switch (chunkedPart.getLabel()) {
-
-            case FORMAL_DATE:
-                date = getFormalDate(source, chunkedPart);
-                builder.setStartDate(date);
-                builder.setEndDate(date);
-                break;
-
-            case RELAX_DATE:
-                date = getRelaxDate(source, chunkedPart);
-                builder.setStartDate(date);
-                builder.setEndDate(date);
-                break;
-
-            case RELATIVE_DATE:
-                date=getRelativeDate(source, chunkedPart);
-                builder.setStartDate(date);
-                builder.setEndDate(date);
-                break;
-
-            case LIMITED_DATE:
-                Pair<LocalDate,LocalDate> pdate =getLimitedDate(source, chunkedPart);                builder.setStartDate(date);
-                builder.setStartDate(pdate.first);
-                builder.setEndDate(pdate.second);
-                break;
-
-        }
+//        switch (chunkedPart.getLabel()) {
+//
+//            case FORMAL_DATE:
+//                date = getFormalDate(source, chunkedPart);
+//                builder.setStartDate(date);
+//                builder.setEndDate(date);
+//                break;
+//
+//            case RELAX_DATE:
+//                date = getRelaxDate(source, chunkedPart);
+//                builder.setStartDate(date);
+//                builder.setEndDate(date);
+//                break;
+//
+//            case RELATIVE_DATE:
+//                date=getRelativeDate(source, chunkedPart);
+//                builder.setStartDate(date);
+//                builder.setEndDate(date);
+//                break;
+//
+//            case LIMITED_DATE:
+//                Pair<LocalDate,LocalDate> pdate =getLimitedDate(source, chunkedPart);                builder.setStartDate(date);
+//                builder.setStartDate(pdate.first);
+//                builder.setEndDate(pdate.second);
+//                break;
+//
+//        }
     }
 
     private LocalDate getFormalDate(LocalDateTime source, ChunkedPart chunkedPart) {
@@ -218,7 +218,7 @@ public class StandardDateExtractor implements Extractor {
             res=LocalDate.now().plusDays((int)first.value);
             return res;
         }
-        if(first.tag.equals(Tag.RELATIVE_PREPOSITION)) {
+        else if(first.tag.equals(Tag.RELATIVE_PREPOSITION)) {
             if(taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).equals(Tag.DATE_SEEKBY)){
                 res=LocalDate.now().plusDays(((int)first.value)*((int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
             }
@@ -228,7 +228,7 @@ public class StandardDateExtractor implements Extractor {
             }
 
         }
-        if (first.tag.equals(Tag.NUMBER)){
+        else{// (first.tag.equals(Tag.NUMBER)){
             if((taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).equals(Tag.DATE_SEEKBY))&&(taggedWords.get(2).getTags().containsTagByValue(Tag.RELATIVE_SUFFIX).tag.equals(Tag.RELATIVE_SUFFIX))){
                 res=LocalDate.now().plusDays(((int)first.value)*((int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
             }

@@ -42,6 +42,12 @@ public class StandardEventDetector implements EventDetector {
         return builder.build(source);
     }
 
+    public StandardEventDetector(Extractor DateExtractor) {
+        timeExtractor = provideTimeExtractor();
+        dateExtractor = DateExtractor;
+        locationExtractor = provideLocationExtractor();
+    }
+
     protected Extractor provideTimeExtractor() {
         return new StandardTimeExtractor();
     }
