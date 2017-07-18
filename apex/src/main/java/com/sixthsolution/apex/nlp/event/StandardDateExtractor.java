@@ -32,20 +32,21 @@ public class StandardDateExtractor implements Extractor {
                 builder.setEndDate(date);
                 break;
 
-//            case RELAX_DATE:
-//                date = getRelaxDate(source, chunkedPart);
-//                builder.setStartDate(date);
-//                builder.setEndDate(date);
-//                break;
+            case RELAX_DATE:
+                date = getRelaxDate(source, chunkedPart);
+                builder.setStartDate(date);
+                builder.setEndDate(date);
+                break;
+
 //            case RELATIVE_DATE:
 //                date=getRelativeDate(source, chunkedPart);
 //                builder.setStartDate(date);
 //                builder.setEndDate(date);
 //                break;
             case LIMITED_DATE:
-                date=getLimitedDate(source, chunkedPart).first;
+                date = getLimitedDate(source, chunkedPart).first;
                 builder.setStartDate(date);
-                date=getLimitedDate(source, chunkedPart).second;
+                date = getLimitedDate(source, chunkedPart).second;
                 builder.setEndDate(date);
                 break;
 
@@ -101,65 +102,76 @@ public class StandardDateExtractor implements Extractor {
 
             }
         }
-        date=LocalDate.of(year,month,dayOfMonth);
+        date = LocalDate.of(year, month, dayOfMonth);
         return date;
     }
 
 
-//    private LocalDate getRelaxDate(LocalDateTime source, ChunkedPart chunkedPart) {
-//        LocalDate date = null;
-//        int year = source.getYear();
-//        int month = source.getMonthValue();
-//        int dayOfMonth = source.getDayOfMonth();
-//
-//        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
-//        TagValue first = taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER);
-//        TagValue second = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
-//        TagValue third = taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER);
-//
-//        if (taggedWords.size()>=3) {
-//            TagValue intchk = taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER);
-//            Integer n = -1;
-//            if (intchk.value.getClass() == n.getClass()) {
-//                boolean secondIsExactlyMonth = false;
-//                if (second == null) {
-//                    second = taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME);
-//                    third = taggedWords.get(3).getTags().containsTagByValue(Tag.NUMBER);
-//                    secondIsExactlyMonth = true;
-//                }
-//                dayOfMonth=(int)first.value;
-//                month=(int)second.value;
-//                year=(int)third.value;
-//
-//            } else {
-//                first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
-//                second = taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER);
-//                third = taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER);
-//                month=(int)first.value;
-//                dayOfMonth=(int)second.value;
-//                year=(int)third.value;
-//            }
-//        }else {
-//            first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
-//            boolean firstIsExactlyMonth = false;
-//            if (first == null) {
-//                first = taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY);
-//                firstIsExactlyMonth = true;
-//            }
-//            month=(int)first.value;
-//
-//        }
-//
-//        return LocalDate.of(year, month, dayOfMonth);
-//    }
+    private LocalDate getRelaxDate(LocalDateTime source, ChunkedPart chunkedPart) {
+
+        int year = -1;
+        int month = -1;
+        int dayOfMonth = -1;
+
+        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
+        TagValue first ;
+        TagValue second ;
+        TagValue third ;
+
+
+        if (taggedWords.size() > 1) {
+            TagValue intchk = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
+            if(String.valueOf(intchk.value)!=null){
+                first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
+                second = taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER);
+                //suspisious
+                month = (int) first.value;
+                dayOfMonth = (int) second.value;
+
+            } else {
+
+                first = taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER);
+                second = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
+
+                if (second == null) {
+                    second = taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME);
+                }
+                dayOfMonth = (int) first.value;
+                month = (int) second.value;
+            }
+            if (taggedWords.size() >= 3) {
+                third = taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER);
+                TagValue checksecond1 = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
+                TagValue checksecond2 = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
+                if (checksecond1 == null && checksecond2==null) {
+                    third = taggedWords.get(3).getTags().containsTagByValue(Tag.NUMBER);
+                }
+                year = (int) third.value;
+                if (year == -1) {
+                    year = LocalDate.now().getYear();
+                }
+                return LocalDate.of(year, month, dayOfMonth);
+            }
+        }
+        System.out.println("hi");
+        first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
+        if (first == null) {
+            first = taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY);
+        }
+        month = (int) first.value;
+        return LocalDate.of(LocalDate.now().getYear(), month, LocalDate.now().getDayOfMonth());
+        //TODO else for weekday
+
+
+    }
 
 
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
         return null;
     }
 
-    private Pair<LocalDate,LocalDate> getLimitedDate(LocalDateTime source, ChunkedPart chunkedPart) {
-       List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
+    private Pair<LocalDate, LocalDate> getLimitedDate(LocalDateTime source, ChunkedPart chunkedPart) {
+        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
         TagValue first = taggedWords.get(0).getTags().containsTagByValue(Tag.DATE_START_RANGE);
 
         StandardDateExtractor sde = new StandardDateExtractor();
@@ -174,16 +186,16 @@ public class StandardDateExtractor implements Extractor {
             sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             StandardDateExtractor sde2 = new StandardDateExtractor();
             sde2.extract(new EventBuilder(), LocalDateTime.now(), cp2);
-             start = sde.date;
-             end = sde2.date;
+            start = sde.date;
+            end = sde2.date;
 
         } else {
             ChunkedPart cp = new ChunkedPart(DATE, Label.DATE, chunkedPart.getTaggedWords(1, chunkedPart.getTaggedWords().size()));
-            sde.extract(new EventBuilder(),LocalDateTime.now(),cp);
+            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             start = LocalDate.now();
-            end=sde.date;
+            end = sde.date;
         }
-        Pair<LocalDate,LocalDate> p = new Pair<>(start,end);
+        Pair<LocalDate, LocalDate> p = new Pair<>(start, end);
         return p;
     }
 }
