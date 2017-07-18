@@ -71,8 +71,16 @@ public class EventTest {
         //TODO fix startDate of limited date
 
         //relax
-        assertEvent("april").startDate(year+"-04-"+day).endDate(year+"-04-"+day);
-//        assertEvent("april 20th").startDate(year+"-04-20");
+        assertEvent("april").startDate(year+"-04-"+check_zero(String.valueOf(day))).endDate(year+"-04-"+check_zero(String.valueOf(day)));
+        assertEvent("apr").start(year+"/04/"+check_zero(String.valueOf(day))+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)));
+        assertEvent("jan 20").startDate(year+"-01-20").endDate(year+"-01-20");
+        assertEvent("april 20").start(year+"/04/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/04/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+        assertEvent("december 2012").startDate("2012"+"-12-"+day).endDate("2012"+"-12-"+day);
+//        assertEvent("april 20 of 2012").startDate("2012-04-20");
+        assertEvent("20 jan ").startDate(year+"-01-20").endDate(year+"-01-20");
+        assertEvent("20 jan 2012").startDate("2012"+"-01-20").endDate("2012"+"-01-20");
+        assertEvent("20 of jan").startDate(year+"-01-20").endDate(year+"-01-20");
+        assertEvent("20 of jan").start(year+"/01/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/01/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
     }
 
 

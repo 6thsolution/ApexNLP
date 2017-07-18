@@ -13,6 +13,7 @@ public class EnglishTokenizer extends StandardTokenizer {
                 .replaceAll("(\\d+)(\\s+)(\\d+)", "$1 , $3")
                 .replaceAll("(,)"," $1 ")
                 .replaceAll("(in)(\\s+)(the)(\\s+)(evening|afternoon)", "$1_$3_$5")
+                .replaceAll("(\\d+)(th)","")
 //                .replaceAll("(\\s+)(from|starts)(\\s+)", "$1, $2$3")
                 ;
     }

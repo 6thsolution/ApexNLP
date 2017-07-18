@@ -121,39 +121,57 @@ public class StandardDateExtractor implements Extractor {
 
         if (taggedWords.size() > 1) {
             TagValue intchk = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
-            if(String.valueOf(intchk.value)!=null){
-                first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
-                second = taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER);
-                //suspisious
-                month = (int) first.value;
-                dayOfMonth = (int) second.value;
+            String test=taggedWords.get(0).getWord();
+            if ((test).matches(".*\\d+.*")) {
 
-            } else {
-
+                System.out.println("part1 1<3 and start with number");
                 first = taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER);
                 second = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
 
                 if (second == null) {
+                    System.out.println("part1 1<3 and start with number has of");
                     second = taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME);
                 }
                 dayOfMonth = (int) first.value;
                 month = (int) second.value;
+                if (taggedWords.size()>2 && taggedWords.get(taggedWords.size()-1).getWord().matches("\\d+")) {
+
+                    third = taggedWords.get(taggedWords.size()-1).getTags().containsTagByValue(Tag.NUMBER);
+                    System.out.println("year:"+third.value);
+                    year = Integer.valueOf(third.value.toString());
+                    return LocalDate.of(year, month, dayOfMonth);
+                }
+                return LocalDate.of(LocalDate.now().getYear(), month, dayOfMonth);
+
             }
-            if (taggedWords.size() >= 3) {
-                third = taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER);
-                TagValue checksecond1 = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
-                TagValue checksecond2 = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
-                if (checksecond1 == null && checksecond2==null) {
-                    third = taggedWords.get(3).getTags().containsTagByValue(Tag.NUMBER);
+            if (!(test).matches(".*\\d+.*")) {
+                System.out.println("part2 1<3 and start with month name");
+                first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
+                second = taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER);
+                if ((int) second.value > 30) {
+                    System.out.println("part2 1<3 and start with month name and year");
+                    month = (int) first.value;
+                    year = (int) second.value;
+                    return LocalDate.of(year, month, LocalDate.now().getDayOfMonth());
+
                 }
-                year = (int) third.value;
-                if (year == -1) {
-                    year = LocalDate.now().getYear();
+                month = (int) first.value;
+                dayOfMonth = (int) second.value;
+                System.out.println("size:"+taggedWords.size());
+                if (taggedWords.size()>2&&taggedWords.get(taggedWords.size()-1).getWord().matches("\\d+")) {
+
+                    third = taggedWords.get(taggedWords.size()).getTags().containsTagByValue(Tag.NUMBER);
+                    System.out.println("year:"+third.value);
+                    year = Integer.valueOf(third.value.toString());
+                    return LocalDate.of(year, month, dayOfMonth);
                 }
-                return LocalDate.of(year, month, dayOfMonth);
+                return LocalDate.of(LocalDate.now().getYear(), month, dayOfMonth);
+
             }
         }
-        System.out.println("hi");
+
+
+        System.out.println("part 4 just month");
         first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
         if (first == null) {
             first = taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY);
