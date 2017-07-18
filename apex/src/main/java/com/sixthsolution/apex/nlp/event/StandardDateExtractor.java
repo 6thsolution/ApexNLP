@@ -249,6 +249,7 @@ public class StandardDateExtractor implements Extractor {
             int index = 0;
             while (!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) index++;
             List<TaggedWord> taggi = taggedWords.subList(1, index);
+            //TODO add for another forms
             ChunkedPart cp = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi);
             List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
             ChunkedPart cp2 = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi2);
