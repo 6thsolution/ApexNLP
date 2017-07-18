@@ -63,9 +63,9 @@ public class EventTest {
         //limited
         //TODO fix confusion of limited date with time
         assertEvent("from 7/15/2017 until 8/15/2017").startDate("2017-07-15").endDate("2017-08-15");
-//        assertEvent("till 2017/08/10").startDate("2017-07-15").endDate("2017-08-10");
-//        assertEvent("till 2017/08/10").start("2017/07/15 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)) );
-        assertEvent("until 15/apr/2012").endDate("2012-04-15");
+        assertEvent("till 2017/08/10").endDate("2017-08-10");
+        assertEvent("till 2017/08/10").start(year+"/"+check_zero(String.valueOf(month))+"/"+check_zero(String.valueOf(day))+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)) );
+        assertEvent("until 15/apr/2012").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate("2012-04-15");
         assertEvent("till 2017/04/10").end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         assertEvent("until 15/apr/2012").end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         //TODO fix startDate of limited date

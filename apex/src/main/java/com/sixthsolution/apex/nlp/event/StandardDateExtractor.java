@@ -248,7 +248,7 @@ public class StandardDateExtractor implements Extractor {
         if (first.containsTag(Tag.DATE_START_RANGE)) {
             int index = 0;
             while (!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) index++;
-            List<TaggedWord> taggi = taggedWords.subList(1, index );
+            List<TaggedWord> taggi = taggedWords.subList(1, index);
             ChunkedPart cp = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi);
             List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
             ChunkedPart cp2 = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi2);
@@ -257,6 +257,13 @@ public class StandardDateExtractor implements Extractor {
             sde2.extract(new EventBuilder(), LocalDateTime.now(), cp2);
             start = sde.date;
             end = sde2.date;
+        }
+            else if (first.containsTag(Tag.DATE_RANGE)){
+                List<TaggedWord> taggi = taggedWords.subList(1, taggedWords.size());
+                ChunkedPart cp = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi);
+                sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+                start = LocalDate.now();
+                end = sde.date;
 
         } else {
             ChunkedPart cp = new ChunkedPart(DATE, Label.DATE, chunkedPart.getTaggedWords(1, chunkedPart.getTaggedWords().size()));
