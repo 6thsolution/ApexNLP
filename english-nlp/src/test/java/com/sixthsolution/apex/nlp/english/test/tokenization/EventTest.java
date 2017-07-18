@@ -58,11 +58,11 @@ public class EventTest {
         assertEvent("15/apr/2012").start("2012/04/15 " + check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         assertEvent("2017/04/10").start("2017/04/10 " + check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         //TODO fix this format
-//        assertEvent("12/09").startDate("2017-09-12").endDate("2017-09-12");
+        assertEvent("12/09").startDate("2017-09-12").endDate("2017-09-12");
 
         //limited
         //TODO fix confusion of limited date with time
-//        assertEvent("from 7/15/2017 until 8/15/2017").startDate("2017-07-15").endDate("2017-08-15");
+        assertEvent("from 7/15/2017 until 8/15/2017").startDate("2017-07-15").endDate("2017-08-15");
 //        assertEvent("till 2017/08/10").startDate("2017-07-15").endDate("2017-08-10");
 //        assertEvent("till 2017/08/10").start("2017/07/15 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)) );
         assertEvent("until 15/apr/2012").endDate("2012-04-15");

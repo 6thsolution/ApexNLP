@@ -28,8 +28,8 @@ public class DateDetector extends ChunkDetector {
     private static Pattern formal_date() {
         return match(NUMBER.toString()).then(DATE_SEPARATOR.toString())
                 .then(anyOf(NUMBER.toString(), MONTH_NAME.toString()))
-                .then(DATE_SEPARATOR.toString())
-                .then(NUMBER.toString());
+                .then(maybe(DATE_SEPARATOR.toString()))
+                .then(maybe(NUMBER.toString()));
     }
 
     /**

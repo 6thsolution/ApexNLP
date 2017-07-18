@@ -45,7 +45,6 @@ public class DateDetectorTest extends EnglishDetectorTest {
     public void test_relative_date(){
         assertChunkedPart("today").text("today").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("tomorrow").text("tomorrow").label(RELATIVE_DATE).entity(DATE);
-        assertChunkedPart("tonight").text("tonight").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("next sunday").text("next sunday").label(RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("2 monday from today").text("2 monday from today").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("next april").text("next april").label(RELATIVE_DATE).entity(DATE);

@@ -35,6 +35,9 @@ public class TimeDetectionFilter extends ChunkDetectionFilter {
                 if (startIndex > 0 && taggedWords.get(startIndex - 1).hasTag(MONTH_NAME)) {
                     return false;
                 }
+                else if (startIndex > 0 && taggedWords.get(startIndex - 1).hasTag(DATE_SEPARATOR)) { // edited by scrc
+                    return false;
+                }
                 return true;
             case RELATIVE_TIME:
                 return true;

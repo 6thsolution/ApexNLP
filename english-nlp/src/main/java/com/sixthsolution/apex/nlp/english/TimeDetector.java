@@ -66,8 +66,8 @@ public class TimeDetector extends ChunkDetector {
      * @return from (time) till (time)
      */
     private static Pattern range_time() {
-        return maybe(TIME_START_RANGE.toString()).then(fixed_time())
-                .then(TIME_RANGE.toString()).then(fixed_time());
+        //TODO add From-until
+        return fixed_time().then(TIME_RANGE.toString()).then(anyOf(time_relative(), time_hour_min()));
     }
 
     private static Pattern relative_time() {

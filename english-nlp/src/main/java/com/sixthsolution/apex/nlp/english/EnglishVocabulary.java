@@ -32,9 +32,8 @@ public final class EnglishVocabulary {
         //RELATIVE DATE
         //***************************************
         vb.tag(NAMED_DATE, DATE)
-                .e(1, "today")
-                .e(2, "tonight")
-                .e(3, "tomorrow");
+                .e(0, "today")
+                .e(1, "tomorrow");
         vb.tag(GLOBAL_PREPOSITION,DATE)
                 .e(true, "after")
                 .e(false, "before");
@@ -67,7 +66,7 @@ public final class EnglishVocabulary {
                 .e(9, "morning")
                 .e(12, "noon")
                 .e(16, "in_the_evening", "in_the_afternoon", "in_the_after-noon", "evening")
-                .e(21, "night")
+                .e(21, "night","tonight")
                 .e(23, "midnight", "mid-night")
                 .e(0, "now");//TODO current time
         vb.tag(TIME_RELATIVE_INDICATOR, TIME)
@@ -103,10 +102,10 @@ public final class EnglishVocabulary {
         vb.tag(DATE_PREPOSITION, DATE)
                 .e("on");
         vb.tag(DATE_SEEKBY, DATE)
-                .e("day", "days")
-                .e("week", "weeks", "wks", "wks.")
-                .e("month", "months")
-                .e("year", "years", "yrs");
+                .e(1,"day", "days")
+                .e(7,"week", "weeks", "wks", "wks.")
+                .e(30,"month", "months")
+                .e(365,"year", "years", "yrs");
         vb.tag(YEAR_SEEK,DATE)
                 .e("year", "years", "yrs");
         vb.tag(MONTH_SEEK,DATE)
@@ -186,7 +185,7 @@ public final class EnglishVocabulary {
         vb.tag(PREPOSITION, NONE)
                 .e("on", "in", "at", "of", "to", "with");
         vb.tag(RELATIVE_PREPOSITION , NONE)
-                .e("next");
+                .e(1,"next");
         vb.tag(RELATIVE_SUFFIX,NONE)
                 .e("from_today","from_now","after_next");
         vb.tag(THE_PREFIX,NONE)

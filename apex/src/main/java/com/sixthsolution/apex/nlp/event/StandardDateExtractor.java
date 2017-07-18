@@ -2,9 +2,11 @@ package com.sixthsolution.apex.nlp.event;
 
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.dict.TagValue;
+import com.sixthsolution.apex.nlp.dict.Tags;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
 import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.tagger.TaggedWord;
+import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 import com.sixthsolution.apex.nlp.util.Pair;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
@@ -45,10 +47,9 @@ public class StandardDateExtractor implements Extractor {
                 break;
 
             case LIMITED_DATE:
-                date = getLimitedDate(source, chunkedPart).first;
-                builder.setStartDate(date);
-                date = getLimitedDate(source, chunkedPart).second;
-                builder.setEndDate(date);
+                Pair<LocalDate,LocalDate> pdate =getLimitedDate(source, chunkedPart);                builder.setStartDate(date);
+                builder.setStartDate(pdate.first);
+                builder.setEndDate(pdate.second);
                 break;
 
         }
@@ -101,6 +102,28 @@ public class StandardDateExtractor implements Extractor {
                     dayOfMonth = secondNumber;
                 }
 
+            }
+        }
+        //the form monthnumber/yearnumber has been ignored
+        else if (chunkedPart.getTaggedWords().size() == 3) {
+            TagValue first = taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER);
+            TagValue second = taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER);
+            boolean firstIsExactlyMonth = false;
+            if (first == null) {
+                first = taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME);
+                firstIsExactlyMonth = true;
+            }
+            if (first != null && second != null) {
+                int firstNumber = (int) first.value;
+                int secondNumber = (int) second.value;
+                //for formats like 1/02
+                if (!firstIsExactlyMonth) {
+                    month = secondNumber;
+                    dayOfMonth = firstNumber;
+                } else {
+                    month = firstNumber;
+                    dayOfMonth = secondNumber;
+                }
             }
         }
         date = LocalDate.of(year, month, dayOfMonth);
@@ -187,22 +210,48 @@ public class StandardDateExtractor implements Extractor {
 
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart)
     {
-        return null;
+        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
+        TagValue first = taggedWords.get(0).getTags().containsTagByValue(Tag.NAMED_DATE);
+
+        LocalDate res =LocalDate.now();
+        if(first.tag.equals(Tag.NAMED_DATE)){
+            res=LocalDate.now().plusDays((int)first.value);
+            return res;
+        }
+        if(first.tag.equals(Tag.RELATIVE_PREPOSITION)) {
+            if(taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).equals(Tag.DATE_SEEKBY)){
+                res=LocalDate.now().plusDays(((int)first.value)*((int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
+            }
+            if(taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).equals(Tag.WEEK_DAY)){
+                int dif=((int)taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).value)-(LocalDate.now().getDayOfWeek().getValue());
+                res=LocalDate.now().plusDays(dif).plusDays(((int)first.value-1)*7);
+            }
+
+        }
+        if (first.tag.equals(Tag.NUMBER)){
+            if((taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).equals(Tag.DATE_SEEKBY))&&(taggedWords.get(2).getTags().containsTagByValue(Tag.RELATIVE_SUFFIX).tag.equals(Tag.RELATIVE_SUFFIX))){
+                res=LocalDate.now().plusDays(((int)first.value)*((int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
+            }
+
+        }
+
+        return res;
     }
 
     private Pair<LocalDate, LocalDate> getLimitedDate(LocalDateTime source, ChunkedPart chunkedPart) {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
-        TagValue first = taggedWords.get(0).getTags().containsTagByValue(Tag.DATE_START_RANGE);
+        Tags first = taggedWords.get(0).getTags();
 
         StandardDateExtractor sde = new StandardDateExtractor();
         LocalDate start;
         LocalDate end;
-        if (first.value.equals("from")) {
-            int index = taggedWords.indexOf(Tag.DATE_RANGE);
-            List<TaggedWord> taggi = chunkedPart.getTaggedWords(1, index);
-            ChunkedPart cp = new ChunkedPart(DATE, Label.DATE, taggi);
-            List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index+1, chunkedPart.getTaggedWords().size());
-            ChunkedPart cp2 = new ChunkedPart(DATE, Label.DATE, taggi2);
+        if (first.containsTag(Tag.DATE_START_RANGE)) {
+            int index = 0;
+            while (!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) index++;
+            List<TaggedWord> taggi = taggedWords.subList(1, index );
+            ChunkedPart cp = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi);
+            List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
+            ChunkedPart cp2 = new ChunkedPart(DATE, Label.FORMAL_DATE, taggi2);
             sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             StandardDateExtractor sde2 = new StandardDateExtractor();
             sde2.extract(new EventBuilder(), LocalDateTime.now(), cp2);
