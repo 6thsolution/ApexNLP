@@ -45,7 +45,7 @@ public class EventTest {
         assertEvent("at 9:30 to 10:30").startTime("09:30").endTime("10:30");
         //relative
         assertEvent("for 2 hours before noon").startTime("10:00").endTime("12:00");
-//        assertEvent("for four hours").startTime(check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).endTime(check_zero(String.valueOf(hour+4))+":"+check_zero(String.valueOf(min)));
+        assertEvent("for one hour").startTime(check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).endTime(check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         //TODO no idea how to support
         //        assertEvent("from 11.5 - 12.5 ").startTime("11:")
     }

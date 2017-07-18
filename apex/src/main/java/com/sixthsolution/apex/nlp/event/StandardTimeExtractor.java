@@ -27,6 +27,7 @@ public class StandardTimeExtractor implements Extractor {
 
     LocalTime time;
 
+
     @Override
     public void extract(EventBuilder builder, LocalDateTime source, ChunkedPart chunkedPart) {
         switch (chunkedPart.getLabel()) {
@@ -106,6 +107,7 @@ public class StandardTimeExtractor implements Extractor {
 
     private Pair<LocalTime, LocalTime> getRelativeTime(LocalDateTime source,
                                                        ChunkedPart chunkedPart) {
+
         Iterator<TaggedWord> itr = chunkedPart.getTaggedWords().iterator();
         int seekOffset = 0;
         SeekBy seekBy = null;
@@ -135,10 +137,14 @@ public class StandardTimeExtractor implements Extractor {
             }
         }
         LocalTime endTime = null;
+        boolean nextday=false;
         switch (seekBy) {
             case HOUR:
                 if (forwarding) {
                     endTime = startTime.plusHours(seekOffset);
+                    if (startTime.compareTo(endTime)>0) {
+                        nextday=true;
+                    }
                 } else {
                     endTime = startTime.minusHours(seekOffset);
                 }
@@ -152,7 +158,12 @@ public class StandardTimeExtractor implements Extractor {
                 break;
         }
         //start time is greater, so swap them
-        if (startTime.compareTo(endTime) > 0) {
+
+
+//        if (nextday)
+//            return new Pair<>(startTime, endTime);
+        if (startTime.compareTo(endTime) > 0 && !nextday) {
+            System.out.println("hello");
             return new Pair<>(endTime, startTime);
         }
         return new Pair<>(startTime, endTime);

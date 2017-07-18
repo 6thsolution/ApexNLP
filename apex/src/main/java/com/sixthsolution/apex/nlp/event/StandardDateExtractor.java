@@ -38,11 +38,12 @@ public class StandardDateExtractor implements Extractor {
                 builder.setEndDate(date);
                 break;
 
-//            case RELATIVE_DATE:
-//                date=getRelativeDate(source, chunkedPart);
-//                builder.setStartDate(date);
-//                builder.setEndDate(date);
-//                break;
+            case RELATIVE_DATE:
+                date=getRelativeDate(source, chunkedPart);
+                builder.setStartDate(date);
+                builder.setEndDate(date);
+                break;
+
             case LIMITED_DATE:
                 date = getLimitedDate(source, chunkedPart).first;
                 builder.setStartDate(date);
@@ -184,7 +185,8 @@ public class StandardDateExtractor implements Extractor {
     }
 
 
-    private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
+    private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart)
+    {
         return null;
     }
 
@@ -197,9 +199,9 @@ public class StandardDateExtractor implements Extractor {
         LocalDate end;
         if (first.value.equals("from")) {
             int index = taggedWords.indexOf(Tag.DATE_RANGE);
-            List<TaggedWord> taggi = chunkedPart.getTaggedWords(0, index);
+            List<TaggedWord> taggi = chunkedPart.getTaggedWords(1, index);
             ChunkedPart cp = new ChunkedPart(DATE, Label.DATE, taggi);
-            List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index, chunkedPart.getTaggedWords().size());
+            List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index+1, chunkedPart.getTaggedWords().size());
             ChunkedPart cp2 = new ChunkedPart(DATE, Label.DATE, taggi2);
             sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             StandardDateExtractor sde2 = new StandardDateExtractor();
