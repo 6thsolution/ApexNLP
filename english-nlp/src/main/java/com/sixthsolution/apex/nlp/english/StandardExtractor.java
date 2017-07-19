@@ -151,12 +151,12 @@ public class StandardExtractor implements Extractor {
             String test = taggedWords.get(0).getWord();
             if ((test).matches(".*\\d+.*")) {
 
-                System.out.println("part1 1❤️ and start with number");
+//                System.out.println("part1 1❤️ and start with number");
                 first = taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER);
                 second = taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME);
 
                 if (second == null) {
-                    System.out.println("part1 1❤️ and start with number has of");
+//                    System.out.println("part1 1❤️ and start with number has of");
                     second = taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME);
                 }
                 dayOfMonth = (int) first.value;
@@ -164,7 +164,7 @@ public class StandardExtractor implements Extractor {
                 if (taggedWords.size() > 2 && taggedWords.get(taggedWords.size() - 1).getWord().matches("\\d+")) {
 
                     third = taggedWords.get(taggedWords.size() - 1).getTags().containsTagByValue(Tag.NUMBER);
-                    System.out.println("year:" + third.value);
+//                    System.out.println("year:" + third.value);
                     year = Integer.valueOf(third.value.toString());
                     return LocalDate.of(year, month, dayOfMonth);
                 }
@@ -172,11 +172,11 @@ public class StandardExtractor implements Extractor {
 
             }
             if (!(test).matches(".*\\d+.*")) {
-                System.out.println("part2 1❤️ and start with month name");
+//                System.out.println("part2 1❤️ and start with month name");
                 first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
                 second = taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER);
                 if ((int) second.value > 30) {
-                    System.out.println("part2 1❤️ and start with month name and year");
+//                    System.out.println("part2 1❤️ and start with month name and year");
                     month = (int) first.value;
                     year = (int) second.value;
                     return LocalDate.of(year, month, LocalDate.now().getDayOfMonth());
@@ -184,11 +184,11 @@ public class StandardExtractor implements Extractor {
                 }
                 month = (int) first.value;
                 dayOfMonth = (int) second.value;
-                System.out.println("size:" + taggedWords.size());
+//                System.out.println("size:" + taggedWords.size());
                 if (taggedWords.size()>2 && taggedWords.get(taggedWords.size()-1).getWord().matches("\\d+")) {
 
                         third = taggedWords.get(taggedWords.size()-1).getTags().containsTagByValue(Tag.NUMBER);
-                        System.out.println("year:" + third.value);
+//                        System.out.println("year:" + third.value);
                         year = Integer.valueOf(third.value.toString());
                         return LocalDate.of(year, month, dayOfMonth);
 
@@ -199,7 +199,7 @@ public class StandardExtractor implements Extractor {
             }
         }
 
-        System.out.println("part 4 just month");
+//        System.out.println("part 4 just month");
         first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
         if (first == null) {
             int dif = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
@@ -220,25 +220,37 @@ public class StandardExtractor implements Extractor {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
 
         if (taggedWords.get(0).getTags().containsTag(Tag.NAMED_DATE)) {
+            System.out.println("start with named date");
             return LocalDate.now().plusDays((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NAMED_DATE).value);
         }
-        if (taggedWords.get(0).getTags().containsTag(Tag.RELATIVE_PREPOSITION)) {
+        else if (taggedWords.get(0).getTags().containsTag(Tag.RELATIVE_PREPOSITION)) {
+            System.out.println("start with next");
             if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) {
+                System.out.println("followed by date-seekby");
                 return LocalDate.now().plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
             }
             if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_DAY)) {
+                System.out.println("followed by weekday");
                 int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
                 if (dif<0)
                     dif=7-dif;
-                return LocalDate.now().plusDays(dif).plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value - 1) * 7);
+                return LocalDate.now().plusDays(dif).plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value - 1) * 7);
             }
 
         }
-        if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
+        else if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
+            System.out.println("start with number");
             if ((taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) && (taggedWords.get(2).getTags().containsTag(Tag.RELATIVE_SUFFIX))) {
+                System.out.println("followed by date-seekby");
                 return LocalDate.now().plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
             }
-
+            if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_DAY)) {
+                System.out.println("followed by weekday");
+                int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
+                if (dif<0)
+                    dif=7-dif;
+                return LocalDate.now().plusDays(dif).plusDays((((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value) - 1) * 7);
+            }
         }
 
         return null;
