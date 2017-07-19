@@ -186,13 +186,15 @@ public class StandardExtractor implements Extractor {
                 month = (int) first.value;
                 dayOfMonth = (int) second.value;
                 System.out.println("size:" + taggedWords.size());
-                if (taggedWords.size() > 2 && taggedWords.get(taggedWords.size() - 1).getWord().matches("\\d+")) {
+                if (taggedWords.size()>2 && taggedWords.get(taggedWords.size()).getWord().matches("\\d+")) {
 
-                    third = taggedWords.get(taggedWords.size()).getTags().containsTagByValue(Tag.NUMBER);
-                    System.out.println("year:" + third.value);
-                    year = Integer.valueOf(third.value.toString());
-                    return LocalDate.of(year, month, dayOfMonth);
+                        third = taggedWords.get(taggedWords.size()).getTags().containsTagByValue(Tag.NUMBER);
+                        System.out.println("year:" + third.value);
+                        year = Integer.valueOf(third.value.toString());
+                        return LocalDate.of(year, month, dayOfMonth);
+
                 }
+
                 return LocalDate.of(LocalDate.now().getYear(), month, dayOfMonth);
 
             }
@@ -201,11 +203,15 @@ public class StandardExtractor implements Extractor {
         System.out.println("part 4 just month");
         first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
         if (first == null) {
-            first = taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY);
+            int dif = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
+            if (dif<0)
+                dif=7-dif;
+            return LocalDate.now().plusDays(dif);
         }
-        month = (int) first.value;
-        return LocalDate.of(LocalDate.now().getYear(), month, LocalDate.now().getDayOfMonth());
-        //TODO else for weekday
+        else {
+            month = (int) first.value;
+            return LocalDate.of(LocalDate.now().getYear(), month, LocalDate.now().getDayOfMonth());
+        }
 
 
     }
@@ -251,7 +257,6 @@ public class StandardExtractor implements Extractor {
             int index = 0;
             while (!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) index++;
             List<TaggedWord> taggi = taggedWords.subList(1, index);
-            //TODO add for another forms
             ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
             List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
             ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);

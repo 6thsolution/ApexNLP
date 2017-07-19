@@ -36,7 +36,7 @@ public class DateDetector extends ChunkDetector {
      * @return april, april 20, april 20th, april 20 2012
      */
     private static Pattern relax_date_type1() {
-        return month_name().then(maybe(NUMBER.toString()).then(maybe(DATE_SUFFIX.toString())).then(maybe(NUMBER.toString())));
+        return month_name().then(maybe(NUMBER.toString()).then(maybe(DATE_SUFFIX.toString())).then(maybe(DATE_PREFIX.toString())).then(maybe(NUMBER.toString())));
     }
 
     /**
