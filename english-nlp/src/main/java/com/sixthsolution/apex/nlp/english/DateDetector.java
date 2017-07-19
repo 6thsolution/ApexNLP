@@ -114,6 +114,7 @@ public class DateDetector extends ChunkDetector {
     /**
      * @return 5 types of relative date structure
      */
+    //TODO add forms of two days from tomorrow or some specific dates
     private static Pattern relative_date(){
         return match(anyOf(relative_date_type1(),relative_date_type2(),relative_date_type3(),relative_date_type4(),relative_date_type5()));
     }
@@ -197,10 +198,8 @@ public class DateDetector extends ChunkDetector {
 //                ,newPattern(EXPLICIT_RELATIVE_DATE,explicit_relative_date())
                 ,newPattern(GLOBAL_DATE, global_date())
                 ,newPattern(FOREVER_DATE,forever_date())
-                //must debug
                 ,newPattern(LIMITED_DATE,limited_date())
-//                newPattern(DATE_RULES,date_rules())
-//                ,newPattern(RECURRENCE,recurrence())
+
         );
     }
 

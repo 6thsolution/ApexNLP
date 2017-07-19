@@ -217,6 +217,8 @@ public class StandardExtractor implements Extractor {
 
 
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
+       //TODO add seasons event
+
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
         int plusday = 0;
         if (taggedWords.get(0).getTags().containsTag(Tag.NAMED_DATE)) {
@@ -354,6 +356,39 @@ public class StandardExtractor implements Extractor {
         }
 
         return null;
+    }
+    private LocalDate getGlobalDate(LocalDateTime source,ChunkedPart chunkedPart){
+        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
+        int index = 0;
+        while (!taggedWords.get(index).getTags().containsTag(Tag.GLOBAL_PREPOSITION)) index++;
+        List<TaggedWord> taggi = taggedWords.subList(0, index);
+        ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
+        List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
+        ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);
+        boolean forward =(boolean) taggedWords.get(index).getTags().containsTagByValue(Tag.GLOBAL_PREPOSITION).value;
+        int counter;
+        if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)){
+            counter=(int)taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value;
+        }
+        else{
+            counter=1;
+        }
+        int seek=0;
+        if (taggedWords.get(0).getTags().containsTag(Tag.DATE_SEEKBY)){
+            seek=(int)taggedWords.get(0).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
+        }
+        else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)){
+            seek=(int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
+        }
+        StandardExtractor sde = new StandardExtractor();
+        sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+        if (forward){
+            return sde.date.plusDays(seek*counter);
+        }
+        else {
+            return sde.date.minusDays(seek*counter);
+        }
+
     }
 
     private Pair<LocalDate, LocalDate> getLimitedDate(LocalDateTime source, ChunkedPart chunkedPart) {
