@@ -88,6 +88,8 @@ public class DateDetector extends ChunkDetector {
      */
     private static Pattern relative_date_type3(){
         return match((match(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString()).then(maybe(NUMBER.toString()))));
+
+        //TODO add 20 day of next april
         //,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
     }
 

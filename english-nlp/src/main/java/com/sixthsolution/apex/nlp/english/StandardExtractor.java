@@ -7,12 +7,13 @@ import com.sixthsolution.apex.nlp.event.EventBuilder;
 import com.sixthsolution.apex.nlp.event.Extractor;
 import com.sixthsolution.apex.nlp.ner.ChunkedPart;
 import com.sixthsolution.apex.nlp.ner.Label;
+import com.sixthsolution.apex.nlp.ner.regex.RegExChunker;
 import com.sixthsolution.apex.nlp.tagger.TaggedWord;
 import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 import com.sixthsolution.apex.nlp.util.Pair;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
-import com.sixthsolution.apex.nlp.ner.regex.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -185,12 +186,12 @@ public class StandardExtractor implements Extractor {
                 month = (int) first.value;
                 dayOfMonth = (int) second.value;
 //                System.out.println("size:" + taggedWords.size());
-                if (taggedWords.size()>2 && taggedWords.get(taggedWords.size()-1).getWord().matches("\\d+")) {
+                if (taggedWords.size() > 2 && taggedWords.get(taggedWords.size() - 1).getWord().matches("\\d+")) {
 
-                        third = taggedWords.get(taggedWords.size()-1).getTags().containsTagByValue(Tag.NUMBER);
+                    third = taggedWords.get(taggedWords.size() - 1).getTags().containsTagByValue(Tag.NUMBER);
 //                        System.out.println("year:" + third.value);
-                        year = Integer.valueOf(third.value.toString());
-                        return LocalDate.of(year, month, dayOfMonth);
+                    year = Integer.valueOf(third.value.toString());
+                    return LocalDate.of(year, month, dayOfMonth);
 
                 }
 
@@ -203,11 +204,10 @@ public class StandardExtractor implements Extractor {
         first = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
         if (first == null) {
             int dif = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
-            if (dif<0)
-                dif=7-dif;
+            if (dif < 0)
+                dif = 7 - dif;
             return LocalDate.now().plusDays(dif);
-        }
-        else {
+        } else {
             month = (int) first.value;
             return LocalDate.of(LocalDate.now().getYear(), month, LocalDate.now().getDayOfMonth());
         }
@@ -218,87 +218,137 @@ public class StandardExtractor implements Extractor {
 
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
-        int plusday=0;
+        int plusday = 0;
         if (taggedWords.get(0).getTags().containsTag(Tag.NAMED_DATE)) {
             System.out.println("start with named date");
-            plusday=(int) taggedWords.get(0).getTags().containsTagByValue(Tag.NAMED_DATE).value;
-            System.out.println("plusday:"+plusday);
+            plusday = (int) taggedWords.get(0).getTags().containsTagByValue(Tag.NAMED_DATE).value;
             return LocalDate.now().plusDays(plusday);
         }
-        else if (taggedWords.get(0).getTags().containsTag(Tag.RELATIVE_PREPOSITION)) {
+        if (taggedWords.get(0).getTags().containsTag(Tag.RELATIVE_PREPOSITION)) {
             System.out.println("start with next");
             if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) {
                 System.out.println("followed by date-seekby");
-                plusday=((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value);
-                if (taggedWords.get(1).getTags().containsTag(Tag.DAY_SEEK)){
+                plusday = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value);
+                if (taggedWords.get(1).getTags().containsTag(Tag.DAY_SEEK)) {
+                    System.out.println("form of next day");
                     return LocalDate.now().plusDays(plusday);
                 }
-                if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)){
-                    return  LocalDate.now().plusMonths(plusday);
+                if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)) {
+                    System.out.println("form of next month");
+                    if (taggedWords.size() > 2) {
+                        if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
+                            System.out.println("form of next month 20th");
+                            return LocalDate.of(LocalDate.now().getYear(), LocalDate.now().plusMonths(plusday).getMonth(), ((int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value));
+                        }
+                    }
+                    return LocalDate.now().plusMonths(plusday);
                 }
-                if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_SEEK)){
-                    return  LocalDate.now().plusDays(plusday*7);
+                if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_SEEK)) {
+                    System.out.println("form of next week");
+                    if (taggedWords.size() > 2) {
+                        if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
+                            System.out.println("form of next week third day");
+                            plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getDayOfWeek().getValue();
+                            return LocalDate.now().plusDays(7 + plusday);
+
+                        }
+                    }
+                    return LocalDate.now().plusDays(plusday * 7);
                 }
-                if (taggedWords.get(1).getTags().containsTag(Tag.YEAR_SEEK)){
+                if (taggedWords.get(1).getTags().containsTag(Tag.YEAR_SEEK)) {
+                    System.out.println("form of next year");
+                    if (taggedWords.size() > 2) {
+                        if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
+                            System.out.println("form of next year 20th");
+                            if (taggedWords.size() > 3) {
+                                if (taggedWords.get(3).getTags().containsTag(Tag.MONTH_SEEK)) {
+                                    System.out.println("form of next year second month");
+                                    if (taggedWords.size() > 4) {
+                                        if (taggedWords.get(4).getTags().containsTag(Tag.NUMBER)) {
+                                            System.out.println("form of next year second month 20th");
+                                            plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getMonthValue();
+                                            return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(12 + plusday).getMonth(), ((int) taggedWords.get(4).getTags().containsTagByValue(Tag.NUMBER).value));
+
+                                        }
+                                    }
+                                    plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getMonthValue();
+                                    return LocalDate.now().plusMonths(12 + plusday);
+                                }
+                            }
+                            plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getDayOfYear();
+                            return LocalDate.now().plusYears(1).plusDays(365 + plusday);
+                        }
+                        if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_NAME)) {
+                            System.out.println("form of next year april");
+                            if (taggedWords.size() > 4) {
+                                if (taggedWords.get(4).getTags().containsTag(Tag.NUMBER)) {
+                                    System.out.println("form of next april 20th");
+                                    plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME).value - LocalDate.now().getMonthValue();
+                                    return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(12 + plusday).getMonth(), ((int) taggedWords.get(4).getTags().containsTagByValue(Tag.NUMBER).value));
+
+                                }
+                            }
+                            plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME).value - LocalDate.now().getMonthValue();
+                            return LocalDate.now().plusYears(1).plusMonths(12 + plusday);
+                        }
+                    }
                     return LocalDate.now().plusYears(plusday);
                 }
-                plusday=((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value);
-                return LocalDate.now().plusDays(plusday);
             }
             if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_DAY)) {
                 System.out.println("followed by weekday");
                 int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
-                if (dif<=0)
-                    dif=7+dif;
-                plusday=((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value - 1) * 7;
+                if (dif <= 0)
+                    dif = 7 + dif;
+                plusday = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value - 1) * 7;
                 return LocalDate.now().plusDays(dif).plusDays(plusday);
             }
             if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_NAME)) {
                 System.out.println("followed by MonthName");
                 int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME).value) - (LocalDate.now().getMonth().getValue());
-                if (dif<=0)
-                    dif=12+dif;
-                if (taggedWords.size()>2) {
-                    if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER))
+                if (dif <= 0)
+                    dif = 12 + dif;
+                if (taggedWords.size() > 2) {
+                    if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
+                        System.out.println("form of next april 20th");
                         return LocalDate.of(LocalDate.now().getYear(), LocalDate.now().plusMonths(dif).getMonth(), ((int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value));
-                }
-                else return LocalDate.now().plusMonths(dif);
+                    }
+                } else return LocalDate.now().plusMonths(dif);
             }
 
 
-        }
-        else if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
+        } else if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
             System.out.println("start with number");
             if ((taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) && (taggedWords.get(2).getTags().containsTag(Tag.RELATIVE_SUFFIX))) {
                 System.out.println("followed by date-seekby");
-                plusday=((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value);
-                if (taggedWords.get(1).getTags().containsTag(Tag.DAY_SEEK)){
+                plusday = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value);
+                if (taggedWords.get(1).getTags().containsTag(Tag.DAY_SEEK)) {
                     return LocalDate.now().plusDays(plusday);
                 }
-                if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)){
-                    return  LocalDate.now().plusMonths(plusday);
+                if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)) {
+                    return LocalDate.now().plusMonths(plusday);
                 }
-                if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_SEEK)){
-                    return  LocalDate.now().plusDays(plusday*7);
+                if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_SEEK)) {
+                    return LocalDate.now().plusDays(plusday * 7);
                 }
-                if (taggedWords.get(1).getTags().containsTag(Tag.YEAR_SEEK)){
+                if (taggedWords.get(1).getTags().containsTag(Tag.YEAR_SEEK)) {
                     return LocalDate.now().plusYears(plusday);
                 }
-                plusday=((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value);
+                plusday = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value);
                 return LocalDate.now().plusDays(plusday);
             }
             if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_DAY)) {
                 System.out.println("followed by weekday");
                 int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
-                if (dif<=0)
-                    dif=7+dif;
+                if (dif <= 0)
+                    dif = 7 + dif;
                 return LocalDate.now().plusDays(dif).plusDays((((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value) - 1) * 7);
             }
             if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_NAME)) {
                 System.out.println("followed by monthName");
                 int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.MONTH_NAME).value) - (LocalDate.now().getMonth().getValue());
-                if (dif<=0)
-                    dif=12+dif;
+                if (dif <= 0)
+                    dif = 12 + dif;
                 return LocalDate.now().plusMonths(dif);
             }
         }
@@ -319,14 +369,16 @@ public class StandardExtractor implements Extractor {
             List<TaggedWord> taggi = taggedWords.subList(1, index);
             ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
             List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
-            ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+            ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);
+            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             StandardExtractor sde2 = new StandardExtractor();
             sde2.extract(new EventBuilder(), LocalDateTime.now(), cp2);
             start = sde.date;
             end = sde2.date;
         } else if (first.containsTag(Tag.DATE_RANGE)) {
             List<TaggedWord> taggi = taggedWords.subList(1, taggedWords.size());
-            ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+            ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
+            sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
             start = LocalDate.now();
             end = sde.date;
 
