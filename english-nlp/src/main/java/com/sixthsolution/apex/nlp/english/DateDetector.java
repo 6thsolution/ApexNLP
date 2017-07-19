@@ -68,6 +68,58 @@ public class DateDetector extends ChunkDetector {
     }
 
 
+//    /**
+//     * @return today, tomorrow, tonight, ...
+//     */
+//    private static Pattern relative_date_type1(){
+//        return match(NAMED_DATE.toString());
+//    }
+//
+//    /**
+//     * @return next sunday, two monday from today,...
+//     */
+//    private static Pattern relative_date_type2(){
+//        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(WEEK_DAY.toString())
+//                ,match(NUMBER.toString()).then(WEEK_DAY.toString()).then(RELATIVE_SUFFIX.toString())));
+//    }
+//
+//    /**
+//     * @return next april, next april 20th , 20 day of next april,...
+//     */
+//    private static Pattern relative_date_type3(){
+//        return match((match(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString()).then(maybe(NUMBER.toString()))));
+//
+//        //TODO add 20 day of next april
+//        //,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
+//    }
+//
+//    /**+
+//     * @return 2 summer from today, winter 2014, next spring,...
+//     */
+//    private static Pattern relative_date_type4(){
+//        return match(anyOf(match(NUMBER.toString()).then(SEASON.toString()).then(RELATIVE_SUFFIX.toString())
+//        ,match(RELATIVE_PREPOSITION.toString()).then(SEASON.toString()).then(maybe(relax_date()))
+//        ,match(SEASON.toString()).then(NUMBER.toString())));
+//    }
+//
+//    /**
+//     * @return next week third day, 4 week from now, next year may 20th
+//     */
+//    private static Pattern relative_date_type5(){
+//        return match(anyOf(match(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(RELATIVE_SUFFIX.toString())
+//        ,match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()).then(maybe(relax_date()))
+//        ,match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()).then(NUMBER.toString()).then(DATE_SEEKBY.toString())));
+//    }
+//
+//    /**
+//     * @return 5 types of relative date structure
+//     */
+//    //TODO add forms of two days from tomorrow or some specific dates
+//    private static Pattern relative_date(){
+//        return match(anyOf(relative_date_type1(),relative_date_type2(),relative_date_type3(),relative_date_type4(),relative_date_type5()));
+//    }
+
+
     /**
      * @return today, tomorrow, tonight, ...
      */
@@ -76,50 +128,59 @@ public class DateDetector extends ChunkDetector {
     }
 
     /**
-     * @return next sunday, two monday from today,...
+     * @return next sunday, next month, next april, next year, next week, ...
      */
-    private static Pattern relative_date_type2(){
-        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(WEEK_DAY.toString())
-                ,match(NUMBER.toString()).then(WEEK_DAY.toString()).then(RELATIVE_SUFFIX.toString())));
+    private static Pattern relative_date_type2_0(){
+        return match(RELATIVE_PREPOSITION.toString()).then(anyOf(match(WEEK_DAY.toString()), match(MONTH_NAME.toString()), match(DATE_SEEKBY.toString())));
     }
 
     /**
-     * @return next april, next april 20th , 20 day of next april,...
+     * @return week 3rd day, week monday, ...
+     */
+    private static Pattern relative_date_type2_1_0(){
+        return match(WEEK_SEEK.toString()).then(anyOf(match(WEEK_DAY.toString()), match(NUMBER.toString()).then(DAY_SEEK.toString())));
+    }
+
+    /**
+     * @return april 3rd week, april first week second day , month 3rd week tuesday, month 20th, month 2nd monday, ...
+     */
+    private static Pattern relative_date_type2_1_1(){
+        return match(anyOf(match(MONTH_NAME.toString()), match(MONTH_SEEK.toString()))).then(NUMBER.toString()).thenMaybe(anyOf(relative_date_type2_1_0(), match(WEEK_DAY.toString()), match(WEEK_SEEK.toString())));
+    }
+
+    /**
+     * @return year april 3rd week, year april first week second day , year april 3rd week tuesday, year 9th month 20th, year 8th month 2nd monday, year 16th week second day, year 15th week , year 6th month, year 100th day, ...
+     */
+    private static Pattern relative_date_type2_1_2(){
+        return match(YEAR_SEEK.toString()).anyOf(maybe(NUMBER.toString()).then(anyOf(relative_date_type2_1_1())),
+                match(NUMBER.toString()).then(anyOf(relative_date_type2_1_0(), match(anyOf(match(MONTH_SEEK.toString()), match(WEEK_SEEK.toString()), match(DAY_SEEK.toString()))))));
+    }
+
+    private static Pattern relative_date_type2_1(){
+        return match(RELATIVE_PREPOSITION.toString()).then(anyOf(relative_date_type2_1_0(),relative_date_type2_1_1(),relative_date_type2_1_2()));
+    }
+
+    /**
+     * @return all next types
+     */
+    // TODO next Season
+    private static Pattern relative_date_type2(){
+        return match(anyOf(relative_date_type2_0(),relative_date_type2_1()));
+    }
+
+    /**
+     * @return 6 weeks(days, months, mondays, years, aprils) from now(today)
      */
     private static Pattern relative_date_type3(){
-        return match((match(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString()).then(maybe(NUMBER.toString()))));
-
-        //TODO add 20 day of next april
-        //,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
-    }
-
-    /**+
-     * @return 2 summer from today, winter 2014, next spring,...
-     */
-    private static Pattern relative_date_type4(){
-        return match(anyOf(match(NUMBER.toString()).then(SEASON.toString()).then(RELATIVE_SUFFIX.toString())
-        ,match(RELATIVE_PREPOSITION.toString()).then(SEASON.toString()).then(maybe(relax_date()))
-        ,match(SEASON.toString()).then(NUMBER.toString())));
+        return match(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(WEEK_DAY.toString()), match(MONTH_NAME.toString()))).then(RELATIVE_SUFFIX.toString());
     }
 
     /**
-     * @return next week third day, 4 week from now, next year may 20th
+     * @return 3 types of relative date structure
      */
-    private static Pattern relative_date_type5(){
-        return match(anyOf(match(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(RELATIVE_SUFFIX.toString())
-        ,match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()).then(maybe(relax_date()))
-        ,match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()).then(NUMBER.toString()).then(DATE_SEEKBY.toString())));
-    }
-
-    /**
-     * @return 5 types of relative date structure
-     */
-    //TODO add forms of two days from tomorrow or some specific dates
     private static Pattern relative_date(){
-        return match(anyOf(relative_date_type1(),relative_date_type2(),relative_date_type3(),relative_date_type4(),relative_date_type5()));
+        return match(anyOf(relative_date_type1(),relative_date_type2(), relative_date_type3()));
     }
-
-
     /**
      * @return the day after tomorrow, one week before sunday
      */

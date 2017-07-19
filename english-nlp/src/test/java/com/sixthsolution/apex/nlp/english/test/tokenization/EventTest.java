@@ -45,7 +45,7 @@ public class EventTest {
         assertEvent("at 9:30 to 10:30").startTime("09:30").endTime("10:30");
         //relative
         assertEvent("for 2 hours before noon").startTime("10:00").endTime("12:00");
-//        assertEvent("for one hour").startTime(check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).endTime(check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+        assertEvent("for one hour").startTime(check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).endTime(check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         assertEvent("from 11.5 - 12.5 ").startTime("11:05").endTime("12:05");
     }
 
@@ -54,8 +54,8 @@ public class EventTest {
         //formal date
         assertEvent("15/apr/2012").startDate("2012-04-15").endDate("2012-04-15");
         assertEvent("2017/04/10").startDate("2017-04-10").endDate("2017-04-10");
-//        assertEvent("15/apr/2012").start("2012/04/15 " + check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
-//        assertEvent("2017/04/10").start("2017/04/10 " + check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
+        assertEvent("15/apr/2012").start("2012/04/15 " + check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
+        assertEvent("2017/04/10").start("2017/04/10 " + check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         assertEvent("12/09").startDate("2017-09-12").endDate("2017-09-12");
 
         //limited
@@ -63,8 +63,8 @@ public class EventTest {
         assertEvent("till 2017/08/10").endDate("2017-08-10");
         assertEvent("till 2017/08/10").start(year+"/"+check_zero(String.valueOf(month))+"/"+check_zero(String.valueOf(day))+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)) );
         assertEvent("until 15/apr/2012").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate("2012-04-15");
-//        assertEvent("till 2017/04/10").end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
-//        assertEvent("until 15/apr/2012").end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
+        assertEvent("till 2017/04/10").end("2017/04/10 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
+        assertEvent("until 15/apr/2012").end("2012/04/15 " + check_zero(String.valueOf(hour + 1)) + ":" + check_zero(String.valueOf(min)));
         assertEvent("from today until tomorrow").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
         assertEvent("until april").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+"-04-"+check_zero(String.valueOf(day)));
 
@@ -72,7 +72,7 @@ public class EventTest {
         assertEvent("april").startDate(year+"-04-"+check_zero(String.valueOf(day))).endDate(year+"-04-"+check_zero(String.valueOf(day)));
         assertEvent("apr").start(year+"/04/"+check_zero(String.valueOf(day))+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)));
         assertEvent("jan 20").startDate(year+"-01-20").endDate(year+"-01-20");
-//        assertEvent("april 20").start(year+"/04/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/04/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+        assertEvent("april 20").start(year+"/04/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/04/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         assertEvent("december 2012").startDate("2012"+"-12-"+day).endDate("2012"+"-12-"+day);
         assertEvent("april 20 of 2012").startDate("2012-04-20");
         assertEvent("april 20  2012").startDate("2012-04-20");
@@ -81,7 +81,7 @@ public class EventTest {
         assertEvent("20 jan ").startDate(year+"-01-20").endDate(year+"-01-20");
         assertEvent("20 jan 2012").startDate("2012"+"-01-20").endDate("2012"+"-01-20");
         assertEvent("20 of jan").startDate(year+"-01-20").endDate(year+"-01-20");
-//        assertEvent("20 of jan").start(year+"/01/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/01/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+        assertEvent("20 of jan").start(year+"/01/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/01/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         assertEvent("sunday").startDate(year+"-07-23");
 
         //relative
@@ -91,12 +91,17 @@ public class EventTest {
         assertEvent("next day").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
         assertEvent("next month").startDate(year+"-"+check_zero(String.valueOf(month+1))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month+1))+"-"+check_zero(String.valueOf(day)));
         assertEvent("next year").startDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day)));
-//        assertEvent("4 days after next").startDate(year+"-"+check_zero(String.valueOf(month))+"-30");
         assertEvent("next monday").startDate(year+"-07-24");
 //        assertEvent("4 monday from today").startDate(year+"-08-14");
-        assertEvent("next july").startDate(year+1+"-07-19");
-        assertEvent("next jan").startDate(year+1+"-01-19");
+        assertEvent("next july").startDate(year+1+"-07-"+day);
+        assertEvent("next jan").startDate(year+1+"-01-"+day);
         assertEvent("next july 20").startDate(year+"-07-20");
+
+        //global date
+        assertEvent("day after tomorrow").startDate(year+"-07-22");
+        assertEvent("one week before 2018/02/14").startDate("2018-02-07");
+
+
 
 
     }

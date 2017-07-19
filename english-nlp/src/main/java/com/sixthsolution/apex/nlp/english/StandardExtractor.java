@@ -50,6 +50,12 @@ public class StandardExtractor implements Extractor {
                 builder.setEndDate(date);
                 break;
 
+            case GLOBAL_DATE:
+                date = getGlobalDate(source, chunkedPart);
+                builder.setStartDate(date);
+                builder.setEndDate(date);
+                break;
+
             case LIMITED_DATE:
                 Pair<LocalDate, LocalDate> pdate = getLimitedDate(source, chunkedPart);
                 builder.setStartDate(date);
@@ -361,8 +367,8 @@ public class StandardExtractor implements Extractor {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
         int index = 0;
         while (!taggedWords.get(index).getTags().containsTag(Tag.GLOBAL_PREPOSITION)) index++;
-        List<TaggedWord> taggi = taggedWords.subList(0, index);
-        ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
+//        List<TaggedWord> taggi = taggedWords.subList(0, index);
+//        ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
         List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
         ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);
         boolean forward =(boolean) taggedWords.get(index).getTags().containsTagByValue(Tag.GLOBAL_PREPOSITION).value;
@@ -381,7 +387,7 @@ public class StandardExtractor implements Extractor {
             seek=(int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
         }
         StandardExtractor sde = new StandardExtractor();
-        sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+        sde.extract(new EventBuilder(), LocalDateTime.now(), cp2);
         if (forward){
             return sde.date.plusDays(seek*counter);
         }
