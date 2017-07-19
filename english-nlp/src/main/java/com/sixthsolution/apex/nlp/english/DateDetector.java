@@ -87,8 +87,8 @@ public class DateDetector extends ChunkDetector {
      * @return next april, next april 20th , 20 day of next april,...
      */
     private static Pattern relative_date_type3(){
-        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString()).then(maybe(NUMBER.toString()))
-        ,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
+        return match((match(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString()).then(maybe(NUMBER.toString()))));
+        //,match(NUMBER.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(maybe(DATE_DURATION_SUFFIX.toString()).then(RELATIVE_PREPOSITION.toString()).then(MONTH_NAME.toString())))));
     }
 
     /**+

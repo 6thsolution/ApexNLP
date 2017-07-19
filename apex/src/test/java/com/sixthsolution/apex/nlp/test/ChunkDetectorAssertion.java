@@ -53,6 +53,7 @@ public class ChunkDetectorAssertion {
         private final ChunkedPart chunkedPart;
 
         public ChunkedPartAssertion(ChunkedPart chunkedPart) {
+            System.out.println("chunkedpart:"+chunkedPart);
             this.chunkedPart = chunkedPart;
         }
 
@@ -69,11 +70,16 @@ public class ChunkDetectorAssertion {
 
         public ChunkedPartAssertion text(String text) {
             StringBuilder sb = new StringBuilder();
+//            System.out.println("tagwords:"+chunkedPart.getTaggedWords());
             Iterator<TaggedWord> itr = chunkedPart.getTaggedWords().iterator();
-            //            System.out.println(itr.next().toString()+"**");
+//            System.out.println("String:"+text);
+
+            Iterator<TaggedWord> itr2 = chunkedPart.getTaggedWords().iterator();
+
+            System.out.println(itr2.next().toString()+"**");
 
             while (itr.hasNext()) {
-                //                System.out.println(itr.next().toString()+"**");
+//                                System.out.println(itr2.next().toString()+"**");
                 sb.append(itr.next().getWord());
                 if (itr.hasNext()) {
                     sb.append(" ");

@@ -88,9 +88,15 @@ public class EventTest {
         assertEvent("tomorrow").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
         assertEvent("today").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day)));
         assertEvent("next week").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+7))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+7)));
-        assertEvent("4 days").startDate(year+"-"+check_zero(String.valueOf(month))+"-30");
-        assertEvent("next sunday").startDate(year+"-07-23");
-//        assertEvent("4 monday from today").startDate(year+"-08-14");
+        assertEvent("next day").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
+        assertEvent("next month").startDate(year+"-"+check_zero(String.valueOf(month+1))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month+1))+"-"+check_zero(String.valueOf(day)));
+        assertEvent("next year").startDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day)));
+////        assertEvent("4 days after next").startDate(year+"-"+check_zero(String.valueOf(month))+"-30");
+        assertEvent("next monday").startDate(year+"-07-24");
+////        assertEvent("4 monday from today").startDate(year+"-08-14");
+        assertEvent("next july").startDate(year+1+"-07-19");
+        assertEvent("next jan").startDate(year+1+"-01-19");
+
     }
 
 
