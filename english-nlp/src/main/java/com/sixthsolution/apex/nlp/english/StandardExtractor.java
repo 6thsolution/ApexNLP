@@ -148,7 +148,6 @@ public class StandardExtractor implements Extractor {
 
 
         if (taggedWords.size() > 1) {
-            TagValue intchk = taggedWords.get(0).getTags().containsTagByValue(Tag.MONTH_NAME);
             String test = taggedWords.get(0).getWord();
             if ((test).matches(".*\\d+.*")) {
 
@@ -186,9 +185,9 @@ public class StandardExtractor implements Extractor {
                 month = (int) first.value;
                 dayOfMonth = (int) second.value;
                 System.out.println("size:" + taggedWords.size());
-                if (taggedWords.size()>2 && taggedWords.get(taggedWords.size()).getWord().matches("\\d+")) {
+                if (taggedWords.size()>2 && taggedWords.get(taggedWords.size()-1).getWord().matches("\\d+")) {
 
-                        third = taggedWords.get(taggedWords.size()).getTags().containsTagByValue(Tag.NUMBER);
+                        third = taggedWords.get(taggedWords.size()-1).getTags().containsTagByValue(Tag.NUMBER);
                         System.out.println("year:" + third.value);
                         year = Integer.valueOf(third.value.toString());
                         return LocalDate.of(year, month, dayOfMonth);
@@ -219,31 +218,30 @@ public class StandardExtractor implements Extractor {
 
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
-        TagValue first = taggedWords.get(0).getTags().containsTagByValue(Tag.NAMED_DATE);
 
-        LocalDate res = LocalDate.now();
-        if (first.tag.equals(Tag.NAMED_DATE)) {
-            res = LocalDate.now().plusDays((int) first.value);
-            return res;
+        if (taggedWords.get(0).getTags().containsTag(Tag.NAMED_DATE)) {
+            return LocalDate.now().plusDays((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NAMED_DATE).value);
         }
-        if (first.tag.equals(Tag.RELATIVE_PREPOSITION)) {
-            if (taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).equals(Tag.DATE_SEEKBY)) {
-                res = LocalDate.now().plusDays(((int) first.value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
+        if (taggedWords.get(0).getTags().containsTag(Tag.RELATIVE_PREPOSITION)) {
+            if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) {
+                return LocalDate.now().plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.RELATIVE_PREPOSITION).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
             }
-            if (taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).equals(Tag.WEEK_DAY)) {
+            if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_DAY)) {
                 int dif = ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
-                res = LocalDate.now().plusDays(dif).plusDays(((int) first.value - 1) * 7);
+                if (dif<0)
+                    dif=7-dif;
+                return LocalDate.now().plusDays(dif).plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value - 1) * 7);
             }
 
         }
-        if (first.tag.equals(Tag.NUMBER)) {
-            if ((taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).equals(Tag.DATE_SEEKBY)) && (taggedWords.get(2).getTags().containsTagByValue(Tag.RELATIVE_SUFFIX).tag.equals(Tag.RELATIVE_SUFFIX))) {
-                res = LocalDate.now().plusDays(((int) first.value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
+        if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
+            if ((taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) && (taggedWords.get(2).getTags().containsTag(Tag.RELATIVE_SUFFIX))) {
+                return LocalDate.now().plusDays(((int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value) * ((int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value));
             }
 
         }
 
-        return res;
+        return null;
     }
 
     private Pair<LocalDate, LocalDate> getLimitedDate(LocalDateTime source, ChunkedPart chunkedPart) {

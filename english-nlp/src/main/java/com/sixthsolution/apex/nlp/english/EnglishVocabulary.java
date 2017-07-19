@@ -123,7 +123,7 @@ public final class EnglishVocabulary {
         vb.tag(DATE_DURATION_SUFFIX, DATE)
                 .e("day", "days");
         vb.tag(DATE_PREFIX, DATE)
-                .e("of" , "in");
+                .e("of" , "in" , ",");
         vb.tag(DATE_BAND,DATE)
                 .e("at_the_beginning","start","end","last","first");
 
