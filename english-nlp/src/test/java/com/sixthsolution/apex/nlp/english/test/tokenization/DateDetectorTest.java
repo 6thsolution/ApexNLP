@@ -32,7 +32,7 @@ public class DateDetectorTest extends EnglishDetectorTest {
         assertChunkedPart("april").text("april").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("apr 20").text("apr 20").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("april 20 th").text("april 20 th").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("april 20 2012").text("april 20 2012").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("april 20,2012").text("april 20 , 2012").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("20 april").text("20 april").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("20 th apr").text("20 th apr").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("20 of april").text("20 of april").label(RELAX_DATE).entity(DATE);
@@ -46,23 +46,20 @@ public class DateDetectorTest extends EnglishDetectorTest {
         assertChunkedPart("today").text("today").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("tomorrow").text("tomorrow").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("next sunday").text("next sunday").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("2 monday from today").text("2 monday from today").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("2 monday from_today").text("2 monday from_today").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("next april").text("next april").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("next apr 20").text("next apr 20").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("20 day of next april").text("20 day of next april").label(RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("next spring").text("next spring").label(RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("2 summer from today").text("2 summer from today").label(RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("winter 2014").text("winter 2014").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next week third day").text("next week third day").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("four weeks from now").text("four weeks from now").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next year may 20th").text("next year may 20 th").label(RELATIVE_DATE).entity(DATE);
-
+        assertChunkedPart("next week third day").text("next week third day").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("four weeks from_now").text("four weeks from_now").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("next year may 20th").text("next year may 20 th").label(RELATIVE_DATE).entity(DATE);
     }
 
 
     @Test
     public void test_global_date(){
-        //add "the" to structure
         assertChunkedPart("day after tomorrow").text("day after tomorrow").label(GLOBAL_DATE).entity(DATE);
         assertChunkedPart("one week before sunday").text("one week before sunday").label(GLOBAL_DATE).entity(DATE);
 
@@ -71,8 +68,8 @@ public class DateDetectorTest extends EnglishDetectorTest {
 
     @Test
     public void test_limited_date(){
-//        assertChunkedPart("till next month").text("till next month").label(LIMITED_DATE).entity(DATE);
-//        assertChunkedPart("from sunday until june 20").text("from sunday until june 20").label(LIMITED_DATE).entity(DATE);
+        assertChunkedPart("till next month").text("till next month").label(LIMITED_DATE).entity(DATE);
+        assertChunkedPart("from sunday until june 20").text("from sunday until june 20").label(LIMITED_DATE).entity(DATE);
         assertChunkedPart("from 7/15/2017 until 8/15/2017").text("from 7 / 15 / 2017 until 8 / 15 / 2017").label(LIMITED_DATE).entity(DATE);
     }
 

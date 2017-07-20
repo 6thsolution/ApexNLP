@@ -119,7 +119,6 @@ public class DateDetector extends ChunkDetector {
 //        return match(anyOf(relative_date_type1(),relative_date_type2(),relative_date_type3(),relative_date_type4(),relative_date_type5()));
 //    }
 
-
     /**
      * @return today, tomorrow, tonight, ...
      */
@@ -128,32 +127,33 @@ public class DateDetector extends ChunkDetector {
     }
 
     /**
-     * @return next sunday, next month, next april, next year, next week, ...
+     * @return next sunday, ...
      */
     private static Pattern relative_date_type2_0(){
-        return match(RELATIVE_PREPOSITION.toString()).then(anyOf(match(WEEK_DAY.toString()), match(MONTH_NAME.toString()), match(DATE_SEEKBY.toString())));
+        return match(RELATIVE_PREPOSITION.toString()).then(WEEK_DAY.toString());
     }
 
     /**
-     * @return week 3rd day, week monday, ...
+     * @return week 3rd day, week monday, week, ...
      */
     private static Pattern relative_date_type2_1_0(){
-        return match(WEEK_SEEK.toString()).then(anyOf(match(WEEK_DAY.toString()), match(NUMBER.toString()).then(DAY_SEEK.toString())));
+        return match(DATE_SEEKBY.toString()).thenMaybe(anyOf(match(WEEK_DAY.toString()), match(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString())));
     }
 
     /**
      * @return april 3rd week, april first week second day , month 3rd week tuesday, month 20th, month 2nd monday, ...
      */
     private static Pattern relative_date_type2_1_1(){
-        return match(anyOf(match(MONTH_NAME.toString()), match(MONTH_SEEK.toString()))).then(NUMBER.toString()).thenMaybe(anyOf(relative_date_type2_1_0(), match(WEEK_DAY.toString()), match(WEEK_SEEK.toString())));
+        return match(anyOf(match(MONTH_NAME.toString()), match(DATE_SEEKBY.toString()))).
+                thenMaybe(NUMBER.toString()).thenMaybe(anyOf(relative_date_type2_1_0(), match(WEEK_DAY.toString()), match(DATE_SEEKBY.toString()), match(DATE_SUFFIX.toString())));
     }
 
     /**
-     * @return year april 3rd week, year april first week second day , year april 3rd week tuesday, year 9th month 20th, year 8th month 2nd monday, year 16th week second day, year 15th week , year 6th month, year 100th day, ...
+     * @return year april 3rd week, year april first week second day , year april 3rd week tuesday, year 9th month 20th, year 8th month 2nd monday, year 16th week second day, year 15th week , year 6th month, year 100th day, year 40th monday, ...
      */
     private static Pattern relative_date_type2_1_2(){
-        return match(YEAR_SEEK.toString()).anyOf(maybe(NUMBER.toString()).then(anyOf(relative_date_type2_1_1())),
-                match(NUMBER.toString()).then(anyOf(relative_date_type2_1_0(), match(anyOf(match(MONTH_SEEK.toString()), match(WEEK_SEEK.toString()), match(DAY_SEEK.toString()))))));
+        return match(DATE_SEEKBY.toString()).thenMaybe(maybe(NUMBER.toString())
+                .then(anyOf(match(DATE_SEEKBY.toString()), relative_date_type2_1_1(), relative_date_type2_1_0(), match(WEEK_DAY.toString()))));
     }
 
     private static Pattern relative_date_type2_1(){

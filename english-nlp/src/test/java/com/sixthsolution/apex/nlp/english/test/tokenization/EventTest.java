@@ -92,11 +92,12 @@ public class EventTest {
         assertEvent("next month").startDate(year+"-"+check_zero(String.valueOf(month+1))+"-"+check_zero(String.valueOf(day))).endDate(year+"-"+check_zero(String.valueOf(month+1))+"-"+check_zero(String.valueOf(day)));
         assertEvent("next year").startDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day)));
         assertEvent("next monday").startDate(year+"-07-24");
-//        assertEvent("4 monday from today").startDate(year+"-08-14");
+        assertEvent("4 monday from_today").startDate(year+"-08-14");
         assertEvent("next july").startDate(year+1+"-07-"+day);
         assertEvent("next jan").startDate(year+1+"-01-"+day);
         assertEvent("next july 20").startDate(year+"-07-20");
-
+        assertEvent("next week third day").startDate(year+"-07-26");
+        assertEvent("next year july 20th day").startDate(year+2+"-07-20");
         //global date
         assertEvent("day after tomorrow").startDate(year+"-07-22");
         assertEvent("one week before 2018/02/14").startDate("2018-02-07");
@@ -109,31 +110,31 @@ public class EventTest {
 
     @Test
     public void test_full_sentence() {
-//        assertEvent("Grocery shopping at Wegmans Thursday at 5pm")
-//                .location("Wegmans")
-//                .startTime("17:00")
-//                .endTime("18:00");
+        assertEvent("Grocery shopping at Wegmans Thursday at 5pm")
+                .location("Wegmans")
+                .startTime("17:00")
+                .endTime("18:00");
         assertEvent("12/09 Meet John at Mall from 9:30 to 12:00")
                 .location("Mall")
                 .startTime("09:30")
                 .endTime("12:00");
-//        assertEvent("Meet John on monday at Mall")
-//                .location("Mall")
-//                .start("2017/04/10 09:30")
-//                .end("2017/04/10 10:30");
-//        assertEvent("Family Dine Out on the 2nd Friday of every month at 6-9p")
-//                .startTime("18:00")
-//                .endTime("21:00");
-//        assertEvent("Mission Trip at Jakarta on Nov 13-17 calendar Church")
-//                .location("Jakarta")
-//                .startTime(check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)))
-//                .endTime(check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+        assertEvent("Meet John on monday at Mall")
+                .location("Mall")
+                //wrong value
+                .start(year+"/"+check_zero(String.valueOf(month))+"/"+(day+10)+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/"+check_zero(String.valueOf(month))+"/"+(day+10)+" "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+        assertEvent("Family Dine Out on the 2nd Friday of every month at 6-9p")
+                .startTime("18:00")
+                .endTime("21:00");
+        assertEvent("Mission Trip at Jakarta on Nov 13-17 calendar Church")
+                .location("Jakarta")
+                .startTime(check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min)))
+                .endTime(check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         assertEvent("Wash the Car at Mall at 8.45pm 5/12/13")
                 .location("Mall")
                 .start("2013/05/12 20:45")
                 .end("2013/05/12 21:45");
-//        assertEvent("meeting with Tom for two hours after noon")
-//                .start("2017/07/15 12:00").end("2017/07/15 14:00");
+        assertEvent("meeting with Tom for two hours after noon")
+                .start("2017/07/20 12:00").end("2017/07/20 14:00");
     }
 
     public String check_zero(String digit) {
