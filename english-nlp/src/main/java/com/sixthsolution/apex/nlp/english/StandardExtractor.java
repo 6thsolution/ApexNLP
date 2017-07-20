@@ -211,7 +211,7 @@ public class StandardExtractor implements Extractor {
         if (first == null) {
             int dif = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
             if (dif < 0)
-                dif = 7 - dif;
+                dif = 7 +dif;
             return LocalDate.now().plusDays(dif);
         } else {
             month = (int) first.value;
@@ -271,12 +271,14 @@ public class StandardExtractor implements Extractor {
                             if (taggedWords.size() > 3) {
                                 if (taggedWords.get(3).getTags().containsTag(Tag.MONTH_SEEK)) {
                                     System.out.println("form of next year second month");
-                                    if (taggedWords.size() > 4) {
-                                        if (taggedWords.get(4).getTags().containsTag(Tag.NUMBER)) {
+                                    if (taggedWords.size() >= 4) {
+                                        if (taggedWords.get(3).getTags().containsTag(Tag.NUMBER)) {
                                             System.out.println("form of next year second month 20th");
                                             plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getMonthValue();
-                                            return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(12 + plusday).getMonth(), ((int) taggedWords.get(4).getTags().containsTagByValue(Tag.NUMBER).value));
-
+                                            if (plusday < 0)
+                                                plusday += 12;
+                                            return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(plusday).getMonth()
+                                                    , ((int) taggedWords.get(3).getTags().containsTagByValue(Tag.NUMBER).value));
                                         }
                                     }
                                     plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getMonthValue();

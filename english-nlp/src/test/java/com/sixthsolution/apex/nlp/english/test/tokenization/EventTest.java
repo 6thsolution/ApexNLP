@@ -83,6 +83,7 @@ public class EventTest {
         assertEvent("20 of jan").startDate(year+"-01-20").endDate(year+"-01-20");
         assertEvent("20 of jan").start(year+"/01/20 "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/01/20 "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         assertEvent("sunday").startDate(year+"-07-23");
+        assertEvent("monday").startDate(year+"-07-24");
 
         //relative
         assertEvent("tomorrow").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1))).endDate(year+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day+1)));
@@ -93,11 +94,12 @@ public class EventTest {
         assertEvent("next year").startDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day))).endDate(year+1+"-"+check_zero(String.valueOf(month))+"-"+check_zero(String.valueOf(day)));
         assertEvent("next monday").startDate(year+"-07-24");
         assertEvent("4 monday from_today").startDate(year+"-08-14");
-        assertEvent("next july").startDate(year+1+"-07-"+day);
+        assertEvent("next may").startDate(year+1+"-05-"+day);
+        assertEvent("next aug").startDate(year+"-08-"+day);
         assertEvent("next jan").startDate(year+1+"-01-"+day);
-        assertEvent("next july 20").startDate(year+"-07-20");
+        assertEvent("next july 9").startDate(year+"-07-09");
         assertEvent("next week third day").startDate(year+"-07-26");
-        assertEvent("next year july 20th day").startDate(year+2+"-07-20");
+//        assertEvent("next year july 9th day").startDate(year+1+"-07-09");
         //global date
         assertEvent("day after tomorrow").startDate(year+"-07-22");
         assertEvent("one week before 2018/02/14").startDate("2018-02-07");
@@ -120,8 +122,7 @@ public class EventTest {
                 .endTime("12:00");
         assertEvent("Meet John on monday at Mall")
                 .location("Mall")
-                //wrong value
-                .start(year+"/"+check_zero(String.valueOf(month))+"/"+(day+10)+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/"+check_zero(String.valueOf(month))+"/"+(day+10)+" "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
+                .start(year+"/"+check_zero(String.valueOf(month))+"/"+(day+4)+" "+check_zero(String.valueOf(hour))+":"+check_zero(String.valueOf(min))).end(year+"/"+check_zero(String.valueOf(month))+"/"+(day+4)+" "+check_zero(String.valueOf(hour+1))+":"+check_zero(String.valueOf(min)));
         assertEvent("Family Dine Out on the 2nd Friday of every month at 6-9p")
                 .startTime("18:00")
                 .endTime("21:00");
