@@ -2,6 +2,7 @@ package com.sixthsolution.apex.nlp.event;
 
 import com.sixthsolution.apex.model.Event;
 
+import com.sixthsolution.apex.model.Recurrence;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
@@ -17,6 +18,7 @@ public class EventBuilder {
     private LocalDate startDate;
     private LocalDate endDate;
     private String location = "";
+    private Recurrence recurrence =null;
 
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
@@ -38,6 +40,8 @@ public class EventBuilder {
         this.location = location;
     }
 
+    public void setReccurence(Recurrence reccurence ){this.recurrence=reccurence;}
+
     public Event build(LocalDateTime source) {
         if (startTime == null) {
             startTime = source.toLocalTime();
@@ -52,10 +56,11 @@ public class EventBuilder {
             endDate = startDate;
         }
 
+
         LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
         LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
 
-        return new Event("", location, startDateTime, endDateTime, false, null);
+        return new Event("", location, startDateTime, endDateTime, false, recurrence);
     }
 
 }

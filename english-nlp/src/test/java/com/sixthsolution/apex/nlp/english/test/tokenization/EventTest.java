@@ -99,6 +99,7 @@ public class EventTest {
         assertEvent("next jan").startDate(year+1+"-01-"+day);
         assertEvent("next july 9").startDate(year+"-07-09");
         assertEvent("next week third day").startDate(year+"-07-26");
+        //TODO fix this
 //        assertEvent("next year july 9th day").startDate(year+1+"-07-09");
         //global date
         assertEvent("day after tomorrow").startDate(year+"-07-22");

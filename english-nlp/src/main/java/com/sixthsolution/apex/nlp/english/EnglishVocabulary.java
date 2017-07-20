@@ -96,7 +96,7 @@ public final class EnglishVocabulary {
         vb.tag(DATE_RANGE,DATE)
                 .e("till", "until", "for", "to");
         vb.tag(DATE_FOREVER_KEY,DATE)
-                .e("other");
+                .e(2,"other");
         vb.tag(DATE_SEPARATOR, DATE)
                 .e("/", "-", ".");
         vb.tag(DATE_PREPOSITION, DATE)

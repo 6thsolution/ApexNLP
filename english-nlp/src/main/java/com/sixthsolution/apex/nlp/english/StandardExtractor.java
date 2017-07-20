@@ -1,5 +1,6 @@
 package com.sixthsolution.apex.nlp.english;
 
+import com.sixthsolution.apex.model.Recurrence;
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.dict.TagValue;
 import com.sixthsolution.apex.nlp.dict.Tags;
@@ -63,7 +64,26 @@ public class StandardExtractor implements Extractor {
                 builder.setEndDate(pdate.second);
                 break;
 
+            case FOREVER_DATE:
+                Pair<Recurrence,Pair<LocalDate,LocalDate>> pdate2=getForever(source, chunkedPart);
+                builder.setReccurence(pdate2.first);
+                builder.setStartDate(pdate2.second.first);
+                builder.setEndDate(pdate2.second.second);
         }
+    }
+
+    private Pair<Recurrence,Pair<LocalDate,LocalDate>> getForever(LocalDateTime source , ChunkedPart chunkedPart){
+//        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
+//        Recurrence recurrence ;
+//        if(taggedWords.get(0).getTags().containsTag(Tag.DATE_RECURRENCE)){
+//            if(taggedWords.get(1).getTags().containsTag(Tag.NUMBER)){
+//                recurrence.interval() = (int)taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER).value;
+//                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
+//                    if ()
+//                }
+//            }
+//        }
+        return null;
     }
 
     private LocalDate getFormalDate(LocalDateTime source, ChunkedPart chunkedPart) {
