@@ -197,6 +197,7 @@ public class DateDetector extends ChunkDetector {
     /**
      * @return every other day, every 2 weeks
      */
+    //TODO add every week sundays,...
     private static Pattern forever_date(){
         return match(DATE_RECURRENCE.toString()).then(maybe(anyOf(DATE_FOREVER_KEY.toString(),NUMBER.toString()))).then(forever_seek()).then(maybe(DATE_RANGE.toString())).then(maybe(anyOf(relax_date(),relative_date(),formal_date())));
     }

@@ -1,12 +1,15 @@
 package com.sixthsolution.apex.nlp.test;
 
 import com.sixthsolution.apex.model.Event;
+import com.sixthsolution.apex.model.Recurrence;
 import com.sixthsolution.apex.nlp.parser.Parser;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,6 +68,19 @@ public class ParserAssertion {
             assertEquals(expected.getMinute(), actual.getMinute());
         }
 
+        public EventAssertion checkRecurrence(String expected){
+            assertRecurrence(event.recurrence(),expected);
+            return this;
+        }
+
+        private void assertRecurrence(Recurrence actual,String expected){
+            String[] e=expected.toLowerCase().split(",");
+            assertEquals(e[0], actual.frequency().toString().toLowerCase());
+            assertEquals(e[1], String.valueOf(actual.interval()));
+            assertEquals(e[2],String.valueOf(actual.isForever()));
+            assertEquals(e[3],String.valueOf(actual.until().toLocalDate()));
+
+        }
         public EventAssertion startTime(String expectedAsString) {
             assertTime(event.start().toLocalTime(), expectedAsString);
             return this;

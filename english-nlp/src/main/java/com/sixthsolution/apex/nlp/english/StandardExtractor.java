@@ -1,6 +1,8 @@
 package com.sixthsolution.apex.nlp.english;
 
+import com.sixthsolution.apex.model.Frequency;
 import com.sixthsolution.apex.model.Recurrence;
+import com.sixthsolution.apex.model.WeekDay;
 import com.sixthsolution.apex.nlp.dict.Tag;
 import com.sixthsolution.apex.nlp.dict.TagValue;
 import com.sixthsolution.apex.nlp.dict.Tags;
@@ -15,6 +17,7 @@ import com.sixthsolution.apex.nlp.util.Pair;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,17 +76,81 @@ public class StandardExtractor implements Extractor {
     }
 
     private Pair<Recurrence,Pair<LocalDate,LocalDate>> getForever(LocalDateTime source , ChunkedPart chunkedPart){
-//        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
-//        Recurrence recurrence ;
-//        if(taggedWords.get(0).getTags().containsTag(Tag.DATE_RECURRENCE)){
-//            if(taggedWords.get(1).getTags().containsTag(Tag.NUMBER)){
-//                recurrence.interval() = (int)taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER).value;
-//                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
-//                    if ()
-//                }
-//            }
-//        }
-        return null;
+        List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
+        Recurrence recurrence ;
+        int interval=1;
+        Frequency frequency=Frequency.DAILY;
+        List<WeekDay> byDays =new ArrayList<>();
+
+        if(taggedWords.get(0).getTags().containsTag(Tag.DATE_RECURRENCE)){
+            if(taggedWords.get(1).getTags().containsTag(Tag.NUMBER)){
+                interval = (int)taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER).value;
+                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
+                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)){
+                        frequency = Frequency.DAILY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)){
+                        frequency =Frequency.WEEKLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)){
+                        frequency =Frequency.MONTHLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)){
+                        frequency =Frequency.YEARLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)){
+                        frequency=Frequency.WEEKLY;
+                        byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
+                    }
+
+                }
+            }else if(taggedWords.get(1).getTags().containsTag(Tag.DATE_FOREVER_KEY)){
+                interval=2;
+                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
+                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)){
+                        frequency = Frequency.DAILY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)){
+                        frequency =Frequency.WEEKLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)){
+                        frequency =Frequency.MONTHLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)){
+                        frequency =Frequency.YEARLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)){
+                        frequency=Frequency.WEEKLY;
+                        byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
+                    }
+
+                }
+            }
+            else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)){
+                interval=1;
+                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
+                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)){
+                        frequency = Frequency.DAILY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)){
+                        frequency =Frequency.WEEKLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)){
+                        frequency =Frequency.MONTHLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)){
+                        frequency =Frequency.YEARLY;
+                    }
+                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)){
+                        frequency=Frequency.WEEKLY;
+                        byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
+                    }
+
+                }
+            }
+        }
+        recurrence=new Recurrence(frequency,interval,LocalDateTime.now(),false,byDays);
+        return new Pair<>(recurrence,new Pair<>(LocalDate.now(),recurrence.until().toLocalDate()));
     }
 
     private LocalDate getFormalDate(LocalDateTime source, ChunkedPart chunkedPart) {
@@ -242,8 +309,9 @@ public class StandardExtractor implements Extractor {
     }
 
 
+
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
-       //TODO add seasons event
+        //TODO add seasons event
 
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
         int plusday = 0;
@@ -260,8 +328,7 @@ public class StandardExtractor implements Extractor {
                 if (taggedWords.get(1).getTags().containsTag(Tag.DAY_SEEK)) {
                     System.out.println("form of next day");
                     return LocalDate.now().plusDays(plusday);
-                }
-                if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)) {
+                }else if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)) {
                     System.out.println("form of next month");
                     if (taggedWords.size() > 2) {
                         if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
@@ -270,8 +337,7 @@ public class StandardExtractor implements Extractor {
                         }
                     }
                     return LocalDate.now().plusMonths(plusday);
-                }
-                if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_SEEK)) {
+                } else if (taggedWords.get(1).getTags().containsTag(Tag.WEEK_SEEK)) {
                     System.out.println("form of next week");
                     if (taggedWords.size() > 2) {
                         if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
@@ -282,8 +348,7 @@ public class StandardExtractor implements Extractor {
                         }
                     }
                     return LocalDate.now().plusDays(plusday * 7);
-                }
-                if (taggedWords.get(1).getTags().containsTag(Tag.YEAR_SEEK)) {
+                } else if (taggedWords.get(1).getTags().containsTag(Tag.YEAR_SEEK)) {
                     System.out.println("form of next year");
                     if (taggedWords.size() > 2) {
                         if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
@@ -291,14 +356,13 @@ public class StandardExtractor implements Extractor {
                             if (taggedWords.size() > 3) {
                                 if (taggedWords.get(3).getTags().containsTag(Tag.MONTH_SEEK)) {
                                     System.out.println("form of next year second month");
-                                    if (taggedWords.size() >= 4) {
-                                        if (taggedWords.get(3).getTags().containsTag(Tag.NUMBER)) {
+                                    if (taggedWords.size() > 4) {
+                                        if (taggedWords.get(4).getTags().containsTag(Tag.NUMBER)) {
                                             System.out.println("form of next year second month 20th");
                                             plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getMonthValue();
-                                            if (plusday < 0)
-                                                plusday += 12;
-                                            return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(plusday).getMonth()
-                                                    , ((int) taggedWords.get(3).getTags().containsTagByValue(Tag.NUMBER).value));
+                                            return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(12 + plusday).getMonth(), ((int) taggedWords.get(4).getTags().containsTagByValue(Tag.NUMBER).value));
+
+
                                         }
                                     }
                                     plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.NUMBER).value - LocalDate.now().getMonthValue();
@@ -310,16 +374,20 @@ public class StandardExtractor implements Extractor {
                         }
                         if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_NAME)) {
                             System.out.println("form of next year april");
-                            if (taggedWords.size() > 4) {
-                                if (taggedWords.get(4).getTags().containsTag(Tag.NUMBER)) {
-                                    System.out.println("form of next april 20th");
+                            if (taggedWords.size() >= 4) {
+                                if (taggedWords.get(3).getTags().containsTag(Tag.NUMBER)) {
+                                    System.out.println("form of next year april 20th");
                                     plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME).value - LocalDate.now().getMonthValue();
-                                    return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(12 + plusday).getMonth(), ((int) taggedWords.get(4).getTags().containsTagByValue(Tag.NUMBER).value));
-
+                                    if (plusday < 0)
+                                        plusday += 12;
+                                    return LocalDate.of(LocalDate.now().plusYears(1).getYear(), LocalDate.now().plusMonths(plusday).getMonth()
+                                            , ((int) taggedWords.get(3).getTags().containsTagByValue(Tag.NUMBER).value));
                                 }
                             }
                             plusday = (int) taggedWords.get(2).getTags().containsTagByValue(Tag.MONTH_NAME).value - LocalDate.now().getMonthValue();
-                            return LocalDate.now().plusYears(1).plusMonths(12 + plusday);
+                            if (plusday < 0)
+                                plusday += 12;
+                            return LocalDate.now().plusYears(1).plusMonths(plusday);
                         }
                     }
                     return LocalDate.now().plusYears(plusday);
@@ -345,7 +413,6 @@ public class StandardExtractor implements Extractor {
                     }
                 } else return LocalDate.now().plusMonths(dif);
             }
-
 
         } else if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
             System.out.println("start with number");
