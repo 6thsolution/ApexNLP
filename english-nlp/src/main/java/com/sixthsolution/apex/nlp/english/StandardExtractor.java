@@ -140,8 +140,8 @@ public class StandardExtractor implements Extractor {
 
 
             int index = 0;
-            while ((!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) && index<taggedWords.size()) index++;
-            if (index > 0) {
+            while (index<taggedWords.size() && (!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE))) index++;
+            if (index <taggedWords.size()) {
                 List<TaggedWord> taggi = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
                 ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
                 StandardExtractor sde = new StandardExtractor();
@@ -155,6 +155,8 @@ public class StandardExtractor implements Extractor {
                 recurrence=new Recurrence(frequency, interval,LocalDateTime.now(),false,byDays);
                 return new Pair<>(recurrence,new Pair<>(LocalDate.now(),LocalDateTime.now().toLocalDate()));
             }
+
+
         }
         recurrence=new Recurrence(frequency, interval, LocalDateTime.now(),false,byDays);
         return new Pair<>(recurrence,new Pair<>(LocalDate.now(),recurrence.until().toLocalDate()));
