@@ -16,6 +16,7 @@ import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 import com.sixthsolution.apex.nlp.util.Pair;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,8 @@ import static com.sixthsolution.apex.nlp.ner.Entity.DATE;
 public class StandardExtractor implements Extractor {
 
     LocalDate date;
+
+
 
     @Override
     public void extract(EventBuilder builder, LocalDateTime source, ChunkedPart chunkedPart) {
@@ -68,90 +71,95 @@ public class StandardExtractor implements Extractor {
                 break;
 
             case FOREVER_DATE:
-                Pair<Recurrence,Pair<LocalDate,LocalDate>> pdate2=getForever(source, chunkedPart);
+                Pair<Recurrence, Pair<LocalDate, LocalDate>> pdate2 = getForever(source, chunkedPart);
                 builder.setReccurence(pdate2.first);
                 builder.setStartDate(pdate2.second.first);
                 builder.setEndDate(pdate2.second.second);
         }
     }
-
-    private Pair<Recurrence,Pair<LocalDate,LocalDate>> getForever(LocalDateTime source , ChunkedPart chunkedPart){
+    private Pair<Recurrence, Pair<LocalDate, LocalDate>> getForever(LocalDateTime source, ChunkedPart chunkedPart) {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
-        Recurrence recurrence ;
-        int interval=1;
-        Frequency frequency=Frequency.DAILY;
-        List<WeekDay> byDays =new ArrayList<>();
+        Recurrence recurrence =null;
+        int interval = 1;
+        Frequency frequency = Frequency.DAILY;
+        List<WeekDay> byDays = new ArrayList<>();
 
-        if(taggedWords.get(0).getTags().containsTag(Tag.DATE_RECURRENCE)){
-            if(taggedWords.get(1).getTags().containsTag(Tag.NUMBER)){
-                interval = (int)taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER).value;
-                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
-                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)){
+        if (taggedWords.get(0).getTags().containsTag(Tag.DATE_RECURRENCE)) {
+            if (taggedWords.get(1).getTags().containsTag(Tag.NUMBER)) {
+                interval = (int) taggedWords.get(1).getTags().containsTagByValue(Tag.NUMBER).value;
+                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)) {
+                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)) {
                         frequency = Frequency.DAILY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)){
-                        frequency =Frequency.WEEKLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)){
-                        frequency =Frequency.MONTHLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)){
-                        frequency =Frequency.YEARLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)){
-                        frequency=Frequency.WEEKLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)) {
+                        frequency = Frequency.WEEKLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)) {
+                        frequency = Frequency.MONTHLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)) {
+                        frequency = Frequency.YEARLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)) {
+                        frequency = Frequency.WEEKLY;
                         byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
                     }
 
                 }
-            }else if(taggedWords.get(1).getTags().containsTag(Tag.DATE_FOREVER_KEY)){
-                interval=2;
-                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
-                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)){
+            } else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_FOREVER_KEY)) {
+                interval = 2;
+                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)) {
+                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)) {
                         frequency = Frequency.DAILY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)) {
+                        frequency = Frequency.WEEKLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)) {
+                        frequency = Frequency.MONTHLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)) {
+                        frequency = Frequency.YEARLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)) {
+                        frequency = Frequency.WEEKLY;
+                        byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
                     }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)){
-                        frequency =Frequency.WEEKLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)){
-                        frequency =Frequency.MONTHLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)){
-                        frequency =Frequency.YEARLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)){
-                        frequency=Frequency.WEEKLY;
+
+                }
+            } else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) {
+                interval = 1;
+                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)) {
+                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)) {
+                        frequency = Frequency.DAILY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)) {
+                        frequency = Frequency.WEEKLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)) {
+                        frequency = Frequency.MONTHLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)) {
+                        frequency = Frequency.YEARLY;
+                    } else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)) {
+                        frequency = Frequency.WEEKLY;
                         byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
                     }
 
                 }
             }
-            else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)){
-                interval=1;
-                if (taggedWords.get(2).getTags().containsTag(Tag.DATE_SEEKBY)){
-                    if (taggedWords.get(2).getTags().containsTag(Tag.DAY_SEEK)){
-                        frequency = Frequency.DAILY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_SEEK)){
-                        frequency =Frequency.WEEKLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.MONTH_SEEK)){
-                        frequency =Frequency.MONTHLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.YEAR_SEEK)){
-                        frequency =Frequency.YEARLY;
-                    }
-                    else if (taggedWords.get(2).getTags().containsTag(Tag.WEEK_DAY)){
-                        frequency=Frequency.WEEKLY;
-                        byDays.add((WeekDay) taggedWords.get(2).getTags().containsTagByValue(Tag.WEEK_DAY).value);
-                    }
 
-                }
+
+            int index = 0;
+            while ((!taggedWords.get(index).getTags().containsTag(Tag.DATE_RANGE)) && index<taggedWords.size()) index++;
+            if (index > 0) {
+                List<TaggedWord> taggi = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
+                ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
+                StandardExtractor sde = new StandardExtractor();
+                sde.extract(new EventBuilder(), LocalDateTime.now(), cp);
+                LocalDate untildate = sde.date;
+                recurrence=new Recurrence(frequency, interval,LocalDateTime.of(untildate, LocalTime.now()),false,byDays);
+                return new Pair<>(recurrence,new Pair<>(LocalDate.now(),untildate));
+
+            }
+            else {
+                recurrence=new Recurrence(frequency, interval,LocalDateTime.now(),false,byDays);
+                return new Pair<>(recurrence,new Pair<>(LocalDate.now(),LocalDateTime.now().toLocalDate()));
             }
         }
-        recurrence=new Recurrence(frequency,interval,LocalDateTime.now(),false,byDays);
+        recurrence=new Recurrence(frequency, interval, LocalDateTime.now(),false,byDays);
         return new Pair<>(recurrence,new Pair<>(LocalDate.now(),recurrence.until().toLocalDate()));
     }
+
 
     private LocalDate getFormalDate(LocalDateTime source, ChunkedPart chunkedPart) {
 
@@ -298,7 +306,7 @@ public class StandardExtractor implements Extractor {
         if (first == null) {
             int dif = ((int) taggedWords.get(0).getTags().containsTagByValue(Tag.WEEK_DAY).value) - (LocalDate.now().getDayOfWeek().getValue());
             if (dif < 0)
-                dif = 7 +dif;
+                dif = 7 + dif;
             return LocalDate.now().plusDays(dif);
         } else {
             month = (int) first.value;
@@ -307,7 +315,6 @@ public class StandardExtractor implements Extractor {
 
 
     }
-
 
 
     private LocalDate getRelativeDate(LocalDateTime source, ChunkedPart chunkedPart) {
@@ -328,7 +335,7 @@ public class StandardExtractor implements Extractor {
                 if (taggedWords.get(1).getTags().containsTag(Tag.DAY_SEEK)) {
                     System.out.println("form of next day");
                     return LocalDate.now().plusDays(plusday);
-                }else if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)) {
+                } else if (taggedWords.get(1).getTags().containsTag(Tag.MONTH_SEEK)) {
                     System.out.println("form of next month");
                     if (taggedWords.size() > 2) {
                         if (taggedWords.get(2).getTags().containsTag(Tag.NUMBER)) {
@@ -452,7 +459,8 @@ public class StandardExtractor implements Extractor {
 
         return null;
     }
-    private LocalDate getGlobalDate(LocalDateTime source,ChunkedPart chunkedPart){
+
+    private LocalDate getGlobalDate(LocalDateTime source, ChunkedPart chunkedPart) {
         List<TaggedWord> taggedWords = chunkedPart.getTaggedWords();
         int index = 0;
         while (!taggedWords.get(index).getTags().containsTag(Tag.GLOBAL_PREPOSITION)) index++;
@@ -460,28 +468,25 @@ public class StandardExtractor implements Extractor {
 //        ChunkedPart cp = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi)).get(0);
         List<TaggedWord> taggi2 = chunkedPart.getTaggedWords(index + 1, chunkedPart.getTaggedWords().size());
         ChunkedPart cp2 = new RegExChunker(Arrays.asList(new TimeDetector(), new LocationDetector(), new DateDetector())).chunk(new TaggedWords(taggi2)).get(0);
-        boolean forward =(boolean) taggedWords.get(index).getTags().containsTagByValue(Tag.GLOBAL_PREPOSITION).value;
+        boolean forward = (boolean) taggedWords.get(index).getTags().containsTagByValue(Tag.GLOBAL_PREPOSITION).value;
         int counter;
-        if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)){
-            counter=(int)taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value;
+        if (taggedWords.get(0).getTags().containsTag(Tag.NUMBER)) {
+            counter = (int) taggedWords.get(0).getTags().containsTagByValue(Tag.NUMBER).value;
+        } else {
+            counter = 1;
         }
-        else{
-            counter=1;
-        }
-        int seek=0;
-        if (taggedWords.get(0).getTags().containsTag(Tag.DATE_SEEKBY)){
-            seek=(int)taggedWords.get(0).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
-        }
-        else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)){
-            seek=(int)taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
+        int seek = 0;
+        if (taggedWords.get(0).getTags().containsTag(Tag.DATE_SEEKBY)) {
+            seek = (int) taggedWords.get(0).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
+        } else if (taggedWords.get(1).getTags().containsTag(Tag.DATE_SEEKBY)) {
+            seek = (int) taggedWords.get(1).getTags().containsTagByValue(Tag.DATE_SEEKBY).value;
         }
         StandardExtractor sde = new StandardExtractor();
         sde.extract(new EventBuilder(), LocalDateTime.now(), cp2);
-        if (forward){
-            return sde.date.plusDays(seek*counter);
-        }
-        else {
-            return sde.date.minusDays(seek*counter);
+        if (forward) {
+            return sde.date.plusDays(seek * counter);
+        } else {
+            return sde.date.minusDays(seek * counter);
         }
 
     }

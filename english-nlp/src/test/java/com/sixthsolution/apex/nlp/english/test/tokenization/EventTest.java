@@ -105,7 +105,8 @@ public class EventTest {
         assertEvent("one week before 2018/02/14").startDate("2018-02-07");
 
         //forever
-        assertEvent("every 2 days").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+day).checkRecurrence("daily,2,false,2017-07-21");
+        assertEvent("every 2 days till tomorrow").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+day).checkRecurrence("daily,2,false,2017-07-24");
+        assertEvent("every 2 weeks").startDate(year+"-"+check_zero(String.valueOf(month))+"-"+day).checkRecurrence("weekly,2,false,2017-07-23");
 
 
 
