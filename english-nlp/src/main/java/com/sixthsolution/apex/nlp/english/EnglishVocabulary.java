@@ -12,6 +12,7 @@ import static com.sixthsolution.apex.nlp.ner.Entity.TIME;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public final class EnglishVocabulary {

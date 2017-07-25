@@ -2,6 +2,7 @@ package com.sixthsolution.apex.nlp.tokenization;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class StandardTokenizer implements Tokenizer {

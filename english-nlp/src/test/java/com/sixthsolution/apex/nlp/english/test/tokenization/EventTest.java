@@ -10,6 +10,7 @@ import static com.sixthsolution.apex.nlp.test.ParserAssertion.init;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class EventTest {

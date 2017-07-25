@@ -10,6 +10,7 @@ import static com.sixthsolution.apex.nlp.test.TokenizerAssertion.init;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class EnglishTokenizationTest {

@@ -21,6 +21,7 @@ import static com.sixthsolution.apex.nlp.dict.Tag.*;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class StandardTimeExtractor implements Extractor {

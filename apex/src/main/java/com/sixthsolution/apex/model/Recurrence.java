@@ -24,6 +24,7 @@ import java.util.List;
  * Represents a recurring event.
  *
  * @author Saeed Masoumi (saeed@6thsolution.com)
+ * @author Rozhin Bayati
  */
 public class Recurrence {
 

@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ *
  */
 
 public class StandardLocationExtractor implements Extractor {

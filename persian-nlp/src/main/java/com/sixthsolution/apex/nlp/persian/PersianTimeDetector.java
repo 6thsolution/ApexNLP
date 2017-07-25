@@ -1,7 +1,10 @@
-package com.sixthsolution.apex.nlp.english;
+package com.sixthsolution.apex.nlp.persian;
+
+/**
+ * Created by rozhin on 7/26/2017.
+ */
 
 import com.nobigsoftware.dfalex.Pattern;
-import com.sixthsolution.apex.nlp.english.filter.TimeDetectionFilter;
 import com.sixthsolution.apex.nlp.ner.Entity;
 import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.regex.ChunkDetectionFilter;
@@ -14,38 +17,39 @@ import java.util.List;
 import static com.nobigsoftware.dfalex.Pattern.anyOf;
 import static com.nobigsoftware.dfalex.Pattern.match;
 import static com.nobigsoftware.dfalex.Pattern.maybe;
-import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_HOUR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MERIDIEM;
+import static com.sixthsolution.apex.nlp.dict.Tag.*;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MIN;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_PREFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RANGE;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_PREFIX;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_SEPARATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.TIME_START_RANGE;
 import static com.sixthsolution.apex.nlp.ner.Entity.TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.FIXED_TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.RANGE_TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.RELATIVE_TIME;
 
-/**
- * @author Saeed Masoumi (s-masoumi@live.com)
- * @author Rozhin Bayati
- */
+import com.sixthsolution.apex.nlp.persian.TimeDetectionFilter;
 
-public class TimeDetector extends ChunkDetector {
+import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_HOUR;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MERIDIEM;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_PREFIX;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RANGE;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_PREFIX;
+import static com.sixthsolution.apex.nlp.dict.Tag.TIME_SEPARATOR;
+
+
+
+
+public class PersianTimeDetector extends ChunkDetector {
 
     /**
-     * @return returns noon, afternoon, etc.
+     * @return returns شب،ظهر،عصر...
      */
     private static Pattern time_relative() {
         return match(TIME_RELATIVE.toString());
     }
 
     /**
-     * @return returns hh:mm am/pm
+     * @return returns hh:mm ق.ظ/ب.ظ
      */
     private static Pattern time_hour_min() {
         return match(NUMBER.toString()).thenMaybe(
@@ -54,7 +58,7 @@ public class TimeDetector extends ChunkDetector {
     }
 
     /**
-     * @return at hh:mm am/pm, at noon
+     * @return  like time_hour_min but starts with در/ساعت
      */
     private static Pattern fixed_time() {
         return maybe(TIME_PREFIX.toString()).then(
@@ -64,7 +68,7 @@ public class TimeDetector extends ChunkDetector {
     }
 
     /**
-     * @return from (time) till (time)
+     * @return از (time) تا (time)
      */
     private static Pattern range_time() {
         //TODO add From-until

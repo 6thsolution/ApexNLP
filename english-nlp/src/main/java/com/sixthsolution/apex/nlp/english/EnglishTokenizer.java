@@ -4,6 +4,7 @@ import com.sixthsolution.apex.nlp.tokenization.StandardTokenizer;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class EnglishTokenizer extends StandardTokenizer {

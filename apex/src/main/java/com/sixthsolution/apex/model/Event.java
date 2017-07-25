@@ -22,6 +22,7 @@ import org.threeten.bp.LocalDateTime;
  * Represents a single calendar event.
  *
  * @author Saeed Masoumi (saeed@6thsolution.com)
+ * @author Rozhin Bayati
  */
 public class Event {
 

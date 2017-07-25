@@ -6,6 +6,7 @@ import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class DateDetectionFilter extends ChunkDetectionFilter {

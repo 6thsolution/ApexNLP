@@ -9,6 +9,7 @@ import org.threeten.bp.LocalTime;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class EventBuilder {

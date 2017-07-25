@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class Tags extends ArrayList<TagValue> {

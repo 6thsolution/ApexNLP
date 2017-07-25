@@ -1,12 +1,10 @@
-package com.sixthsolution.apex.nlp.english.filter;
+package com.sixthsolution.apex.nlp.persian;
 
 import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.regex.ChunkDetectionFilter;
 import com.sixthsolution.apex.nlp.tagger.TaggedWords;
 
-import static com.sixthsolution.apex.nlp.dict.Tag.DATE_SEPARATOR;
-import static com.sixthsolution.apex.nlp.dict.Tag.MONTH_NAME;
-import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
+import static com.sixthsolution.apex.nlp.dict.Tag.*;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
@@ -32,7 +30,7 @@ public class TimeDetectionFilter extends ChunkDetectionFilter {
             }
             return true;
             case RANGE_TIME:
-                //ignore like Nov 13-17
+                //ignore like فروردین 13-17
                 if (startIndex > 0 && taggedWords.get(startIndex - 1).hasTag(MONTH_NAME)) {
                     return false;
                 }

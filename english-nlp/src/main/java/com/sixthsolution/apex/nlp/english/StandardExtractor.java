@@ -25,8 +25,8 @@ import java.util.List;
 import static com.sixthsolution.apex.nlp.ner.Entity.DATE;
 
 /**
- * @author Saeed Masoumi (s-masoumi@live.com)
- */
+ * @author Rozhin Bayati
+ * */
 
 public class StandardExtractor implements Extractor {
 

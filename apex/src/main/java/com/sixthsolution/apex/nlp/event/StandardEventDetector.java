@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class StandardEventDetector implements EventDetector {

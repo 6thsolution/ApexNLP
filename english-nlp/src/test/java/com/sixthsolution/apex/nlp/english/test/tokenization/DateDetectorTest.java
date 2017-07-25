@@ -11,6 +11,7 @@ import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunk
 
 /**
  * @author Saeed Masoumi (s-masoumi@live.com)
+ * @author Rozhin Bayati
  */
 
 public class DateDetectorTest extends EnglishDetectorTest {
