@@ -19,25 +19,21 @@ public class PersianDDTest extends PersianDetectorTest {
     public void test_formal_date() {
         assertChunkedPart("1396/8/9").text("1396 / 8 / 9").label(FORMAL_DATE).entity(DATE);
         assertChunkedPart("96/3/20").text("96 / 3 / 20").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("03/14/16").text("03 / 14 / 16").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("03/apr/2016").text("03 / apr / 2016").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("12/12/16").text("12 / 12 / 16").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("2016/apr/21").text("2016 / apr / 21").label(FORMAL_DATE).entity(DATE);
-//        assertChunkedPart("2001-12-12").text("2001 - 12 - 12").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("1398/تیر/16").text("1398 / تیر / 16").label(FORMAL_DATE).entity(DATE);
+        assertChunkedPart("89-مهر-12").text("89 - مهر - 12").label(FORMAL_DATE).entity(DATE);
 
     }
 
     @Test
     public void test_relax_date() {
-//        assertChunkedPart("april").text("april").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("apr 20").text("apr 20").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("april 20 th").text("april 20 th").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("april 20,2012").text("april 20 , 2012").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("20 april").text("20 april").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("20 th apr").text("20 th apr").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("20 of april").text("20 of april").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("20 apr 2012").text("20 apr 2012").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("monday").text("monday").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("مهر").text("مهر").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("20 تیر").text("20 تیر").label(RELAX_DATE).entity(DATE);
+//        assertChunkedPart("اول مرداد").text("اول مرداد").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("20ام تیر").text("20 ام تیر").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("10 فروردین 59").text("10 فروردین 59").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("بیستم فروردین 75").text("بیستم فروردین 75").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("شنبه").text("شنبه").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("دوشنبه").text("دوشنبه").label(RELAX_DATE).entity(DATE);
 
     }
 
@@ -60,25 +56,24 @@ public class PersianDDTest extends PersianDetectorTest {
 
     @Test
     public void test_global_date(){
-//        assertChunkedPart("day after tomorrow").text("day after tomorrow").label(GLOBAL_DATE).entity(DATE);
-//        assertChunkedPart("one week before sunday").text("one week before sunday").label(GLOBAL_DATE).entity(DATE);
+//        assertChunkedPart(" دو روز بعد فردا").text("دو روز بعد فردا").label(GLOBAL_DATE).entity(DATE);
+        assertChunkedPart("یک هفته قبل تیر").text("یک هفته قبل تیر").label(GLOBAL_DATE).entity(DATE);
 
     }
 
 
     @Test
     public void test_limited_date(){
-//        assertChunkedPart("till next month").text("till next month").label(LIMITED_DATE).entity(DATE);
-//        assertChunkedPart("from sunday until june 20").text("from sunday until june 20").label(LIMITED_DATE).entity(DATE);
-//        assertChunkedPart("from 7/15/2017 until 8/15/2017").text("from 7 / 15 / 2017 until 8 / 15 / 2017").label(LIMITED_DATE).entity(DATE);
+        assertChunkedPart("تا پسفردا").text("تا پسفردا").label(LIMITED_DATE).entity(DATE);
+        assertChunkedPart("از شنبه تا 20ام فروردین").text("از شنبه تا 20 ام فروردین").label(LIMITED_DATE).entity(DATE);
+        assertChunkedPart("از 1395/2/1 تا 1396/5/7").text("از 1395 / 2 / 1 تا 1396 / 5 / 7").label(LIMITED_DATE).entity(DATE);
     }
 
     @Test
     public void test_forever_date(){
-//        assertChunkedPart("every other day").text("every other day").label(FOREVER_DATE).entity(DATE);
-//        assertChunkedPart("every day").text("every day").label(FOREVER_DATE).entity(DATE);
-//        assertChunkedPart("every 2 sunday").text("every 2 sunday").label(FOREVER_DATE).entity(DATE);
-//        assertChunkedPart("every day until june").text("every day until june").label(FOREVER_DATE).entity(DATE);
+        assertChunkedPart("هر روز").text("هر روز").label(FOREVER_DATE).entity(DATE);
+        assertChunkedPart("هر دو هفته").text("هر دو هفته").label(FOREVER_DATE).entity(DATE);
+        assertChunkedPart("هر شنبه تا مرداد").text("هر شنبه تا مرداد").label(FOREVER_DATE).entity(DATE);
 
     }
     @Override
