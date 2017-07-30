@@ -13,6 +13,7 @@ public enum Tag {
     //LOCATION
     LOCATION_PREFIX(102),
     LOCATION_SUFFIX(103),
+    LOCATION_NAME(137),
     //TIME
     TIME_PREFIX(104),                //e.g. at, in ,the
     TIME_START_RANGE(105),       //e.g. from

@@ -17,7 +17,6 @@ import java.util.List;
 import static com.nobigsoftware.dfalex.Pattern.anyOf;
 import static com.nobigsoftware.dfalex.Pattern.match;
 import static com.nobigsoftware.dfalex.Pattern.maybe;
-import static com.sixthsolution.apex.nlp.dict.Tag.*;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_MIN;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_RELATIVE_INDICATOR;
 import static com.sixthsolution.apex.nlp.ner.Entity.TIME;
@@ -25,7 +24,7 @@ import static com.sixthsolution.apex.nlp.ner.Label.FIXED_TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.RANGE_TIME;
 import static com.sixthsolution.apex.nlp.ner.Label.RELATIVE_TIME;
 
-import com.sixthsolution.apex.nlp.persian.TimeDetectionFilter;
+import com.sixthsolution.apex.nlp.persian.filter.TimeDetectionFilter;
 
 import static com.sixthsolution.apex.nlp.dict.Tag.NUMBER;
 import static com.sixthsolution.apex.nlp.dict.Tag.TIME_HOUR;

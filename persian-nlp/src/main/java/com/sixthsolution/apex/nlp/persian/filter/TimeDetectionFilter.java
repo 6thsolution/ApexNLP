@@ -1,4 +1,4 @@
-package com.sixthsolution.apex.nlp.persian;
+package com.sixthsolution.apex.nlp.persian.filter;
 
 import com.sixthsolution.apex.nlp.ner.Label;
 import com.sixthsolution.apex.nlp.ner.regex.ChunkDetectionFilter;

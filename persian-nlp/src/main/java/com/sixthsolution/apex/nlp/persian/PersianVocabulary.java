@@ -178,6 +178,9 @@ public final class PersianVocabulary {
                 .e("در");
         vb.tag(LOCATION_SUFFIX, LOCATION)
                 .e("خیابان", "کوچه", "بزرگراه");
+        vb.tag(LOCATION_NAME,LOCATION)
+            .e("خانه","محل_کار","بازار","پارک","دانشگاه","مدرسه","کافه","رستوران","مغازه");
+
         //***************************************
         //Others
         //***************************************
@@ -187,6 +190,7 @@ public final class PersianVocabulary {
                 .e(1,"بعدی","بعد");
         vb.tag(RELATIVE_SUFFIX,NONE)
                 .e("از_امروز","از_الان","از_فردا");
+
 //        vb.tag(THE_PREFIX,NONE)
 //                .e("the","this","current");
         return vb.build();
