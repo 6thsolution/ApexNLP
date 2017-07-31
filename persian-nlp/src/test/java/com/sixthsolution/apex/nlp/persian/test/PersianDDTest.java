@@ -58,7 +58,7 @@ public class PersianDDTest extends PersianDetectorTest {
 
     @Test
     public void test_global_date(){
-//        assertChunkedPart(" یک هفته بعد مرداد").text("یک هفته بعد مرداد").label(GLOBAL_DATE).entity(DATE);
+        assertChunkedPart(" یک هفته بعد 1396/4/2").text("یک هفته بعد 1396 / 4 / 2").label(GLOBAL_DATE).entity(DATE);
         assertChunkedPart("یک هفته قبل تیر").text("یک هفته قبل تیر").label(GLOBAL_DATE).entity(DATE);
 
     }
