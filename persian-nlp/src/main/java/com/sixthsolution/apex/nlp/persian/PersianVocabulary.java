@@ -98,8 +98,8 @@ public final class PersianVocabulary {
 //                .e(2,"other");
         vb.tag(DATE_SEPARATOR, DATE)
                 .e("/", "-", ".");
-        vb.tag(DATE_PREPOSITION, DATE)
-                .e("در");
+//        vb.tag(DATE_PREPOSITION, DATE)
+//                .e("در");
         vb.tag(DATE_SEEKBY, DATE)
                 .e(1,"روز", "روز_ها", "روزها")
                 .e(7,"هفته", "هفته_ها")
@@ -115,16 +115,15 @@ public final class PersianVocabulary {
                 .e("روز", "روز_ها", "روزها");
 
 
-        vb.tag(DATE_START_RANGE, DATE)
-                .e("از", "از_روز");
+
         vb.tag(DATE_SUFFIX, DATE)
                 .e("ام", "امین");
         vb.tag(DATE_DURATION_SUFFIX, DATE)
                 .e("روز",  "روز_ها","روزها");
         vb.tag(DATE_PREFIX, DATE)
-                .e("از" , "در" , ",");
+                .e("از" , "در" , ",","از", "از_روز");
         vb.tag(DATE_BAND,DATE)
-                .e("اول","پایان","آخر");
+                .e("اول","پایان","آخرین","آخر");
         vb.tag(CURRENT,DATE)
                 .e("الان","امروز","امسال");
         //***************************************

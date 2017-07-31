@@ -81,17 +81,17 @@ public class PersianDDTest extends PersianDetectorTest {
     @Test
     public void test_explicit_relative_date(){
         assertChunkedPart("سومین روز سال").text("سومین روز سال").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("the 20th day of two year from now").text("the 20 th day of two year from now").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("second month of this year").text("second month of this year").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("first week of april").text("first week of april").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("20th day of this month").text("20 th day of this month").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("100th day of the year 2020").text("100 th day of the year 2020").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("دومین ماه امسال").text("دومین ماه امسال").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("اولین هفته فروردین").text("اولین هفته فروردین").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("بیستمین روز این ماه").text("بیستمین روز این ماه").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("سومین روز از سال 2010").text("سومین روز از سال 2010").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("آخر فروردین").text("آخر فروردین").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("last week of april of next year").text("last week of april of next year").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("second day of next week").text("second day of next week").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("last day of second week of next month").text("last day of second week of next month").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("at_the_beginning of next year").text("at_the_beginning of next year").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
 //        assertChunkedPart("last day of second week of next month").text("last day of second week of next month").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("اول ماه بعد").text("اول ماه بعد").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+//        assertChunkedPart("یکم ماه بعدی").text("یکم ماه بعدی").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
 
     }
 

@@ -156,7 +156,7 @@ public class PersianDateDetector extends ChunkDetector {
      * @return ta mah bad, az 12/3/2012 ta tir  ,..
      */
     private static Pattern limited_date(){
-        return match(maybe(DATE_START_RANGE.toString()).then(maybe(anyOf(relax_date(),relative_date(),formal_date()))).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())));
+        return match(maybe(DATE_PREFIX.toString()).then(maybe(anyOf(relax_date(),relative_date(),formal_date()))).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())));
     }
 
     /**
@@ -184,7 +184,7 @@ public class PersianDateDetector extends ChunkDetector {
      */
     private static Pattern year_part_relative() {
         return match(maybe(anyOf(match(NUMBER.toString()), match(THE_PREFIX.toString()))).then(DATE_SEEKBY.toString())
-                .then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString()))).then(year_part_exact()));
+                .then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_PREFIX.toString()))).then(year_part_exact()));
     }
 
     /**
@@ -207,7 +207,7 @@ public class PersianDateDetector extends ChunkDetector {
      */
     private static Pattern month_part_relative() {
         return match(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(MONTH_NAME.toString()))
-                .thenMaybe(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString())).then(month_part_exact())));
+                .thenMaybe(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_PREFIX.toString())).then(month_part_exact())));
     }
 
     static Pattern month_part() {
@@ -234,7 +234,7 @@ public class PersianDateDetector extends ChunkDetector {
      * @return two weeks from first week of next year(week part), 3rd week after today, ...
      */
     private static Pattern week_part_relative() {
-        return match(NUMBER.toString()).then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString()))).then(week_part_exact());
+        return match(NUMBER.toString()).then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_PREFIX.toString()))).then(week_part_exact());
     }
 
     private static Pattern week_part() {
@@ -242,8 +242,7 @@ public class PersianDateDetector extends ChunkDetector {
     }
 
     private static Pattern start_with_number() {
-        return maybe(THE_PREFIX.toString()).then(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString())
-                .then(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
+        return match(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString()).thenMaybe(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
     }
 
     private static Pattern start_with_day_band() {
