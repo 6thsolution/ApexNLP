@@ -50,50 +50,50 @@ public class PersianDateDetector extends ChunkDetector {
     /**
      * @return tir, aban...
      */
-    private static Pattern month_name(){
+    private static Pattern month_name() {
         return match(MONTH_NAME.toString());
     }
 
     /**
      * @return shanbe, yekshanbe...
      */
-    private static Pattern week_day(){
+    private static Pattern week_day() {
         return match(WEEK_DAY.toString());
     }
 
     /**
-     * @return  20 of tir 2012, shanbe, tir
+     * @return 20 of tir 2012, shanbe, tir
      */
-    private static Pattern relax_date(){
-        return match(anyOf(month_name(),relax_date_type2(),week_day()));
+    private static Pattern relax_date() {
+        return match(anyOf(month_name(), relax_date_type2(), week_day()));
     }
 
 
     /**
      * @return emshab, farda, pasfarda, ...
      */
-    private static Pattern relative_date_type1(){
+    private static Pattern relative_date_type1() {
         return match(NAMED_DATE.toString());
     }
 
     /**
      * @return shanbe bad, ...
      */
-    private static Pattern relative_date_type2_0(){
+    private static Pattern relative_date_type2_0() {
         return match(WEEK_DAY.toString()).then(RELATIVE_PREPOSITION.toString());
     }
 
     /**
      * @return hafte bad sevomin rooz , hafte bad shanbe
      */
-    private static Pattern relative_date_type2_1_0(){
+    private static Pattern relative_date_type2_1_0() {
         return match(DATE_SEEKBY.toString()).then(RELATIVE_PREPOSITION.toString()).thenMaybe(anyOf(match(WEEK_DAY.toString()), match(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString())));
     }
 
     /**
      * @return farvardin bad sevomin hafte, farvardin badi avalin hafte dovomin rooz , mah bad sevomin hafte seshanbe, mah bad 20 om, mah bad dovomin shanbe, ...
      */
-    private static Pattern relative_date_type2_1_1(){
+    private static Pattern relative_date_type2_1_1() {
         return match(anyOf(match(MONTH_NAME.toString()), match(DATE_SEEKBY.toString()))).then(RELATIVE_PREPOSITION.toString()).
                 thenMaybe(NUMBER.toString()).thenMaybe(anyOf(relative_date_type2_1_0(), match(WEEK_DAY.toString()), match(DATE_SEEKBY.toString()), match(DATE_SUFFIX.toString())));
     }
@@ -101,66 +101,69 @@ public class PersianDateDetector extends ChunkDetector {
     /**
      * @return sal bad farvardin sevomin hafte, sal bad farvardin avalin hafte sevomin rooz , sal bad farvardin sevomin hafte shanbe, sal bad sevomin mah 20om, sal bad hashtomin mah dovomin shanbe, sal bad 16 omin hafte dovomin rooz, sal bad 17 omin hafte , sal bad 9omin mah, sal bad sadomin rooz, sal bad chehlomin hafte, ...
      */
-    private static Pattern relative_date_type2_1_2(){
+    private static Pattern relative_date_type2_1_2() {
         return match(DATE_SEEKBY.toString()).then(RELATIVE_PREPOSITION.toString()).thenMaybe(maybe(NUMBER.toString())
                 .then(anyOf(match(DATE_SEEKBY.toString()), relative_date_type2_1_1(), relative_date_type2_1_0(), match(WEEK_DAY.toString()))));
     }
 
-    private static Pattern relative_date_type2_1(){
-        return match(anyOf(relative_date_type2_1_0(),relative_date_type2_1_1(),relative_date_type2_1_2()));
+    private static Pattern relative_date_type2_1() {
+        return match(anyOf(relative_date_type2_1_0(), relative_date_type2_1_1(), relative_date_type2_1_2()));
     }
 
     /**
      * @return all next types
      */
     // TODO next Season
-    private static Pattern relative_date_type2(){
-        return match(anyOf(relative_date_type2_0(),relative_date_type2_1()));
+    private static Pattern relative_date_type2() {
+        return match(anyOf(relative_date_type2_0(), relative_date_type2_1()));
     }
 
     /**
      * @return 6 weeks(days, months, mondays, years, aprils) from now(today)
      */
-    private static Pattern relative_date_type3(){
+    private static Pattern relative_date_type3() {
         return match(maybe(PREPOSITION.toString()).then(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(WEEK_DAY.toString()), match(MONTH_NAME.toString()))).then(RELATIVE_SUFFIX.toString()));
     }
 
     /**
      * @return 3 types of relative date structure
      */
-    private static Pattern relative_date(){
-        return match(anyOf(relative_date_type1(),relative_date_type2(), relative_date_type3()));
+    private static Pattern relative_date() {
+        return match(anyOf(relative_date_type1(), relative_date_type2(), relative_date_type3()));
     }
+
     /**
      * @return rooze bad az shanbe
      */
-    private static Pattern global_date(){
-        return match(maybe(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(GLOBAL_PREPOSITION.toString()).then(anyOf(relative_date(),formal_date(),relax_date())));
+    private static Pattern global_date() {
+        return match(maybe(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(GLOBAL_PREPOSITION.toString()).then(anyOf(relative_date(), formal_date(), relax_date())));
     }
 
     /**
      * @return rooz mah sal
      */
-    private static Pattern forever_seek(){
-        return match(anyOf(DATE_SEEKBY.toString(),WEEK_DAY.toString()));
+    private static Pattern forever_seek() {
+        return match(anyOf(DATE_SEEKBY.toString(), WEEK_DAY.toString()));
     }
+
     /**
      * @return har rooz,har mah ta sale bad
      */
     //TODO add every week sundays,...
-    private static Pattern forever_date(){
-        return match(DATE_RECURRENCE.toString()).then(maybe(NUMBER.toString())).then(forever_seek()).then(maybe(DATE_RANGE.toString())).then(maybe(anyOf(relax_date(),relative_date(),formal_date())));
+    private static Pattern forever_date() {
+        return match(DATE_RECURRENCE.toString()).then(maybe(NUMBER.toString())).then(forever_seek()).then(maybe(DATE_RANGE.toString())).then(maybe(anyOf(relax_date(), relative_date(), formal_date())));
     }
 
     /**
      * @return ta mah bad, az 12/3/2012 ta tir  ,..
      */
-    private static Pattern limited_date(){
-        return match(maybe(DATE_PREFIX.toString()).then(maybe(anyOf(relax_date(),relative_date(),formal_date()))).then(DATE_RANGE.toString()).then(anyOf(relax_date(),relative_date(),formal_date())));
+    private static Pattern limited_date() {
+        return match(maybe(DATE_PREFIX.toString()).then(maybe(anyOf(relax_date(), relative_date(), formal_date()))).then(DATE_RANGE.toString()).then(anyOf(relax_date(), relative_date(), formal_date())));
     }
 
+
     /**
-     * @return alan,emrooz,emsal,in mah,in hafte,...
+     * @return alan, emrooz, emsal, in mah,in hafte,...
      */
     private static Pattern year_part_current() {
         return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString())).then(DATE_SEEKBY.toString()));
@@ -195,7 +198,7 @@ public class PersianDateDetector extends ChunkDetector {
     }
 
     private static Pattern month_part_explicit() {
-        return match(anyOf(match(NUMBER.toString()).then(DATE_SEEKBY.toString()), match(MONTH_NAME.toString())).thenMaybe(match(DATE_PREFIX.toString()).then(year_part())));
+        return match(anyOf(match(NUMBER.toString()).then(DATE_SEEKBY.toString()), match(MONTH_NAME.toString())).thenMaybe(maybe(DATE_PREFIX.toString()).then(year_part())));
     }
 
     static Pattern month_part_exact() {
@@ -207,7 +210,7 @@ public class PersianDateDetector extends ChunkDetector {
      */
     private static Pattern month_part_relative() {
         return match(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(MONTH_NAME.toString()))
-                .thenMaybe(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_PREFIX.toString())).then(month_part_exact())));
+                .thenMaybe(anyOf(match(GLOBAL_PREPOSITION.toString()), maybe(DATE_PREFIX.toString())).then(month_part_exact())));
     }
 
     static Pattern month_part() {
@@ -222,8 +225,7 @@ public class PersianDateDetector extends ChunkDetector {
     }
 
     private static Pattern week_part_explicit() {
-        return match(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part()));
-
+        return match(NUMBER.toString()).then(DATE_SEEKBY.toString()).thenMaybe(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part()));
     }
 
     private static Pattern week_part_exact() {
@@ -234,7 +236,7 @@ public class PersianDateDetector extends ChunkDetector {
      * @return two weeks from first week of next year(week part), 3rd week after today, ...
      */
     private static Pattern week_part_relative() {
-        return match(NUMBER.toString()).then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_PREFIX.toString()))).then(week_part_exact());
+        return match(NUMBER.toString()).then(anyOf(match(GLOBAL_PREPOSITION.toString()), maybe(DATE_PREFIX.toString()))).then(week_part_exact());
     }
 
     private static Pattern week_part() {
@@ -245,9 +247,10 @@ public class PersianDateDetector extends ChunkDetector {
         return match(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString()).thenMaybe(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
     }
 
+
     private static Pattern start_with_day_band() {
         return match(DATE_BAND.toString()).thenMaybe(anyOf(match(DATE_SEEKBY.toString()), match(WEEK_DAY.toString()), match(MONTH_NAME.toString())))
-                .then(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
+                .thenMaybe(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
     }
 
     private static Pattern start_with_day_of_week() {
@@ -263,12 +266,12 @@ public class PersianDateDetector extends ChunkDetector {
     protected List<Pair<Label, Pattern>> getPatterns() {
         return Arrays.asList(
                 newPattern(FORMAL_DATE, formal_date())
-                ,newPattern(RELAX_DATE, relax_date())
-                ,newPattern(RELATIVE_DATE, relative_date())
-                ,newPattern(EXPLICIT_RELATIVE_DATE,explicit_relative_date())
-                ,newPattern(GLOBAL_DATE, global_date())
-                ,newPattern(FOREVER_DATE,forever_date())
-                ,newPattern(LIMITED_DATE,limited_date())
+                , newPattern(RELAX_DATE, relax_date())
+                , newPattern(RELATIVE_DATE, relative_date())
+                , newPattern(EXPLICIT_RELATIVE_DATE, explicit_relative_date())
+                , newPattern(GLOBAL_DATE, global_date())
+                , newPattern(FOREVER_DATE, forever_date())
+                , newPattern(LIMITED_DATE, limited_date())
 
         );
     }
