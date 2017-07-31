@@ -200,7 +200,7 @@ public class PersianDateDetector extends ChunkDetector {
                 newPattern(FORMAL_DATE, formal_date())
                 ,newPattern(RELAX_DATE, relax_date())
                 ,newPattern(RELATIVE_DATE, relative_date())
-                ,newPattern(EXPLICIT_RELATIVE_DATE,explicit_relative_date())
+//                ,newPattern(EXPLICIT_RELATIVE_DATE,explicit_relative_date())
                 ,newPattern(GLOBAL_DATE, global_date())
                 ,newPattern(FOREVER_DATE,forever_date())
                 ,newPattern(LIMITED_DATE,limited_date())
