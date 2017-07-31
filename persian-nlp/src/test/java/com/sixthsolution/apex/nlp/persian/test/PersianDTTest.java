@@ -21,13 +21,12 @@ import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunk
 
 public class PersianDTTest extends PersianDetectorTest {
 
-    //TODO add every x hours
-
     @Test
     public void test_fixed_time() {
         assertChunkedPart("ساعت 10").text("ساعت 10").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("ساعت 10 ق.ظ").text("ساعت 10 ق.ظ").label(FIXED_TIME).entity(TIME);
-//        assertChunkedPart("ساعت 10 صبح").text("ساعت 10 صبح").label(FIXED_TIME).entity(TIME);
+        assertChunkedPart("ساعت 10 صبح").text("ساعت 10 صبح").label(FIXED_TIME).entity(TIME);
+        assertChunkedPart("ساعت 10 قبل_از_ظهر").text("ساعت 10 قبل_از_ظهر").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("عصر").text("عصر").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("7 ب.ظ").text("7 ب.ظ").label(FIXED_TIME).entity(TIME);
         assertChunkedPart("در 23:20").text("در 23 : 20").label(FIXED_TIME).entity(TIME);
@@ -44,19 +43,13 @@ public class PersianDTTest extends PersianDetectorTest {
 
     //TODO fix rangetime
     @Test
-    public void test_range_time() {
-//        assertChunkedPart("از 4 ب.ظ تا 12").text("از 4 ب.ظ تا 12")
+//    public void test_range_time() {
+//        assertChunkedPart("از صبح تا عصر").text("از صبح تا عصر")
 //                .label(RANGE_TIME).entity(TIME);
+//
+//    }
 
-    }
 
-    //TODO fix relative time
-    @Test
-    public void test_relative_time() {
-//        assertChunkedPart("تا یک ساعت").text("تا یک ساعت")
-//                .label(RELATIVE_TIME).entity(TIME);
-
-    }
 
     @Override
     protected ChunkDetector provideDetector() {

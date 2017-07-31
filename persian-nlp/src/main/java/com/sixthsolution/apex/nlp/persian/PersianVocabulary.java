@@ -62,7 +62,7 @@ public final class PersianVocabulary {
         vb.tag(TIME_RELATIVE_PREFIX, TIME)
                 .e("تا");
         vb.tag(TIME_RELATIVE, TIME)
-                .e(9, "صبح")
+                .e(9, "قبل_از_ظهر","صبح")
                 .e(12, "ظهر")
                 .e(16, "عصر", "بعد_از_ظهر")
                 .e(21, "شب","امشب")
@@ -177,9 +177,9 @@ public final class PersianVocabulary {
         vb.tag(LOCATION_PREFIX, LOCATION)
                 .e("در");
         vb.tag(LOCATION_SUFFIX, LOCATION)
-                .e("خیابان", "کوچه", "بزرگراه");
+                .e("خیابان", "کوچه", "محله","بزرگراه");
         vb.tag(LOCATION_NAME,LOCATION)
-            .e("خانه","محل_کار","بازار","پارک","دانشگاه","مدرسه","کافه","رستوران","مغازه");
+            .e("خانه","شرکت","اداره","باشگاه","محل_کار","بازار","پارک","دانشگاه","مدرسه","کافه","رستوران","مغازه");
 
         //***************************************
         //Others

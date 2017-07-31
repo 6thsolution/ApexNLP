@@ -11,6 +11,7 @@ import com.sixthsolution.apex.nlp.util.Pair;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.nobigsoftware.dfalex.Pattern.anyOf;
 import static com.nobigsoftware.dfalex.Pattern.match;
 import static com.nobigsoftware.dfalex.Pattern.repeat;
 import static com.sixthsolution.apex.nlp.ner.Entity.LOCATION;
@@ -25,15 +26,18 @@ public class PersianLocationDetector extends ChunkDetector {
      * @return در_بازار
      */
     private static Pattern location() {
-        return match(Tag.LOCATION_PREFIX.toString()).thenMaybe(Tag.LOCATION_NAME.toString()).thenRepeat(Tag.NONE.toString());
+        return match(Tag.LOCATION_PREFIX.toString()).then(anyOf(address_location(),location_name()));
     }
 
+    private static Pattern location_name(){
+        return match(Tag.LOCATION_NAME.toString());
+    }
     /**
      * @return at 123 st
      */
     private static Pattern address_location() {
-        return match(Tag.LOCATION_PREFIX.toString()).then(Tag.LOCATION_SUFFIX.toString()).thenMaybe(repeat(Tag.NONE.toString()))
-                .then(Tag.NUMBER.toString());
+        return match(Tag.LOCATION_SUFFIX.toString()).thenMaybe(repeat(Tag.NONE.toString()))
+                .then(anyOf(Tag.NUMBER.toString(),Tag.NONE.toString()));
     }
 
     @Override

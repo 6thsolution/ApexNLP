@@ -49,7 +49,8 @@ public enum Tag {
     YEAR_SEEK(133),
     MONTH_SEEK(134),
     WEEK_SEEK(135),
-    DAY_SEEK(136);
+    DAY_SEEK(136),
+    CURRENT(138);
 
     public int id;
 

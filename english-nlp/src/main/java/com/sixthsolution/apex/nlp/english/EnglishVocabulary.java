@@ -127,7 +127,8 @@ public final class EnglishVocabulary {
                 .e("of" , "in" , ",");
         vb.tag(DATE_BAND,DATE)
                 .e("at_the_beginning","start","end","last","first");
-
+        vb.tag(CURRENT,DATE)
+                .e("now","today","current","this");
         //***************************************
         //SEASONS
         //***************************************

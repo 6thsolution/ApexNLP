@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import static com.sixthsolution.apex.nlp.test.ChunkDetectorAssertion.assertChunkedPart;
 
-//TODO check and fix location bugs
 public class PersianDLTest extends PersianDetectorTest {
 
     @Override
@@ -18,21 +17,24 @@ public class PersianDLTest extends PersianDetectorTest {
 
     @Test
     public void test_location() {
-//        assertChunkedPart("در خانه").text("در خانه")
-//                .label(Label.LOCATION).entity(Entity.LOCATION);
-        assertChunkedPart("در خیابان دهم").text("در خیابان")
+        assertChunkedPart("در کوچه شقایق").text("در کوچه شقایق")
                 .label(Label.LOCATION).entity(Entity.LOCATION);
-//        assertChunkedPart("at 123 st.").text("at 123 st.")
-//                .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("در خیابان دهم").text("در خیابان دهم")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("در بزرگراه چمران").text("در بزرگراه چمران")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("در بازار").text("در بازار")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
+
     }
 
     @Test
     public void test_int_full_sentence() {
-//        assertChunkedPart("Grocery shopping at Wegman's Thursday at 5pm").text("at Wegman's")
-//                .label(Label.LOCATION).entity(Entity.LOCATION);
-//        assertChunkedPart("Meet John at Mall from 9:30 to 12:00").text("at Mall")
-//                .label(Label.LOCATION).entity(Entity.LOCATION);
-//        assertChunkedPart("Bring Negin lunch at 123 st.").text("at 123 st.")
-//                .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("خرید در بازار در روز چهارشنبه").text("در بازار")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("امشب ملاقات با دوستم در رستوران").text("در رستوران")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
+        assertChunkedPart("خرید لباس در خیابان دهم").text("در خیابان دهم")
+                .label(Label.LOCATION).entity(Entity.LOCATION);
     }
 }
