@@ -19,6 +19,7 @@ public class DateDetectionFilter extends ChunkDetectionFilter {
             case GLOBAL_DATE:
             case RELATIVE_DATE:
             case LIMITED_DATE:
+            case EXPLICIT_RELATIVE_DATE:
                 return true;
         }
         return false;

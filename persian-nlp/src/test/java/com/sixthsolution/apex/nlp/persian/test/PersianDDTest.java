@@ -79,8 +79,8 @@ public class PersianDDTest extends PersianDetectorTest {
     }
     @Test
     public void test_explicit_relative(){
-//        assertChunkedPart("")
     }
+
     @Override
     protected ChunkDetector provideDetector() {
         return new PersianDateDetector();
