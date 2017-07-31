@@ -40,18 +40,19 @@ public class PersianDDTest extends PersianDetectorTest {
 
     @Test
     public void test_relative_date(){
-//        assertChunkedPart("today").text("today").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("tomorrow").text("tomorrow").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next sunday").text("next sunday").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("2 monday from_today").text("2 monday from_today").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next april").text("next april").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next apr 20").text("next apr 20").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("امروز").text("امروز").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("پسفردا").text("پسفردا").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("شنبه بعدی").text("شنبه بعدی").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("8 هفته از_امروز").text("8 هفته از_امروز").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("فروردین بعدی").text("فروردین بعدی").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("فروردین بعدی 20 ام").text("فروردین بعدی 20 ام").label(RELATIVE_DATE).entity(DATE);
 ////        assertChunkedPart("next spring").text("next spring").label(RELATIVE_DATE).entity(DATE);
 ////        assertChunkedPart("2 summer from today").text("2 summer from today").label(RELATIVE_DATE).entity(DATE);
 ////        assertChunkedPart("winter 2014").text("winter 2014").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next week third day").text("next week third day").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("four weeks from_now").text("four weeks from_now").label(RELATIVE_DATE).entity(DATE);
-//        assertChunkedPart("next year may 20th").text("next year may 20 th").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("هفته بعدی").text("هفته بعدی").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("هفته بعدی سومین روز").text("هفته بعدی سومین روز").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("4 شنبه از_فردا").text("4 شنبه از_فردا").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("سال بعدی سومین روز").text("سال بعدی سومین روز").label(RELATIVE_DATE).entity(DATE);
     }
 
 

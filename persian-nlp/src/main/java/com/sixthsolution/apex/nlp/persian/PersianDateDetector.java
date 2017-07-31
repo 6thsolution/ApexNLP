@@ -91,23 +91,23 @@ public class PersianDateDetector extends ChunkDetector {
     }
 
     /**
-     * @return april 3rd week, april first week second day , month 3rd week tuesday, month 20th, month 2nd monday, ...
+     * @return farvardin bad sevomin hafte, farvardin badi avalin hafte dovomin rooz , mah bad sevomin hafte seshanbe, mah bad 20 om, mah bad dovomin shanbe, ...
      */
     private static Pattern relative_date_type2_1_1(){
-        return match(anyOf(match(MONTH_NAME.toString()), match(DATE_SEEKBY.toString()))).
+        return match(anyOf(match(MONTH_NAME.toString()), match(DATE_SEEKBY.toString()))).then(RELATIVE_PREPOSITION.toString()).
                 thenMaybe(NUMBER.toString()).thenMaybe(anyOf(relative_date_type2_1_0(), match(WEEK_DAY.toString()), match(DATE_SEEKBY.toString()), match(DATE_SUFFIX.toString())));
     }
 
     /**
-     * @return year april 3rd week, year april first week second day , year april 3rd week tuesday, year 9th month 20th, year 8th month 2nd monday, year 16th week second day, year 15th week , year 6th month, year 100th day, year 40th monday, ...
+     * @return sal bad farvardin sevomin hafte, sal bad farvardin avalin hafte sevomin rooz , sal bad farvardin sevomin hafte shanbe, sal bad sevomin mah 20om, sal bad hashtomin mah dovomin shanbe, sal bad 16 omin hafte dovomin rooz, sal bad 17 omin hafte , sal bad 9omin mah, sal bad sadomin rooz, sal bad chehlomin hafte, ...
      */
     private static Pattern relative_date_type2_1_2(){
-        return match(DATE_SEEKBY.toString()).thenMaybe(maybe(NUMBER.toString())
+        return match(DATE_SEEKBY.toString()).then(RELATIVE_PREPOSITION.toString()).thenMaybe(maybe(NUMBER.toString())
                 .then(anyOf(match(DATE_SEEKBY.toString()), relative_date_type2_1_1(), relative_date_type2_1_0(), match(WEEK_DAY.toString()))));
     }
 
     private static Pattern relative_date_type2_1(){
-        return match(RELATIVE_PREPOSITION.toString()).then(anyOf(relative_date_type2_1_0(),relative_date_type2_1_1(),relative_date_type2_1_2()));
+        return match(anyOf(relative_date_type2_1_0(),relative_date_type2_1_1(),relative_date_type2_1_2()));
     }
 
     /**
@@ -122,7 +122,7 @@ public class PersianDateDetector extends ChunkDetector {
      * @return 6 weeks(days, months, mondays, years, aprils) from now(today)
      */
     private static Pattern relative_date_type3(){
-        return match(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(WEEK_DAY.toString()), match(MONTH_NAME.toString()))).then(RELATIVE_SUFFIX.toString());
+        return match(maybe(PREPOSITION.toString()).then(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(WEEK_DAY.toString()), match(MONTH_NAME.toString()))).then(RELATIVE_SUFFIX.toString()));
     }
 
     /**
