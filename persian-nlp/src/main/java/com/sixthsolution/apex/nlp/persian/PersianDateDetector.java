@@ -166,14 +166,14 @@ public class PersianDateDetector extends ChunkDetector {
      * @return alan, emrooz, emsal, in mah,in hafte,...
      */
     private static Pattern year_part_current() {
-        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString())).then(DATE_SEEKBY.toString()));
+        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString())).thenMaybe(DATE_SEEKBY.toString()));
     }
 
     /**
      * @return sal bad, 2001, the year before 2025, year after next year, year before year 2013, year, ...
      */
     private static Pattern year_part() {
-        return match(anyOf(match(DATE_SEEKBY.toString()).then(RELATIVE_PREPOSITION.toString()), maybe(THE_PREFIX.toString()).thenMaybe(DATE_SEEKBY.toString()).then(NUMBER.toString()),
+        return match(anyOf(match(DATE_SEEKBY.toString()).then(GLOBAL_PREPOSITION.toString()), maybe(THE_PREFIX.toString()).thenMaybe(DATE_SEEKBY.toString()).then(NUMBER.toString()),
                 year_part_relative(), year_part_current(), match(DATE_SEEKBY.toString())));
     }
 
@@ -257,6 +257,7 @@ public class PersianDateDetector extends ChunkDetector {
         return match(WEEK_DAY.toString()).then(maybe(DATE_PREFIX.toString())).then(anyOf(week_part(), year_part(), month_part()));
     }
 
+    //TODO add DATE_BAND for second parts
     private static Pattern explicit_relative_date() {
         return match(anyOf(start_with_day_band(), start_with_day_of_week(), start_with_number()));
     }
