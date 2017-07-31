@@ -25,10 +25,11 @@ public class PersianDDTest extends PersianDetectorTest {
     }
 
     @Test
-    public void test_relax_date() {
+    public void test_relax_date()
+    {
         assertChunkedPart("مهر").text("مهر").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("20 تیر").text("20 تیر").label(RELAX_DATE).entity(DATE);
-//        assertChunkedPart("اول مرداد").text("اول مرداد").label(RELAX_DATE).entity(DATE);
+        assertChunkedPart("یکم تیر").text("یکم تیر").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("20ام تیر").text("20 ام تیر").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("10 فروردین 59").text("10 فروردین 59").label(RELAX_DATE).entity(DATE);
         assertChunkedPart("بیستم فروردین 75").text("بیستم فروردین 75").label(RELAX_DATE).entity(DATE);
@@ -56,7 +57,7 @@ public class PersianDDTest extends PersianDetectorTest {
 
     @Test
     public void test_global_date(){
-//        assertChunkedPart(" دو روز بعد فردا").text("دو روز بعد فردا").label(GLOBAL_DATE).entity(DATE);
+//        assertChunkedPart(" یک هفته بعد مرداد").text("یک هفته بعد مرداد").label(GLOBAL_DATE).entity(DATE);
         assertChunkedPart("یک هفته قبل تیر").text("یک هفته قبل تیر").label(GLOBAL_DATE).entity(DATE);
 
     }
@@ -75,6 +76,10 @@ public class PersianDDTest extends PersianDetectorTest {
         assertChunkedPart("هر دو هفته").text("هر دو هفته").label(FOREVER_DATE).entity(DATE);
         assertChunkedPart("هر شنبه تا مرداد").text("هر شنبه تا مرداد").label(FOREVER_DATE).entity(DATE);
 
+    }
+    @Test
+    public void test_explicit_relative(){
+//        assertChunkedPart("")
     }
     @Override
     protected ChunkDetector provideDetector() {
