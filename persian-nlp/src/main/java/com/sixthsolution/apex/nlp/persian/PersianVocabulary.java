@@ -67,7 +67,7 @@ public final class PersianVocabulary {
                 .e(16, "عصر", "بعد_از_ظهر")
                 .e(21, "شب","امشب")
                 .e(23, "نیمه_شب", "نصف_شب")
-                .e(0, "الان");//TODO current time
+                .e(0, "الان");
         vb.tag(TIME_RELATIVE_INDICATOR, TIME)
                 .e(false, "قبل","قبل_از")
                 .e(true, "بعد","بعد_از");
@@ -125,7 +125,8 @@ public final class PersianVocabulary {
                 .e("از" , "در" , ",");
         vb.tag(DATE_BAND,DATE)
                 .e("اول","پایان","آخر");
-
+        vb.tag(CURRENT,DATE)
+                .e("الان","امروز","امسال");
         //***************************************
         //SEASONS
         //***************************************
@@ -191,8 +192,8 @@ public final class PersianVocabulary {
         vb.tag(RELATIVE_SUFFIX,NONE)
                 .e("از_امروز","از_الان","از_فردا");
 
-//        vb.tag(THE_PREFIX,NONE)
-//                .e("the","this","current");
+        vb.tag(THE_PREFIX,NONE)
+                .e("این");
         return vb.build();
     }
 }
