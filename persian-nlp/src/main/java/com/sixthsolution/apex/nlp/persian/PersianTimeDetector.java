@@ -58,7 +58,7 @@ public class PersianTimeDetector extends ChunkDetector {
      * @return از (time) تا (time)
      */
     private static Pattern range_time() {
-        return match(match(maybe(TIME_START_RANGE.toString()).then(maybe(fixed_time())).then(TIME_RANGE.toString()).then(fixed_time())));
+        return match(match(maybe(TIME_START_RANGE.toString()).then(maybe(fixed_time())).then(TIME_RELATIVE_PREFIX.toString()).then(fixed_time())));
     }
 
 

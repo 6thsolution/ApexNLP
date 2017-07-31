@@ -83,12 +83,11 @@ public class PersianDateDetector extends ChunkDetector {
         return match(WEEK_DAY.toString()).then(RELATIVE_PREPOSITION.toString());
     }
 
-    //TODO make it persian
     /**
-     * @return week 3rd day, week monday, week, ...
+     * @return hafte bad sevomin rooz , hafte bad shanbe
      */
     private static Pattern relative_date_type2_1_0(){
-        return match(DATE_SEEKBY.toString()).thenMaybe(anyOf(match(WEEK_DAY.toString()), match(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString())));
+        return match(DATE_SEEKBY.toString()).then(RELATIVE_PREPOSITION.toString()).thenMaybe(anyOf(match(WEEK_DAY.toString()), match(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString())));
     }
 
     /**

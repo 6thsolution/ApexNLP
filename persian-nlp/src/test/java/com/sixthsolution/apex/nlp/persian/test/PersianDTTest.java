@@ -41,13 +41,12 @@ public class PersianDTTest extends PersianDetectorTest {
         assertChunkedPart("12.2.2016").noDetection();
     }
 
-    //TODO fix rangetime
     @Test
-//    public void test_range_time() {
-//        assertChunkedPart("از صبح تا عصر").text("از صبح تا عصر")
-//                .label(RANGE_TIME).entity(TIME);
-//
-//    }
+    public void test_range_time() {
+        assertChunkedPart("از صبح تا عصر").text("از صبح تا عصر")
+                .label(RANGE_TIME).entity(TIME);
+
+    }
 
 
 
