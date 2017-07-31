@@ -166,89 +166,101 @@ public class DateDetector extends ChunkDetector {
      * @return now, this year, today, current year, the year, ...
      */
     private static Pattern year_part_current() {
-        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString()).then(YEAR_SEEK.toString())));
+        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString())).then(DATE_SEEKBY.toString()));
     }
 
     /**
      * @return next year, 2001, the year before 2025, year after next year, year before year 2013, year, ...
      */
     private static Pattern year_part() {
-        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).thenMaybe(YEAR_SEEK.toString()), maybe(THE_PREFIX.toString()).thenMaybe(YEAR_SEEK.toString()).then(NUMBER.toString()),
-                year_part_relative(), year_part_current(), match(YEAR_SEEK.toString())));
+        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()), maybe(THE_PREFIX.toString()).thenMaybe(DATE_SEEKBY.toString()).then(NUMBER.toString()),
+                year_part_relative(), year_part_current(), match(DATE_SEEKBY.toString())));
     }
 
+    private static Pattern year_part_exact() {
+        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).thenMaybe(DATE_SEEKBY.toString()), maybe(THE_PREFIX.toString())
+                .thenMaybe(DATE_SEEKBY.toString()).then(NUMBER.toString()), year_part_current(), match(DATE_SEEKBY.toString())));
+    }
 
     /**
      * @return year after next, after 2001, year before 2025, three years after next year, the year before year 2013, 4 years from today
      */
     private static Pattern year_part_relative() {
-        return match(maybe(anyOf(match(NUMBER.toString()), match(THE_PREFIX.toString()))).then(YEAR_SEEK.toString())
-                .then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString()))).then(year_part()));
+        return match(maybe(anyOf(match(NUMBER.toString()), match(THE_PREFIX.toString()))).then(DATE_SEEKBY.toString())
+                .then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString()))).then(year_part_exact()));
     }
 
     /**
      * @return now, this month, today, current month, the month, ...
      */
     private static Pattern month_part_current() {
-        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString()).then(MONTH_SEEK.toString())));
+        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString()).then(DATE_SEEKBY.toString())));
     }
 
-
     private static Pattern month_part_explicit() {
-        return match(anyOf(match(NUMBER.toString()).then(MONTH_SEEK.toString()), match(MONTH_NAME.toString())).thenMaybe(match(DATE_PREPOSITION.toString()).then(year_part())));
+        return match(anyOf(match(NUMBER.toString()).then(DATE_SEEKBY.toString()), match(MONTH_NAME.toString())).thenMaybe(match(DATE_PREFIX.toString()).then(year_part())));
+    }
+
+    static Pattern month_part_exact() {
+        return match(anyOf(month_part_current(), maybe(THE_PREFIX.toString()).then(anyOf(month_part_explicit()))));
     }
 
     /**
      * @return two months from june(month part), 3rd month after today, 3rd april from now, ...
      */
     private static Pattern month_part_relative() {
-        return match(NUMBER.toString()).then(anyOf(match(MONTH_SEEK.toString()), match(MONTH_NAME.toString())).thenMaybe(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString())).then(month_part())));
+        return match(NUMBER.toString()).then(anyOf(match(DATE_SEEKBY.toString()), match(MONTH_NAME.toString()))
+                .thenMaybe(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString())).then(month_part_exact())));
     }
 
-
     static Pattern month_part() {
-        return match(anyOf(month_part_current(), maybe(THE_PREFIX.toString()).then(anyOf(month_part_explicit(), month_part_relative()))));
+        return match(anyOf(match(RELATIVE_PREPOSITION.toString()).then(DATE_SEEKBY.toString()), month_part_current(), maybe(THE_PREFIX.toString()).then(anyOf(month_part_explicit(), month_part_relative()))));
     }
 
     /**
      * @return now, this week, today, current week, the week, ...
      */
     private static Pattern week_part_current() {
-        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString()).then(WEEK_SEEK.toString())));
+        return match(anyOf(match(CURRENT.toString()), match(THE_PREFIX.toString()).then(DATE_SEEKBY.toString())));
     }
 
     private static Pattern week_part_explicit() {
-        return match(NUMBER.toString()).then(WEEK_SEEK.toString()).then(DATE_PREPOSITION.toString()).then(anyOf(year_part(), month_part()));
+        return match(NUMBER.toString()).then(DATE_SEEKBY.toString()).then(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part()));
 
+    }
+
+    private static Pattern week_part_exact() {
+        return maybe(THE_PREFIX.toString()).then(anyOf(week_part_current(), week_part_explicit()));
     }
 
     /**
      * @return two weeks from first week of next year(week part), 3rd week after today, ...
      */
     private static Pattern week_part_relative() {
-        return match(NUMBER.toString()).then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString()))).then(week_part());
+        return match(NUMBER.toString()).then(anyOf(match(GLOBAL_PREPOSITION.toString()), match(DATE_START_RANGE.toString()))).then(week_part_exact());
     }
 
     private static Pattern week_part() {
         return maybe(THE_PREFIX.toString()).then(anyOf(week_part_current(), week_part_explicit(), week_part_relative()));
     }
-    
-    private static Pattern start_with_number(){
-        return match(NUMBER.toString()).then(maybe(DATE_SEEKBY.toString())).then(DATE_PREFIX.toString()).then(anyOf(year_part(),month_part(),week_part()));
+
+    private static Pattern start_with_number() {
+        return maybe(THE_PREFIX.toString()).then(NUMBER.toString()).thenMaybe(DATE_SUFFIX.toString()).then(DATE_SEEKBY.toString())
+                .then(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
     }
 
-    private static Pattern start_with_day_band(){
-        return match(DATE_BAND.toString()).then(maybe(anyOf(DATE_SEEKBY.toString(),WEEK_DAY.toString(),MONTH_NAME.toString()))).then(DATE_PREFIX.toString()).then(anyOf(year_part(),month_part(),week_part()));
+    private static Pattern start_with_day_band() {
+        return match(DATE_BAND.toString()).thenMaybe(anyOf(match(DATE_SEEKBY.toString()), match(WEEK_DAY.toString()), match(MONTH_NAME.toString())))
+                .then(DATE_PREFIX.toString()).then(anyOf(year_part(), month_part(), week_part()));
     }
 
-    private static Pattern start_with_day_of_week(){
-        return match(WEEK_DAY.toString()).then(DATE_PREFIX.toString()).then(anyOf(year_part(),month_part(),week_part()));
+    private static Pattern start_with_day_of_week() {
+        return match(WEEK_DAY.toString()).then(DATE_PREFIX.toString()).then(anyOf(week_part(), year_part(), month_part()));
     }
 
-    private static Pattern explicit_relative_date(){
-        return match(anyOf(start_with_day_band(),start_with_day_of_week(),start_with_number()));
+    private static Pattern explicit_relative_date() {
+        return match(anyOf(start_with_day_band(), start_with_day_of_week(), start_with_number()));
     }
-
 
 
     @Override
