@@ -1,11 +1,9 @@
 package com.sixthsolution.apex.nlp.persian.event;
 
 import com.sixthsolution.apex.model.Event;
-import com.sixthsolution.apex.model.Recurrence;
 import com.sixthsolution.apex.nlp.event.EventBuilder;
 import com.sixthsolution.apex.nlp.persian.calendar.tools.JalaliCalendar;
 import com.sixthsolution.apex.nlp.persian.model.PersianEvent;
-import com.sixthsolution.apex.nlp.persian.model.PersianRecurrence;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.LocalTime;
 
@@ -29,7 +27,7 @@ public class PersianEventBuilder extends EventBuilder {
         this.endDate = endDate;
     }
 
-    public void setRecurrence(PersianRecurrence persianRecurrence){this.recurrence=persianRecurrence;}
+    public void setRecurrence(PersianRecurrence recurrence){this.recurrence=recurrence;}
 
     @Override
     public Event build(LocalDateTime source) {

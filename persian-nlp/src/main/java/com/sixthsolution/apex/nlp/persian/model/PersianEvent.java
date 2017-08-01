@@ -1,9 +1,8 @@
 package com.sixthsolution.apex.nlp.persian.model;
 
 import com.sixthsolution.apex.model.Event;
-import com.sixthsolution.apex.model.Recurrence;
 import com.sixthsolution.apex.nlp.persian.calendar.tools.JalaliCalendar;
-import org.threeten.bp.LocalDateTime;
+import com.sixthsolution.apex.nlp.persian.event.PersianRecurrence;
 import org.threeten.bp.LocalTime;
 
 /**

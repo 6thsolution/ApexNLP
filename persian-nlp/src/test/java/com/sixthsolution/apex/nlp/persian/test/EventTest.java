@@ -1,8 +1,10 @@
 package com.sixthsolution.apex.nlp.persian.test;
 
 import com.sixthsolution.apex.nlp.persian.PersianParser;
+import com.sixthsolution.apex.nlp.persian.calendar.tools.JalaliCalendar;
 import org.junit.Before;
 import org.junit.Test;
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;
 
 import static com.sixthsolution.apex.nlp.test.ParserAssertion.assertEvent;
@@ -23,10 +25,11 @@ public class EventTest {
 
     @Before
     public void setUp() {
-        
-        year = LocalDateTime.now().getYear();
-        month = LocalDateTime.now().getMonthValue();
-        day = LocalDateTime.now().getDayOfMonth();
+        JalaliCalendar jalaliCalendar = new JalaliCalendar();
+        jalaliCalendar=jalaliCalendar.convertor(LocalDate.now());
+        year = jalaliCalendar.getYear();
+        month = jalaliCalendar.getMonth();
+        day = jalaliCalendar.getDay();
         hour = LocalDateTime.now().getHour();
         min = LocalDateTime.now().getMinute();
         System.out.println(LocalDateTime.now());
@@ -37,7 +40,7 @@ public class EventTest {
     @Test
     public void test_time_extraction() {
         //formal
-        assertEvent("in the evening").startTime("16:00").endTime("17:00");
+//        assertEvent("عصر").startTime("16:00").endTime("17:00");
         //range
 //        assertEvent("at morning - 9 pm").startTime("09:00").endTime("21:00");
 //        assertEvent("at 5pm till 6pm").startTime("17:00").endTime("18:00");

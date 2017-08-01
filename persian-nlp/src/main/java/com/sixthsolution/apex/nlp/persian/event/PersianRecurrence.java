@@ -1,4 +1,4 @@
-package com.sixthsolution.apex.nlp.persian.model;
+package com.sixthsolution.apex.nlp.persian.event;
 
 /**
  * Created by rozhin on 8/1/2017.
