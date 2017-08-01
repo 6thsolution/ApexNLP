@@ -42,7 +42,7 @@ public class PersianDDTest extends PersianDetectorTest {
     public void test_relative_date(){
         assertChunkedPart("امروز").text("امروز").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("پسفردا").text("پسفردا").label(RELATIVE_DATE).entity(DATE);
-        assertChunkedPart("شنبه بعدی").text("شنبه بعد").label(RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("شنبه بعدی").text("شنبه بعدی").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("8 هفته از_امروز").text("8 هفته از_امروز").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("فروردین بعدی").text("فروردین بعدی").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("فروردین بعدی 20 ام").text("فروردین بعدی 20 ام").label(RELATIVE_DATE).entity(DATE);
@@ -86,7 +86,7 @@ public class PersianDDTest extends PersianDetectorTest {
         assertChunkedPart("بیستمین روز این ماه").text("بیستمین روز این ماه").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
         assertChunkedPart("سومین روز از سال 2010").text("سومین روز از سال 2010").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
         assertChunkedPart("آخر فروردین").text("آخر فروردین").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
-        assertChunkedPart("دومین روز از هفته بعدی").text("دومین روز از هفته بعدی").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
+        assertChunkedPart("دومین روز از هفته بعد").text("دومین روز از هفته بعد").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
         assertChunkedPart("شنبه دومین هفته از فروردین امسال").text("شنبه دومین هفته از فروردین امسال").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
         assertChunkedPart("آخرین روز از دومین هفته از ماه بعد").text("آخرین روز از دومین هفته از ماه بعد").label(EXPLICIT_RELATIVE_DATE).entity(DATE);
         assertChunkedPart("اول سال بعد").text("اول سال بعد").label(EXPLICIT_RELATIVE_DATE).entity(DATE);

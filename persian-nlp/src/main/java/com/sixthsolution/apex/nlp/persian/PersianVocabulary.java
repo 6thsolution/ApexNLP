@@ -34,8 +34,8 @@ public final class PersianVocabulary {
                 .e(1, "فردا")
                 .e(1, "پسفردا","پس_فردا");
         vb.tag(GLOBAL_PREPOSITION,DATE)
-                .e(true, "بعدی","بعد")
-                .e(false, "قبل","قبلی");
+                .e(true, "بعد")
+                .e(false, "قبل");
         //***************************************
         //MONTH_NAME NAMES
         //***************************************
