@@ -40,6 +40,7 @@ public class PersianDDTest extends PersianDetectorTest {
 
     @Test
     public void test_relative_date(){
+        //TODO fix conflict of baed instead of baedi
         assertChunkedPart("امروز").text("امروز").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("پسفردا").text("پسفردا").label(RELATIVE_DATE).entity(DATE);
         assertChunkedPart("شنبه بعدی").text("شنبه بعدی").label(RELATIVE_DATE).entity(DATE);
