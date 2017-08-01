@@ -13,31 +13,32 @@ import static com.sixthsolution.apex.nlp.test.ParserAssertion.init;
  * @author Rozhin Bayati
  */
 
-//public class EventTest {
-//    int year;
-//    int month;
-//    int day;
-//    int hour;
-//    int min;
-//
-//
-//    @Before
-//    public void setUp() {
-//        year = LocalDateTime.now().getYear();
-//        month = LocalDateTime.now().getMonthValue();
-//        day = LocalDateTime.now().getDayOfMonth();
-//        hour = LocalDateTime.now().getHour();
-//        min = LocalDateTime.now().getMinute();
-//        System.out.println(LocalDateTime.now());
-//        System.out.println(year + "/" + month + "/" + day + " " + hour + ":" + min);
-//        init(LocalDateTime.of(year, Integer.valueOf(check_zero(String.valueOf(month))), Integer.valueOf(check_zero(String.valueOf(day))), Integer.valueOf(check_zero(String.valueOf(hour))), Integer.valueOf(check_zero(String.valueOf(min)))), new PersianParser());
-//    }
-//
-//    @Test
-//    public void test_time_extraction() {
-//        //formal
-//        assertEvent("in the evening").startTime("16:00").endTime("17:00");
-//        //range
+public class EventTest {
+    int year;
+    int month;
+    int day;
+    int hour;
+    int min;
+
+
+    @Before
+    public void setUp() {
+        
+        year = LocalDateTime.now().getYear();
+        month = LocalDateTime.now().getMonthValue();
+        day = LocalDateTime.now().getDayOfMonth();
+        hour = LocalDateTime.now().getHour();
+        min = LocalDateTime.now().getMinute();
+        System.out.println(LocalDateTime.now());
+        System.out.println(year + "/" + month + "/" + day + " " + hour + ":" + min);
+        init(LocalDateTime.of(year, Integer.valueOf(check_zero(String.valueOf(month))), Integer.valueOf(check_zero(String.valueOf(day))), Integer.valueOf(check_zero(String.valueOf(hour))), Integer.valueOf(check_zero(String.valueOf(min)))), new PersianParser());
+    }
+
+    @Test
+    public void test_time_extraction() {
+        //formal
+        assertEvent("in the evening").startTime("16:00").endTime("17:00");
+        //range
 //        assertEvent("at morning - 9 pm").startTime("09:00").endTime("21:00");
 //        assertEvent("at 5pm till 6pm").startTime("17:00").endTime("18:00");
 //        assertEvent("at 5-6pm").startTime("17:00").endTime("18:00");
@@ -48,8 +49,8 @@ import static com.sixthsolution.apex.nlp.test.ParserAssertion.init;
 //        assertEvent("for 2 hours before noon").startTime("10:00").endTime("12:00");
 //        assertEvent("for one hour").startTime(check_zero(String.valueOf(hour)) + ":" + check_zero(String.valueOf(min))).endTime(check_zero(String.valueOf((hour + 1) % 24)) + ":" + check_zero(String.valueOf(min)));
 //        assertEvent("from 11.5 - 12.5 ").startTime("11:05").endTime("12:05");
-//    }
-//
+    }
+
 //    @Test
 //    public void test_date_extraction() {
 //        //formal date
@@ -140,12 +141,12 @@ import static com.sixthsolution.apex.nlp.test.ParserAssertion.init;
 //        assertEvent("meeting with Tom for two hours after noon")
 //                .start("2017/07/24 12:00").end("2017/07/24 14:00");
 //    }
-//
-//    public String check_zero(String digit) {
-//        if (digit.length() == 1)
-//            return "0" + digit;
-//        else
-//            return digit;
-//    }
-//
-//}
+
+    public String check_zero(String digit) {
+        if (digit.length() == 1)
+            return "0" + digit;
+        else
+            return digit;
+    }
+
+}

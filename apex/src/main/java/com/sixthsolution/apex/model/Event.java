@@ -48,6 +48,7 @@ public class Event {
         this.recurrence = recurrence;
     }
 
+
     public void setTitle(String title) {
         this.title = title;
     }
