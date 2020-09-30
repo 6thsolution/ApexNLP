@@ -52,6 +52,7 @@ public class Apex {
 
         ApexConfig(Map<String, Parser> parsers) {
             this.parsers = parsers;
+            syste.debug('flag');
         }
     }
 }
